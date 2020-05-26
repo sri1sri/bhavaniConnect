@@ -196,7 +196,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
     };
     try {
       await _auth.verifyPhoneNumber(
-          phoneNumber: '+1${this.phoneNo}', // PHONE NUMBER TO SEND OTP
+          phoneNumber: '+91${this.phoneNo}', // PHONE NUMBER TO SEND OTP
           codeAutoRetrievalTimeout: (String verId) {
             //Starts the phone number verification process for the given phone number.
             //Either sends an SMS with a 6 digit code to the phone number specified, or sign's the user in and [verificationCompleted] is called.
@@ -259,7 +259,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
     try {
       usersRef
           .where('phoneNumber',
-              isEqualTo: '+1${_phoneNumberController.value.text}')
+              isEqualTo: '+91${_phoneNumberController.value.text}')
           .snapshots()
           .listen((data) => {
                 print('data=$data'),
