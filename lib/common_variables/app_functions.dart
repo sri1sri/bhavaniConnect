@@ -14,9 +14,8 @@ void GoToPage(BuildContext context, Widget page) {
 
 String EMPLOYEE_ID;
 String DEVICE_TOKEN;
-String EMPLOYEE_PNO='';
+String EMPLOYEE_PNO = '';
 ImageSource IMAGE_SOURCE = ImageSource.gallery;
-
 
 String getDateTime(int timestamp) {
   var format = new DateFormat('dd MMM yyyy, hh:mm a');
@@ -35,7 +34,4 @@ String getTime(int timestamp) {
   var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 
   return timestamp == 0 ? '--' : format.format(date);
-
-
 }
-

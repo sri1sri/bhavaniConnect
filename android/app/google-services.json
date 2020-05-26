@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "104727521685",
+    "firebase_url": "https://bhavaniconnect.firebaseio.com",
+    "project_id": "bhavaniconnect",
+    "storage_bucket": "bhavaniconnect.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104727521685:android:93c4d783087464caf8ee9c",
+        "android_client_info": {
+          "package_name": "com.kondasri.bhavaniconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104727521685-go16dne031i7one7soj34fgk0rlddost.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kondasri.bhavaniconnect",
+            "certificate_hash": "4e733f21a104e269448ccb1689152182ae7ebb8d"
+          }
+        },
+        {
+          "client_id": "104727521685-vstc7qg8mj2bhec8e1uh6qj0d195i2i4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl8_2NSxQpz758JegXVcXX_OHMLV2MrOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104727521685-vstc7qg8mj2bhec8e1uh6qj0d195i2i4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "104727521685-g87v301voemog6nncnc12iomgpvdg9uh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kondasri.bhavaniconnect"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

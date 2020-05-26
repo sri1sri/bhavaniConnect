@@ -10,6 +10,9 @@ project 'Runner', {
   'Release' => :release,
 }
 
+pod 'Firebase/Core'
+pod 'Firebase/Auth'
+
 def parse_KV_file(file, separator='=')
   file_abs_path = File.expand_path(file)
   if !File.exists? file_abs_path

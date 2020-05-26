@@ -6,26 +6,16 @@ import 'package:flutter/material.dart';
 import 'common_widgets/navigationBar.dart';
 import 'common_widgets/offline_widgets/offline_widget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.currentUserId}) : super(key: key);
+
+  final String currentUserId;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_HomePage(),
-    );
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class F_HomePage extends StatefulWidget {
-  F_HomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _F_HomePageState createState() => _F_HomePageState();
-}
-
-class _F_HomePageState extends State<F_HomePage> {
+class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
 
   @override
@@ -50,8 +40,7 @@ class _F_HomePageState extends State<F_HomePage> {
 
     switch (currentIndex) {
       case 0:
-        child = Dashboard(
-        );
+        child = Dashboard();
         break;
       case 1:
         child = ProfilePage();

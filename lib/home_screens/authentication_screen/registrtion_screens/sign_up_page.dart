@@ -1,55 +1,49 @@
 import 'dart:io';
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_variables/app_functions.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/button_widget/to_do_button.dart';
+import 'package:bhavaniconnect/common_widgets/image_widget/avatar_selector.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_page.dart';
+import 'package:bhavaniconnect/models/current-area.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SignUpPage extends StatelessWidget {
-//  SignUpPage({@required this.phoneNo});
-//  String phoneNo;
+class SignUpPage extends StatefulWidget {
+  final FirebaseUser user;
+
+  const SignUpPage({Key key, this.user}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_SignUpPage(),
-    );
-  }
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class F_SignUpPage extends StatefulWidget {
-//  F_SignUpPage({this.model, @required this.phoneNo});
-//  final SignUpModel model;
-//  String phoneNo;
-
-
-
-//  static Widget create(BuildContext context, String phoneNo) {
-//    final AuthBase auth = Provider.of<AuthBase>(context);
-//
-//    return ChangeNotifierProvider<SignUpModel>(
-//      create: (context) => SignUpModel(auth: auth),
-//      child: Consumer<SignUpModel>(
-//        builder: (context, model, _) => F_SignUpPage(model: model, phoneNo: phoneNo),
-//      ),
-//    );
-//  }
-  @override
-  _F_SignUpPageState createState() => _F_SignUpPageState();
-}
-
-class _F_SignUpPageState extends State<F_SignUpPage> {
-  int group =1;
+class _SignUpPageState extends State<SignUpPage> {
+  int group = 1;
   File _profilePic;
   DateTime selectedDate = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMMM yyyy");
+
+  String selectedRole;
+  String selectedConstructionSite;
+  String selectedConstructionId;
+
+  bool validated = false;
+
+  final _formKey = GlobalKey<FormState>();
+
+  String deviceToken;
+
+  LatLng currentLocation;
 
 //  final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://bconnect-9d1b5.appspot.com/');
 //  StorageUploadTask _uploadTask;
@@ -58,6 +52,8 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
   bool _loading;
   double _progressValue;
 
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   @override
   void initState() {
     super.initState();
@@ -65,14 +61,38 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
     _progressValue = 0.0;
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getDeviceToken();
+    getCurrentLocation();
+  }
+
+  getDeviceToken() {
+    _firebaseMessaging.getToken().then((token) {
+      deviceToken = token;
+    });
+  }
+
+  getCurrentLocation() async {
+    await CurrentArea.instance.getCurrentLocation().then((location) async {
+      if (location != null) {
+        currentLocation = LatLng(location.latitude, location.longitude);
+        var prefs = await SharedPreferences.getInstance();
+        prefs.setDouble("latitude", currentLocation.latitude);
+        prefs.setDouble("longitude", currentLocation.longitude);
+      }
+    });
+  }
+
   Future<Null> showPicker(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime(2010),
-        firstDate: DateTime(1930),
-        lastDate: DateTime(2010),
+      context: context,
+      initialDate: DateTime(2010),
+      firstDate: DateTime(1930),
+      lastDate: DateTime(2010),
     );
-    if (picked != null){
+    if (picked != null) {
       setState(() {
         print(customFormat.format(picked));
         selectedDate = picked;
@@ -98,7 +118,7 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
     return offlineWidget(context);
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -117,196 +137,7 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
 //});
 //  }
 
-  Widget signupContent(Widget signInBtn){
-   return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                SizedBox(height: 50,),
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                Text(
-                  'Create your own \naccount today',
-                  style: titleStyle,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20,),
-                Text(
-                  'To create an Account enter your name and date of birth.',
-                  style: descriptionStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            SizedBox(height: 20,),
-
-            Column(
-              children: <Widget>[
-                Container(
-                  width: 120,
-                  height: 120,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top:50,left: 25),
-                    child: Text('Add Photo',style: descriptionStyle,),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    shape: BoxShape.circle,),
-                ),
-//                GestureDetector(onTap: _captureImage,
-//                    child: _profilePic == null ?
-//                    Container(
-//                      width: 120,
-//                      height: 120,
-//                      child: Padding(
-//                        padding: const EdgeInsets.only(top:50,left: 25),
-//                        child: Text('Add Photo',style: descriptionStyle,),
-//                      ),
-//                      decoration: BoxDecoration(
-//                        color: Colors.grey[100],
-//                        shape: BoxShape.circle,),
-//                    )
-//                        :
-//                    Container(
-//                      width: 120,
-//                      height: 120,
-//                      decoration: BoxDecoration(
-//                          shape: BoxShape.circle,
-//                          image: DecorationImage(
-//                            image: FileImage(_profilePic),  // here add your image file path
-//                            fit: BoxFit.fill,
-//                          )),
-//                    )),
-
-                SizedBox(height: 40.0),
-                SizedBox(height: 20,),
-                new TextFormField(
-                  controller: _usernameController,
-                  textInputAction: TextInputAction.done,
-                  obscureText: false,
-                  focusNode: _usernameFocusNode,
-                 // onEditingComplete: () => _imageUpload(),
-                 // onChanged: model.updateUsername,
-                  decoration: new InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.account_circle,
-                      color: backgroundColor,
-                    ),
-                    labelText: "Enter your name",
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(5.0),
-                      borderSide: new BorderSide(),
-                    ),
-                  ),
-                  validator: (val) {
-                    if(val.length==0) {
-                      return "Username cannot be empty";
-                    }else{
-                      return null;
-                    }
-                  },
-                  keyboardType: TextInputType.text,
-                  style: new TextStyle(
-                    fontFamily: "Poppins",
-                  ),
-                ),
-
-                SizedBox(height: 20.0),
-                DropdownSearch(
-                    showSelectedItem: true,
-                    maxHeight: 400,
-                    mode: Mode.MENU,
-                    items: ["Manager", "Site Engineer", "Store Manager","Accountant","Security"],
-                    label: "Employee Role",
-                    onChanged: print,
-                    selectedItem: "Choose your role",
-                    showSearchBox: true),
-                SizedBox(height: 20,),
-                DropdownSearch(
-                    showSelectedItem: true,
-                    maxHeight: 400,
-                    mode: Mode.MENU,
-                    items: ["Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham",],
-                    label: "Construction Site",
-                    onChanged: print,
-                    selectedItem: "Choose Construction Site",
-                    showSearchBox: true),
-                SizedBox(height: 20,),
-                Padding(
-                  padding: EdgeInsets.only(top: 0,bottom: 10),
-                  child: Container(
-
-                    child: RaisedButton(
-
-                      color: Colors.white,
-                      child: Container(
-                        height: 60,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                            children: <Widget>[
-                              Text(
-                                'Select your date of birth.',
-                                style: descriptionStyle,
-                                textAlign: TextAlign.center,
-                              ),
-                              Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.date_range,
-                                      size: 18.0,
-                                      color: backgroundColor,
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Text(
-                                        '${customFormat2.format(selectedDate)}',
-                                        style: subTitleStyle
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Text(
-                                  'Change',
-                                  style: subTitleStyle
-                              ),
-                            ],
-                          ),
-                              SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-                      onPressed: () => showPicker(context),
-
-                    ),
-                  ),
-
-                ),
-                SizedBox(height: 15.0),
-
-                signInBtn,
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-
   Widget _buildContent(BuildContext context) {
-
     return Container(
       child: SingleChildScrollView(
         child: Container(
@@ -316,7 +147,9 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  SizedBox(height: 50,),
+                  SizedBox(
+                    height: 50,
+                  ),
                 ],
               ),
               Column(
@@ -326,7 +159,9 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
                     style: titleStyle,
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Text(
                     'To create an Account enter your name and date of birth.',
                     style: descriptionStyle,
@@ -334,196 +169,288 @@ class _F_SignUpPageState extends State<F_SignUpPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 20,),
-
-              Column(
-                children: <Widget>[
-                  Container(
-                    width: 120,
-                    height: 120,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top:50,left: 25),
-                      child: Text('Add Photo',style: descriptionStyle,),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      shape: BoxShape.circle,),
-                  ),
-//                GestureDetector(onTap: _captureImage,
-//                    child: _profilePic == null ?
-//                    Container(
-//                      width: 120,
-//                      height: 120,
-//                      child: Padding(
-//                        padding: const EdgeInsets.only(top:50,left: 25),
-//                        child: Text('Add Photo',style: descriptionStyle,),
-//                      ),
-//                      decoration: BoxDecoration(
-//                        color: Colors.grey[100],
-//                        shape: BoxShape.circle,),
-//                    )
-//                        :
-//                    Container(
-//                      width: 120,
-//                      height: 120,
-//                      decoration: BoxDecoration(
-//                          shape: BoxShape.circle,
-//                          image: DecorationImage(
-//                            image: FileImage(_profilePic),  // here add your image file path
-//                            fit: BoxFit.fill,
-//                          )),
-//                    )),
-
-                  SizedBox(height: 40.0),
-
-                  new TextFormField(
-                    controller: _usernameController,
-                    textInputAction: TextInputAction.done,
-                    obscureText: false,
-                    focusNode: _usernameFocusNode,
-                    // onEditingComplete: () => _imageUpload(),
-                    // onChanged: model.updateUsername,
-                    decoration: new InputDecoration(
+              SizedBox(
+                height: 20,
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    AvatarSelector(widget.user.uid, true),
+                    SizedBox(height: 20.0),
+                    new TextFormField(
+                      controller: _usernameController,
+                      textInputAction: TextInputAction.done,
+                      obscureText: false,
+                      focusNode: _usernameFocusNode,
+                      // onEditingComplete: () => _imageUpload(),
+                      // onChanged: model.updateUsername,
+                      decoration: new InputDecoration(
 //                      prefixIcon: Icon(
 //                        Icons.account_circle,
 //                        color: backgroundColor,
 //                      ),
-                      labelText: "Enter your name",
-                      labelStyle: descriptionStyleDark,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(5.0),
-                        borderSide: new BorderSide(),
-                      ),
-                    ),
-                    validator: (val) {
-                      if(val.length==0) {
-                        return "Username cannot be empty";
-                      }else{
-                        return null;
-                      }
-                    },
-                    keyboardType: TextInputType.text,
-                    style: new TextStyle(
-                      fontFamily: "Poppins",
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  DropdownSearch(
-                      showSelectedItem: true,
-                      maxHeight: 400,
-                      mode: Mode.MENU,
-                      items: ["Manager", "Site Engineer", "Store Manager","Accountant","Security"],
-                      label: "Employee Role",
-                      onChanged: print,
-                      selectedItem: "Choose your role",
-                      showSearchBox: true),
-                  SizedBox(height: 30,),
-                  DropdownSearch(
-                      showSelectedItem: true,
-                      maxHeight: 400,
-                      mode: Mode.MENU,
-                      items: ["Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham",],
-                      label: "Construction Site",
-                      onChanged: print,
-                      selectedItem: "Choose Construction Site",
-                      showSearchBox: true),
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: EdgeInsets.only(top: 0,bottom: 10),
-                    child: Container(
-
-                      child: RaisedButton(
-
-                        color: Colors.white,
-                        child: Container(
-                          height: 60,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                            children: <Widget>[
-                              Text(
-                                'Select your date of birth.',
-                                style: descriptionStyle,
-                                textAlign: TextAlign.center,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.date_range,
-                                          size: 18.0,
-                                          color: backgroundColor,
-                                        ),
-                                        SizedBox(width: 10,),
-                                        Text(
-                                            '${customFormat2.format(selectedDate)}',
-                                            style: subTitleStyle
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Text(
-                                      'Change',
-                                      style: subTitleStyle
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 10,),
-                            ],
-                          ),
+                        labelText: "Enter your name",
+                        labelStyle: descriptionStyleDark,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(5.0),
+                          borderSide: new BorderSide(),
                         ),
-                        onPressed: () => showPicker(context),
-
+                      ),
+                      validator: (val) {
+                        if (val.length == 0) {
+                          return "Username cannot be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      keyboardType: TextInputType.text,
+                      style: new TextStyle(
+                        fontFamily: "Poppins",
                       ),
                     ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    StreamBuilder(
+                      stream: Firestore.instance.collection("role").snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          List<String> items = snapshot.data.documents
+                              .map((e) => (e['name'].toString()))
+                              .toList();
+                          return DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: items,
+                            label: "Employee Role",
+                            onChanged: (String value) {
+                              setState(() {
+                                selectedRole = value;
+                              });
+                            },
+                            selectedItem: selectedRole ?? "Choose your role",
+                            showSearchBox: true,
+                            validate: (value) {
+                              if (validated &&
+                                  (selectedRole == null ||
+                                      selectedRole.isNotEmpty)) {
+                                return "Employee Role cannot be empty";
+                              } else {
+                                return null;
+                              }
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    StreamBuilder(
+                      stream: Firestore.instance
+                          .collection("constructionSite")
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          List<String> items = snapshot.data.documents
+                              .map((e) => (e.documentID.toString()))
+                              .toList();
+                          return DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: items,
+                            dropdownItemBuilder: (context, value, isTrue) {
+                              return ListTile(
+                                title: Text(snapshot.data.documents
+                                    .firstWhere((element) =>
+                                        element.documentID == value)['name']
+                                    .toString()),
+                                selected: isTrue,
+                                onTap: () {
+                                  setState(() {
+                                    selectedConstructionSite = snapshot
+                                        .data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID == value)['name']
+                                        .toString();
+                                    selectedConstructionId = value;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
+                            label: "Construction Site",
+                            onChanged: (value) {},
+                            selectedItem: selectedConstructionSite ??
+                                "Choose Construction Site",
+                            showSearchBox: true,
+                            validate: (value) {
+                              if (validated &&
+                                  (selectedRole == null ||
+                                      selectedRole.isNotEmpty)) {
+                                return "Construction Site cannot be empty";
+                              } else {
+                                return null;
+                              }
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 0, bottom: 10),
+                      child: Container(
+                        child: RaisedButton(
+                          color: Colors.white,
+                          child: Container(
+                            height: 60,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Text(
+                                  'Select your date of birth.',
+                                  style: descriptionStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.date_range,
+                                            size: 18.0,
+                                            color: backgroundColor,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                              '${customFormat2.format(selectedDate)}',
+                                              style: subTitleStyle),
+                                        ],
+                                      ),
+                                    ),
+                                    Text('Change', style: subTitleStyle),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onPressed: () => showPicker(context),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Gender",
+                          style: subTitleStyle1,
+                        ),
+                        Radio(
+                          value: 1,
+                          groupValue: group,
+                          onChanged: (T) {
+                            print(T);
+                            setState(() {
+                              group = T;
+                            });
+                          },
+                        ),
+                        Text(
+                          "Male",
+                          style: descriptionStyleDarkBlur2,
+                        ),
+                        Radio(
+                          value: 2,
+                          groupValue: group,
+                          onChanged: (T) {
+                            print(T);
+                            setState(() {
+                              group = T;
+                            });
+                          },
+                        ),
+                        Text(
+                          "Female",
+                          style: descriptionStyleDarkBlur2,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 25.0),
+                    ToDoButton(
+                      assetName: '',
+                      text: 'Register',
+                      textColor: Colors.white,
+                      backgroundColor: activeButtonBackgroundColor,
+                      onPressed: () async {
+                        if (_formKey.currentState.validate() &&
+                            selectedRole != null &&
+                            selectedConstructionId != null) {
+                          _formKey.currentState.save();
 
-                  ),
-                  SizedBox(height: 5.0),
-                  Row(
-                    children: <Widget>[
-                      SizedBox(width: 10,),
-                      Text("Gender",style: subTitleStyle1,),
-                      Radio(
-                        value: 1,
-                        groupValue: group,
-                        onChanged: (T){
-                          print(T);
+                          var prefs = await SharedPreferences.getInstance();
+                          prefs.setString("userRole", selectedRole);
+
+                          try {
+                            await Firestore.instance
+                                .collection('userData')
+                                .document(widget.user.uid)
+                                .updateData({
+                              'name': _usernameController.text,
+                              'role': selectedRole,
+                              'construction_site': selectedConstructionId,
+                              'date_of_birth': "",
+                              "gender": group,
+                              "token": deviceToken,
+                              'latitude': currentLocation.latitude,
+                              'longitude': currentLocation.longitude,
+                            });
+                            Navigator.pop(context);
+                          } catch (err) {
+                            setState(() {
+                              // isProcessing = false;
+                              // error = err;
+                            });
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                // isProcessing = false;
+                              });
+                            }
+                          }
+                        } else {
                           setState(() {
-                            group=T;
+                            validated = true;
                           });
-                        },
-                      ),
-                      Text("Male",style: descriptionStyleDarkBlur2,),
-                      Radio(
-                        value: 2,
-                        groupValue: group,
-                        onChanged: (T){
-                          print(T);
-                          setState(() {
-                            group=T;
-                          });
-                        },
-                      ),
-                      Text("Female",style: descriptionStyleDarkBlur2,),
-                    ],
-                  ),
-                  SizedBox(height: 25.0),
-                  ToDoButton(
-                    assetName: 'images/googl-logo.png',
-                    text: 'Register',
-                    textColor: Colors.white,
-                    backgroundColor: activeButtonBackgroundColor,
-                    onPressed: (){
-                      GoToPage(context,HomePage());
-                    },
-                    //onPressed: model.canSubmit ? () => _imageUpload() : null,
-                  ),
-                  SizedBox(height: 50.0),
-                ],
+                        }
+                      },
+                      //onPressed: model.canSubmit ? () => _imageUpload() : null,
+                    ),
+                    SizedBox(height: 50.0),
+                  ],
+                ),
               ),
             ],
           ),
