@@ -7,7 +7,6 @@ import 'package:bhavaniconnect/common_widgets/platform_alert/platform_exception_
 import 'package:bhavaniconnect/home_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/login_screens/otp_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/registrtion_screens/sign_up_page.dart';
-import 'package:bhavaniconnect/home_screens/authentication_screen/registrtion_screens/sign_up_page_new.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -204,7 +203,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
           },
           codeSent:
               smsOTPSent, // WHEN CODE SENT THEN WE OPEN DIALOG TO ENTER OTP.
-          timeout: const Duration(seconds: 20),
+          timeout: const Duration(seconds: 90),
           verificationCompleted: (AuthCredential phoneAuthCredential) {
             print(phoneAuthCredential);
           },

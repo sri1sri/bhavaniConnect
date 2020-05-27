@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/button_widget/to_do_button.dart';
 import 'package:bhavaniconnect/common_widgets/image_widget/avatar_selector.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
