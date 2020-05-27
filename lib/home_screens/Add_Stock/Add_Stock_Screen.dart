@@ -54,7 +54,9 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
   getUserRoles() async {
     var prefs = await SharedPreferences.getInstance();
     String role = prefs.getString("userRole");
-    userRole = userRoleValues[role];
+    setState(() {
+      userRole = userRoleValues[role];
+    });
   }
 
   handleSubmit() async {
