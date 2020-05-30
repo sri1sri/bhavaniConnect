@@ -5,16 +5,18 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Stock_Register/ViewDataCsv.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_extend/share_extend.dart';
 
 class StockDataList extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
+  final String constructionId;
+  final String constructionSite;
   final String dealerId;
   final String categoryId;
   final String itemId;
@@ -25,6 +27,8 @@ class StockDataList extends StatefulWidget {
   const StockDataList(
       this.startDate,
       this.endDate,
+      this.constructionId,
+      this.constructionSite,
       this.dealerId,
       this.categoryId,
       this.itemId,
@@ -62,6 +66,7 @@ class _StockDataList extends State<StockDataList> {
     super.initState();
     Firestore.instance
         .collection("stockRegister")
+        .where("construction.constructionId", isEqualTo: widget.constructionId)
         .where("category.categoryId", isEqualTo: widget.categoryId)
         .where("item.itemId", isEqualTo: widget.itemId)
         .where("dealer.dealerId", isEqualTo: widget.dealerId)
@@ -114,30 +119,36 @@ class _StockDataList extends State<StockDataList> {
                     SizedBox(
                       height: 5,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.dealerName,
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: widget.constructionSite ?? "All",
+                            ),
+                            TextSpan(
+                              text: " | ",
+                            ),
+                            TextSpan(
+                              text: widget.dealerName ?? "All",
+                            ),
+                            TextSpan(
+                              text: " | ",
+                            ),
+                            TextSpan(
+                              text: widget.itemName ?? "All",
+                            ),
+                            TextSpan(
+                              text: " | ",
+                            ),
+                            TextSpan(
+                              text: widget.categoryName ?? "All",
+                            ),
+                          ],
                           style: descriptionStyleDarkBlur2,
                         ),
-                        Text(
-                          " | ",
-                          style: descriptionStyleDarkBlur2,
-                        ),
-                        Text(
-                          widget.itemName,
-                          style: descriptionStyleDarkBlur2,
-                        ),
-                        Text(
-                          " | ",
-                          style: descriptionStyleDarkBlur2,
-                        ),
-                        Text(
-                          widget.categoryName,
-                          style: descriptionStyleDarkBlur2,
-                        )
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -161,6 +172,10 @@ class _StockDataList extends State<StockDataList> {
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error),
+                        );
                       } else {
                         List<DocumentSnapshot> result = snapshot.data.documents;
 
@@ -524,11 +539,11 @@ class _StockDataList extends State<StockDataList> {
     // \r\n as eol.
     await file.writeAsString(csv);
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => LoadAndViewCsvPage(path: path),
-      ),
-    );
+    shareFile(path);
+  }
+
+  shareFile(String path) async {
+    ShareExtend.share(path, "file");
   }
 }
 

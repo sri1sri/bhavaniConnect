@@ -198,76 +198,74 @@ class _StockFilter extends State<StockFilter> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Text(
-                              //   "Construction Site",
-                              //   style: titleStyle,
-                              // ),
-                              // SizedBox(
-                              //   height: 15,
-                              // ),
-                              // StreamBuilder(
-                              //   stream: Firestore.instance
-                              //       .collection("constructionSite")
-                              //       .snapshots(),
-                              //   builder: (context,
-                              //       AsyncSnapshot<QuerySnapshot> snapshot) {
-                              //     if (!snapshot.hasData) {
-                              //       return Center(
-                              //           child: CircularProgressIndicator());
-                              //     } else {
-                              //       List<String> items = snapshot.data.documents
-                              //           .map((e) => (e.documentID.toString()))
-                              //           .toList();
-                              //       if (selectedConstructionId != null) {
-                              //         selectedConstructionSite = snapshot
-                              //             .data.documents
-                              //             .firstWhere((element) =>
-                              //                 element.documentID ==
-                              //                 selectedConstructionId)['name'];
-                              //       }
+                              Text(
+                                "Construction Site",
+                                style: titleStyle,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              StreamBuilder(
+                                stream: Firestore.instance
+                                    .collection("constructionSite")
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    List<String> items = snapshot.data.documents
+                                        .map((e) => (e.documentID.toString()))
+                                        .toList();
+                                    if (selectedConstructionId != null) {
+                                      selectedConstructionSite = snapshot
+                                          .data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              selectedConstructionId)['name'];
+                                    }
 
-                              //       return DropdownSearch(
-                              //         showSelectedItem: true,
-                              //         maxHeight: 400,
-                              //         mode: Mode.MENU,
-                              //         items: items,
-                              //         dropdownItemBuilder:
-                              //             (context, value, isTrue) {
-                              //           return ListTile(
-                              //             title: Text(snapshot.data.documents
-                              //                 .firstWhere((element) =>
-                              //                     element.documentID ==
-                              //                     value)['name']
-                              //                 .toString()),
-                              //             selected: isTrue,
-                              //             onTap: () {
-                              //               setState(() {
-                              //                 selectedConstructionSite =
-                              //                     snapshot.data.documents
-                              //                         .firstWhere((element) =>
-                              //                             element.documentID ==
-                              //                             value)['name']
-                              //                         .toString();
-                              //                 selectedConstructionId = value;
-                              //                 print(value);
-                              //                 print(selectedConstructionId);
-                              //               });
-                              //               Navigator.of(context).pop();
-                              //             },
-                              //           );
-                              //         },
-                              //         label: "Construction Site",
-                              //         onChanged: (value) {},
-                              //         selectedItem: selectedConstructionSite ??
-                              //             "Choose Construction Site",
-                              //         showSearchBox: true,
-                              //       );
-                              //     }
-                              //   },
-                              // ),
-                              // SizedBox(
-                              //   height: 20,
-                              // ),
+                                    return DropdownSearch(
+                                      showSelectedItem: true,
+                                      maxHeight: 400,
+                                      mode: Mode.MENU,
+                                      items: items,
+                                      dropdownItemBuilder:
+                                          (context, value, isTrue) {
+                                        return ListTile(
+                                          title: Text(snapshot.data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString()),
+                                          selected: isTrue,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedConstructionSite =
+                                                  snapshot.data.documents
+                                                      .firstWhere((element) =>
+                                                          element.documentID ==
+                                                          value)['name']
+                                                      .toString();
+                                              selectedConstructionId = value;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      label: "Construction Site",
+                                      onChanged: (value) {},
+                                      selectedItem: selectedConstructionSite ??
+                                          "All construction sites selected",
+                                      showSearchBox: true,
+                                    );
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               Text(
                                 "Dealer Name",
                                 style: titleStyle,
@@ -317,8 +315,6 @@ class _StockFilter extends State<StockFilter> {
                                                       value)['name']
                                                   .toString();
                                               selectedDealerId = value;
-                                              print(value);
-                                              print(selectedDealerId);
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -327,17 +323,8 @@ class _StockFilter extends State<StockFilter> {
                                       label: "Dealer Name",
                                       onChanged: (value) {},
                                       selectedItem: selectedDealer ??
-                                          "Choose Dealer Name",
+                                          "All dealer selected",
                                       showSearchBox: true,
-                                      validate: (value) {
-                                        if (validated &&
-                                            (selectedCategory == null ||
-                                                selectedCategory.isEmpty)) {
-                                          return "Dealer cannot be empty";
-                                        } else {
-                                          return null;
-                                        }
-                                      },
                                     );
                                   }
                                 },
@@ -402,18 +389,9 @@ class _StockFilter extends State<StockFilter> {
                                       },
                                       label: "Category",
                                       onChanged: (value) {},
-                                      selectedItem:
-                                          selectedCategory ?? "Choose Category",
+                                      selectedItem: selectedCategory ??
+                                          "All category selected",
                                       showSearchBox: true,
-                                      validate: (value) {
-                                        if (validated &&
-                                            (selectedCategory == null ||
-                                                selectedCategory.isEmpty)) {
-                                          return "Category cannot be empty";
-                                        } else {
-                                          return null;
-                                        }
-                                      },
                                     );
                                   }
                                 },
@@ -479,17 +457,17 @@ class _StockFilter extends State<StockFilter> {
                                       label: "Item Name",
                                       onChanged: (value) {},
                                       selectedItem:
-                                          selectedItem ?? "Choose Item Name",
+                                          selectedItem ?? "All item selected",
                                       showSearchBox: true,
-                                      validate: (value) {
-                                        if (validated &&
-                                            (selectedItem == null ||
-                                                selectedItem.isEmpty)) {
-                                          return "Item Description cannot be empty";
-                                        } else {
-                                          return null;
-                                        }
-                                      },
+                                      // validate: (value) {
+                                      //   if (validated &&
+                                      //       (selectedItem == null ||
+                                      //           selectedItem.isEmpty)) {
+                                      //     return "Item Description cannot be empty";
+                                      //   } else {
+                                      //     return null;
+                                      //   }
+                                      // },
                                     );
                                   }
                                 },
@@ -600,16 +578,15 @@ class _StockFilter extends State<StockFilter> {
                                   //     selectedDealerId,
                                   //     selectedCategoryId,
                                   //     selectedItemId);
-                                  if (_formKey.currentState.validate() &&
-                                      selectedDealerId != null &&
-                                      selectedCategoryId != null &&
-                                      selectedItemId != null) {
+                                  if (_formKey.currentState.validate()) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => StockDataList(
                                           selectedDateFrom,
                                           selectedDateTo,
+                                          selectedConstructionId,
+                                          selectedConstructionSite,
                                           selectedDealerId,
                                           selectedCategoryId,
                                           selectedItemId,
