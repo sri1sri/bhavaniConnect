@@ -39,7 +39,7 @@ class _StockFilter extends State<StockFilter> {
   DateTime selectedDateFrom;
   DateTime selectedDateTo;
 
-  String selectedConstructionId;
+  String constructionId;
   String selectedConstructionSite;
 
   String selectedDealerId;
@@ -59,46 +59,10 @@ class _StockFilter extends State<StockFilter> {
 
     selectedDateFrom = widget.startDate;
     selectedDateTo = widget.endDate;
-    selectedConstructionId = widget.constructionId;
+    constructionId = widget.constructionId;
     selectedDealerId = widget.dealerId;
     selectedItemId = widget.itemId;
     selectedCategoryId = widget.categoryId;
-  }
-
-  @override
-  void didUpdateWidget(StockFilter oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    if (widget.startDate != oldWidget.startDate) {
-      setState(() {
-        selectedDateFrom = widget.startDate;
-      });
-    }
-    if (widget.endDate != oldWidget.endDate) {
-      setState(() {
-        selectedDateTo = widget.endDate;
-      });
-    }
-    if (widget.constructionId != oldWidget.constructionId) {
-      setState(() {
-        selectedConstructionId = widget.constructionId;
-      });
-    }
-    if (widget.dealerId != oldWidget.dealerId) {
-      setState(() {
-        selectedDealerId = widget.dealerId;
-      });
-    }
-    if (widget.itemId != oldWidget.itemId) {
-      setState(() {
-        selectedItemId = widget.itemId;
-      });
-    }
-    if (widget.categoryId != oldWidget.categoryId) {
-      setState(() {
-        selectedCategoryId = widget.categoryId;
-      });
-    }
   }
 
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
@@ -218,13 +182,6 @@ class _StockFilter extends State<StockFilter> {
                                     List<String> items = snapshot.data.documents
                                         .map((e) => (e.documentID.toString()))
                                         .toList();
-                                    if (selectedConstructionId != null) {
-                                      selectedConstructionSite = snapshot
-                                          .data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              selectedConstructionId)['name'];
-                                    }
 
                                     return DropdownSearch(
                                       showSelectedItem: true,
@@ -248,7 +205,9 @@ class _StockFilter extends State<StockFilter> {
                                                           element.documentID ==
                                                           value)['name']
                                                       .toString();
-                                              selectedConstructionId = value;
+                                              constructionId = value;
+                                              print(constructionId);
+                                              print(selectedConstructionSite);
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -286,12 +245,7 @@ class _StockFilter extends State<StockFilter> {
                                     List<String> items = snapshot.data.documents
                                         .map((e) => (e.documentID.toString()))
                                         .toList();
-                                    if (selectedDealer != null) {
-                                      selectedDealer = snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              selectedDealerId)['name'];
-                                    }
+
                                     return DropdownSearch(
                                       showSelectedItem: true,
                                       maxHeight: 400,
@@ -352,13 +306,7 @@ class _StockFilter extends State<StockFilter> {
                                     List<String> items = snapshot.data.documents
                                         .map((e) => (e.documentID.toString()))
                                         .toList();
-                                    if (selectedCategory != null) {
-                                      selectedCategory = snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              selectedCategoryId)['name']
-                                          .toString();
-                                    }
+
                                     return DropdownSearch(
                                       showSelectedItem: true,
                                       maxHeight: 400,
@@ -419,13 +367,7 @@ class _StockFilter extends State<StockFilter> {
                                     List<String> items = snapshot.data.documents
                                         .map((e) => (e.documentID.toString()))
                                         .toList();
-                                    if (selectedItem != null) {
-                                      selectedItem = snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              selectedItemId)['name']
-                                          .toString();
-                                    }
+
                                     return DropdownSearch(
                                       showSelectedItem: true,
                                       maxHeight: 400,
@@ -579,13 +521,16 @@ class _StockFilter extends State<StockFilter> {
                                   //     selectedCategoryId,
                                   //     selectedItemId);
                                   if (_formKey.currentState.validate()) {
+                                    print(constructionId.runtimeType);
+                                    print(selectedConstructionSite);
+                                    print(selectedConstructionSite.runtimeType);
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => StockDataList(
                                           selectedDateFrom,
                                           selectedDateTo,
-                                          selectedConstructionId,
+                                          constructionId,
                                           selectedConstructionSite,
                                           selectedDealerId,
                                           selectedCategoryId,

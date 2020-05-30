@@ -64,6 +64,8 @@ class _StockDataList extends State<StockDataList> {
   @override
   void initState() {
     super.initState();
+    print(widget.constructionId);
+    print('construction Id');
     Firestore.instance
         .collection("stockRegister")
         .where("construction.constructionId", isEqualTo: widget.constructionId)
@@ -119,7 +121,7 @@ class _StockDataList extends State<StockDataList> {
                     SizedBox(
                       height: 5,
                     ),
-                    Container(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
                       child: RichText(
                         text: TextSpan(
@@ -149,6 +151,9 @@ class _StockDataList extends State<StockDataList> {
                           style: descriptionStyleDarkBlur2,
                         ),
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                     ),
                   ],
                 ),
@@ -474,7 +479,15 @@ class _StockDataList extends State<StockDataList> {
   }
 
   Future<void> _generateCSVAndView(context, documents) async {
-    List<DocumentSnapshot> data = documents;
+    QuerySnapshot data = await Firestore.instance
+        .collection("stockRegister")
+        .where("category.categoryId", isEqualTo: widget.categoryId)
+        .where("item.itemId", isEqualTo: widget.itemId)
+        .where("dealer.dealerId", isEqualTo: widget.dealerId)
+        .where("added_on", isGreaterThan: widget.startDate)
+        .where("added_on", isLessThan: widget.endDate)
+        .orderBy('added_on', descending: true)
+        .getDocuments();
     int i = 0;
     List<List<String>> csvData = [
       // headers
@@ -499,9 +512,9 @@ class _StockDataList extends State<StockDataList> {
         "Remarks"
       ],
       // data
-      ...data.map((result) {
+      ...data.documents.map((result) {
         i++;
-        [
+        return [
           i.toString(),
           DateTimeUtils.slashDateFormat(
               (result['added_on'] as Timestamp).toDate()),
