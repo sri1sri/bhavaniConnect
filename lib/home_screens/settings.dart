@@ -105,8 +105,7 @@ class _F_SettingsPageState extends State<F_SettingsPage> {
                       children: <Widget>[
                         RaisedButton(
                           onPressed: () {
-                            FirebaseAuth.instance.signOut();
-                            Navigator.of(context).pop();
+                            _logOut();
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(80.0)),
@@ -157,6 +156,31 @@ class _F_SettingsPageState extends State<F_SettingsPage> {
         ),
       ),
     );
+  }
+
+  _logOut() {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              content: const Text('Are you sure you need to logout?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('Yes Sure'),
+                  onPressed: () async {
+                    FirebaseAuth.instance.signOut();
+
+                    Navigator.of(context)
+                        .popUntil((r) => !r.navigator.canPop());
+                  },
+                ),
+                FlatButton(
+                  child: const Text("No Don't"),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+              ],
+            ));
   }
 
   Widget _reportAnIssue() {

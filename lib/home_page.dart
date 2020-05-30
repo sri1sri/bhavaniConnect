@@ -40,10 +40,10 @@ class _HomePageState extends State<HomePage> {
 
     switch (currentIndex) {
       case 0:
-        child = Dashboard();
+        child = Dashboard(currentUserId: widget.currentUserId);
         break;
       case 1:
-        child = ProfilePage();
+        child = ProfilePage(widget.currentUserId);
         break;
     }
     return Scaffold(

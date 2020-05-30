@@ -1,39 +1,60 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Stock_Register/AddNewInvoice.dart';
 import 'package:bhavaniconnect/home_screens/Stock_Register/Stock_Filter.dart';
 import 'package:bhavaniconnect/home_screens/Stock_Register/detail_description.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+class ShowAllInvoice extends StatefulWidget {
+  final String currentUserId;
 
+  const ShowAllInvoice({Key key, this.currentUserId}) : super(key: key);
 
-class ShowAllInvoice extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_ShowAllInvoice(),
-    );
+  _ShowAllInvoice createState() => _ShowAllInvoice();
+}
+
+class _ShowAllInvoice extends State<ShowAllInvoice> {
+  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
+  DateTime endFilterDate =
+      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
+
+  String constructionSiteId;
+  String categoryId;
+  String itemId;
+  String dealerId;
+
+  UserRoles userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserRoles();
   }
-}
 
-class F_ShowAllInvoice extends StatefulWidget {
-  @override
-  _F_ShowAllInvoice createState() => _F_ShowAllInvoice();
-}
+  getUserRoles() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    setState(() {
+      userRole = userRoleValues[role];
+    });
+  }
 
-class _F_ShowAllInvoice extends State<F_ShowAllInvoice> {
   int _n = 0;
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -49,184 +70,115 @@ class _F_ShowAllInvoice extends State<F_ShowAllInvoice> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Icon(Icons.search,size: 25,color: Colors.white,),
-          rightAction: (){
+          rightActionBar: userRole != null &&
+                  (userRole == UserRoles.Admin ||
+                      userRole == UserRoles.StoreManager ||
+                      userRole == UserRoles.Accountant ||
+                      userRole == UserRoles.Manager)
+              ? Icon(
+                  Icons.search,
+                  size: 25,
+                  color: Colors.white,
+                )
+              : Container(height: 0, width: 0),
+          rightAction: () {
             GoToPage(
                 context,
                 StockFilter(
+                  startDate: startFilterDate,
+                  endDate: endFilterDate,
+                  categoryId: categoryId,
+                  dealerId: dealerId,
+                  itemId: itemId,
+                  constructionId: constructionSiteId,
+                  returnFunction: (startDate, endDate, constructionId, dealerId,
+                      categoryId, itemId) {
+                    setState(() {
+                      startFilterDate = startDate;
+                      endFilterDate = endDate;
+                      constructionSiteId = constructionSiteId;
+                      dealerId = dealerId;
+                      categoryId = categoryId;
+                      itemId = itemId;
+                    });
+                  },
                 ));
           },
           primaryText: 'Stock Register',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 20,),
-//                SingleChildScrollView(
-//                  scrollDirection: Axis.horizontal,
-//                  child: DataTable(
-//                    onSelectAll: (b) {},
-//                    sortAscending: true,
-//                    showCheckboxColumn: false,
-//                    dataRowHeight: 70.0,
-//                    columns: <DataColumn>[
-//                      DataColumn(label: Text("S.No.",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Created On",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Created By",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Purchased Date",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Site name",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Item Description",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Category",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Uom",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Dealer Name",style: subTitleStyle1,),),
-//                      DataColumn(label: Text("Invoice No.",style: subTitleStyle1,),),
-////                      DataColumn(label: Text("Received Quantity",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Issued Quantity",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Balance Quantity",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Rate",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("Sub Total",style: subTitleStyle1,)),
-////                      DataColumn(label: Text("GST Amount",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Total Amount",style: subTitleStyle1,)),
-//                      //DataColumn(label: Text("Remarks",style: subTitleStyle1,)),
-//                    ],
-//                    rows: items
-//                        .map(
-//                          (itemRow) => DataRow(onSelectChanged: (b) {GoToPage(
-//                          context,
-//                          DetailDescription());},
-//                        cells: [
-//                          DataCell(
-//                            Text(itemRow.slNo,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-////                          DataCell(
-////                            Text(itemRow.createdOn,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.createdBy,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-//                          DataCell(
-//                            Text(itemRow.date,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.site,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.itemDescription,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.category,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-////                          DataCell(
-////                            Text(itemRow.umo,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.supplierName,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-//                          DataCell(
-//                            Text(itemRow.invoiceNo,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-////                          DataCell(
-////                            Text(itemRow.receivedQty,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.issuedQty,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.balanceQty,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.rate,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.subTotal,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-////                          DataCell(
-////                            Text(itemRow.gstAmount,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-//                          DataCell(
-//                            Text(itemRow.totalAmt,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-////                          DataCell(
-////                            Text(itemRow.remarks,style:descriptionStyleDark,),
-////                            showEditIcon: false,
-////                            placeholder: false,
-////                          ),
-//                        ],
-//                      ),
-//                    )
-//                        .toList(),
-//                  ),
-//                ),
-                StockRegister(size, context,"29 Oct 2020","Bhavani Vivan","28 Tons of TMT rods with steel blend.","Iron/Steel","MA6578HB","34,732.00"),
-                StockRegister(size, context,"14 Nov 2020","Bhavani Aravindham","700 Plastic PVC Pipes with holders.","Plastics","F63GV374","65,344.00"),
-                StockRegister(size, context,"29 Oct 2020","Bhavani Vivan","28 Tons of TMT rods with steel blend.","Iron/Steel","MA6578HB","34,732.00"),
-                StockRegister(size, context,"14 Nov 2020","Bhavani Aravindham","700 Plastic PVC Pipes with holders.","Plastics","F63GV374","65,344.00"),
-                SizedBox(height: 500,)
-              ],
-            ),
-          ),
+          child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection("stockRegister")
+                  .where("construction_site.constructionId",
+                      isEqualTo: constructionSiteId)
+                  .where("category.categoryId", isEqualTo: categoryId)
+                  .where("item.itemId", isEqualTo: itemId)
+                  .where("dealer.dealerId", isEqualTo: dealerId)
+                  .where("added_on", isGreaterThan: startFilterDate)
+                  .where("added_on", isLessThan: endFilterDate)
+                  .orderBy('added_on', descending: true)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  var result = snapshot.data.documents;
+                  return ListView.builder(
+                    itemCount: result.length,
+                    itemBuilder: (context, index) {
+                      return StockRegister(
+                          size,
+                          context,
+                          result[index].documentID,
+                          DateTimeUtils.formatDayMonthYear(
+                              (result[index]['added_on'] as Timestamp)
+                                  .toDate()),
+                          result[index]['construction_site']
+                              ['constructionSite'],
+                          "28 Tons of TMT rods with steel blend.",
+                          result[index]['category']['categoryName'],
+                          result[index]['invoice_no'],
+                          double.parse(result[index]['total_amount_gst'])
+                              .toStringAsFixed(2));
+                    },
+                  );
+                }
+              }),
         ),
       ),
-      floatingActionButton:  FloatingActionButton(
-        onPressed: () {
-          GoToPage(
-              context,
-              AddInvoice(
-              ));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: backgroundColor,
-      ),
+      floatingActionButton: userRole != null &&
+              (userRole == UserRoles.Admin ||
+                  userRole == UserRoles.StoreManager ||
+                  userRole == UserRoles.Manager)
+          ? FloatingActionButton(
+              onPressed: () {
+                GoToPage(
+                    context,
+                    AddInvoice(
+                      currentUserId: widget.currentUserId,
+                    ));
+              },
+              child: Icon(Icons.add),
+              backgroundColor: backgroundColor,
+            )
+          : null,
     );
   }
 }
@@ -288,13 +240,11 @@ var items = <ItemInfo>[
       receivedQty: '440',
       issuedQty: '340',
       balanceQty: '100',
-      rate:'₹4732.00',
+      rate: '₹4732.00',
       subTotal: '₹4732.00',
       gstAmount: '₹32.00',
       totalAmt: '₹34,732.00',
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '2',
       createdOn: '03/Nov/2020',
@@ -309,13 +259,11 @@ var items = <ItemInfo>[
       receivedQty: '440',
       issuedQty: '340',
       balanceQty: '100',
-      rate:'₹4732.00',
+      rate: '₹4732.00',
       subTotal: '₹4732.00',
       gstAmount: '₹32.00',
       totalAmt: '₹34,732.00',
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '3',
       createdOn: '03/Nov/2020',
@@ -330,13 +278,11 @@ var items = <ItemInfo>[
       receivedQty: '440',
       issuedQty: '340',
       balanceQty: '100',
-      rate:'₹4732.00',
+      rate: '₹4732.00',
       subTotal: '₹4732.00',
       gstAmount: '₹32.00',
       totalAmt: '₹34,732.00',
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '4',
       createdOn: '03/Nov/2020',
@@ -351,13 +297,11 @@ var items = <ItemInfo>[
       receivedQty: '440',
       issuedQty: '340',
       balanceQty: '100',
-      rate:'₹4732.00',
+      rate: '₹4732.00',
       subTotal: '₹4732.00',
       gstAmount: '₹32.00',
       totalAmt: '₹34,732.00',
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '5',
       createdOn: '03/Nov/2020',
@@ -372,35 +316,42 @@ var items = <ItemInfo>[
       receivedQty: '440',
       issuedQty: '340',
       balanceQty: '100',
-      rate:'₹4732.00',
+      rate: '₹4732.00',
       subTotal: '₹4732.00',
       gstAmount: '₹32.00',
       totalAmt: '₹34,732.00',
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
 ];
 
-Widget StockRegister(Size size, BuildContext context,String date,String site,String description,String category,String invoiceNo,String total)
-{
-  return  GestureDetector(
-    onTap: (){
-      GoToPage(context,DetailDescription());
+Widget StockRegister(
+    Size size,
+    BuildContext context,
+    String documentId,
+    String date,
+    String site,
+    String description,
+    String category,
+    String invoiceNo,
+    String total) {
+  return GestureDetector(
+    onTap: () {
+      GoToPage(
+          context,
+          DetailDescription(
+            documentId: documentId,
+          ));
     },
     child: Padding(
-      padding: const EdgeInsets.only(right:15.0,left: 15,top: 20),
+      padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
       child: Container(
         width: double.infinity,
         height: 210,
         child: Stack(
           children: <Widget>[
             Positioned(
-              right:15,
+              right: 15,
               top: 0,
-              child:Text(
-                  date,
-                  style: descriptionStyleDarkBlur3
-              ),
+              child: Text(date, style: descriptionStyleDarkBlur3),
             ),
             Positioned(
               bottom: 0,
@@ -421,23 +372,15 @@ Widget StockRegister(Size size, BuildContext context,String date,String site,Str
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                        site,
-                      style: subTitleStyle1
-                    ),
+                    Text(site, style: subTitleStyle1),
                     SizedBox(height: 10),
                     Expanded(
-                      child: Text(
-                          description,
+                      child: Text(description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: subTitleStyleDark1
-                      ),
+                          style: subTitleStyleDark1),
                     ),
-                    Text(
-                        category,
-                      style: subTitleStyle
-                    ),
+                    Text(category, style: subTitleStyle),
                     SizedBox(height: 10),
                     Text(
                       "Invoice No.:$invoiceNo",
@@ -464,10 +407,7 @@ Widget StockRegister(Size size, BuildContext context,String date,String site,Str
                       bottomRight: Radius.circular(24),
                     ),
                   ),
-                  child: Text(
-                  "₹ $total",
-                    style: subTitleStyleLight
-                  ),
+                  child: Text("₹ $total", style: subTitleStyleLight),
                 ),
               ),
             ),

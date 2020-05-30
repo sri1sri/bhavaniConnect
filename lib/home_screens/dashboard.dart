@@ -16,23 +16,15 @@ import 'Add_Stock/Stock_Screen.dart';
 import 'Concrete_Entries/Concrete_HomePage.dart';
 import 'Labour_Report/Daily_labour_Report.dart';
 
+class Dashboard extends StatefulWidget {
+  final String currentUserId;
 
-
-class Dashboard extends StatelessWidget {
+  const Dashboard({Key key, this.currentUserId}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_Dashboard(),
-    );
-  }
+  _Dashboard createState() => _Dashboard();
 }
 
-class F_Dashboard extends StatefulWidget {
-  @override
-  _F_Dashboard createState() => _F_Dashboard();
-}
-
-class _F_Dashboard extends State<F_Dashboard> {
+class _Dashboard extends State<Dashboard> {
   var features = [
     "Approvals",
     "Catalog",
@@ -62,10 +54,9 @@ class _F_Dashboard extends State<F_Dashboard> {
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -80,26 +71,31 @@ class _F_Dashboard extends State<F_Dashboard> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(60),
+        preferredSize: Size.fromHeight(60),
         child: CustomAppBarDark(
           primaryText: 'Home',
           tabBarWidget: null,
-          leftActionBar: Icon(Icons.notifications,size: 30,color: Colors.transparent,),
-          rightActionBar: Icon(Icons.notifications,size: 25,color: Colors.white,),
-          rightAction: (){
+          leftActionBar: Icon(
+            Icons.notifications,
+            size: 30,
+            color: Colors.transparent,
+          ),
+          rightActionBar: Icon(
+            Icons.notifications,
+            size: 25,
+            color: Colors.white,
+          ),
+          rightAction: () {
             GoToPage(
               context,
               NotificationPage(),
             );
           },
-
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           height: double.infinity,
           color: Colors.white,
@@ -110,11 +106,12 @@ class _F_Dashboard extends State<F_Dashboard> {
                 Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Container(
-                    height: MediaQuery.of(context).size.height/1.37,
+                    height: MediaQuery.of(context).size.height / 1.37,
                     child: Expanded(
                       child: GridView.builder(
                         itemCount: features.length,
-                        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            new SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 0.99,
                           mainAxisSpacing: 2.0,
@@ -126,27 +123,33 @@ class _F_Dashboard extends State<F_Dashboard> {
                               elevation: 0.0,
                               child: new Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.white,
-                                    boxShadow: [new BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 6.0,
-                                      spreadRadius: 5
-                                ),]
-                                ),
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      new BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 6.0,
+                                          spreadRadius: 5),
+                                    ]),
                                 alignment: Alignment.center,
                                 margin: new EdgeInsets.only(
-                                    top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
+                                    top: 5.0,
+                                    bottom: 5.0,
+                                    left: 5.0,
+                                    right: 5.0),
                                 child: new Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Image.asset(
-                                      F_image[index],height: 60,
+                                      F_image[index],
+                                      height: 60,
                                     ),
                                     new Text(
                                       features[index],
-                                      style: subTitleStyle,textAlign: TextAlign.center,
+                                      style: subTitleStyle,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
@@ -167,10 +170,7 @@ class _F_Dashboard extends State<F_Dashboard> {
 //
                                 case 'Approvals':
                                   {
-                                    GoToPage(
-                                        context,
-                                        GoodsScreen(
-                                        ));
+                                    GoToPage(context, GoodsScreen());
                                   }
                                   break;
 //                        case 'Store':
@@ -203,40 +203,36 @@ class _F_Dashboard extends State<F_Dashboard> {
                                   break;
                                 case 'Catalog':
                                   {
-                                    GoToPage(
-                                        context,
-                                        StockScreen(
-                                        ));
+                                    GoToPage(context, StockScreen());
                                   }
                                   break;
                                 case 'Vehicle Entries':
                                   {
-                                    GoToPage(
-                                        context,DaySelection());
+                                    GoToPage(context, DaySelection());
                                   }
                                   break;
                                 case 'Stock Register':
                                   {
                                     GoToPage(
-                                        context,ShowAllInvoice());
+                                        context,
+                                        ShowAllInvoice(
+                                            currentUserId:
+                                                widget.currentUserId));
                                   }
                                   break;
                                 case 'Site Activities':
                                   {
-                                    GoToPage(
-                                        context,SiteActivities());
+                                    GoToPage(context, SiteActivities());
                                   }
                                   break;
                                 case 'Concrete Entries':
                                   {
-                                    GoToPage(
-                                        context,ConcreteEntries());
+                                    GoToPage(context, ConcreteEntries());
                                   }
                                   break;
                                 case 'Labour Report':
                                   {
-                                    GoToPage(
-                                        context,LabourEntries());
+                                    GoToPage(context, LabourEntries());
                                   }
                                   break;
 
@@ -251,7 +247,9 @@ class _F_Dashboard extends State<F_Dashboard> {
                     ),
                   ),
                 ),
-                SizedBox(height: 500,)
+                SizedBox(
+                  height: 500,
+                )
               ],
             ),
           ),
@@ -260,4 +258,3 @@ class _F_Dashboard extends State<F_Dashboard> {
     );
   }
 }
-

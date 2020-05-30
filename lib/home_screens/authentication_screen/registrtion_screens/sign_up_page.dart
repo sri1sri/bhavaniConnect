@@ -28,7 +28,8 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   int group = 1;
   File _profilePic;
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate;
+  DateTime initialDate = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMMM yyyy");
 
@@ -91,6 +92,7 @@ class _SignUpPageState extends State<SignUpPage> {
       firstDate: DateTime(1930),
       lastDate: DateTime(2010),
     );
+
     if (picked != null) {
       setState(() {
         print(customFormat.format(picked));
@@ -237,7 +239,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             validate: (value) {
                               if (validated &&
                                   (selectedRole == null ||
-                                      selectedRole.isNotEmpty)) {
+                                      selectedRole.isEmpty)) {
                                 return "Employee Role cannot be empty";
                               } else {
                                 return null;
@@ -294,8 +296,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             showSearchBox: true,
                             validate: (value) {
                               if (validated &&
-                                  (selectedRole == null ||
-                                      selectedRole.isNotEmpty)) {
+                                  (selectedConstructionSite == null ||
+                                      selectedConstructionSite.isEmpty)) {
                                 return "Construction Site cannot be empty";
                               } else {
                                 return null;
@@ -339,7 +341,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             width: 10,
                                           ),
                                           Text(
-                                              '${customFormat2.format(selectedDate)}',
+                                              '${customFormat2.format(selectedDate ?? initialDate)}',
                                               style: subTitleStyle),
                                         ],
                                       ),
@@ -354,6 +356,21 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           onPressed: () => showPicker(context),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: validated && selectedDate == null,
+                      child: Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: Text(
+                          "Please Select your date of birth.",
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                          textAlign: TextAlign.left,
                         ),
                       ),
                     ),
@@ -406,7 +423,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       onPressed: () async {
                         if (_formKey.currentState.validate() &&
                             selectedRole != null &&
-                            selectedConstructionId != null) {
+                            selectedConstructionId != null &&
+                            selectedDate != null) {
                           _formKey.currentState.save();
 
                           var prefs = await SharedPreferences.getInstance();
@@ -419,8 +437,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                 .updateData({
                               'name': _usernameController.text,
                               'role': selectedRole,
-                              'construction_site': selectedConstructionId,
-                              'date_of_birth': "",
+                              'construction_site': {
+                                "constructionId": selectedConstructionId,
+                                "constructionSite": selectedConstructionSite,
+                              },
+                              'date_of_birth': selectedDate,
                               "gender": group,
                               "token": deviceToken,
                               'latitude': currentLocation.latitude,

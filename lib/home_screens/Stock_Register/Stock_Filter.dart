@@ -1,57 +1,131 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Stock_Register/Stock_Data_List.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+class StockFilter extends StatefulWidget {
+  final DateTime startDate;
+  final DateTime endDate;
+  final String constructionId;
+  final String dealerId;
+  final String categoryId;
+  final String itemId;
+  final Function(DateTime startDate, DateTime endDate, String constructionId,
+      String dealerId, String categoryId, String itemId) returnFunction;
 
+  const StockFilter(
+      {Key key,
+      this.startDate,
+      this.endDate,
+      this.constructionId,
+      this.dealerId,
+      this.itemId,
+      this.categoryId,
+      this.returnFunction})
+      : super(key: key);
 
-class StockFilter extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_StockFilter(),
-    );
+  _StockFilter createState() => _StockFilter();
+}
+
+class _StockFilter extends State<StockFilter> {
+  DateTime selectedDateFrom;
+  DateTime selectedDateTo;
+
+  String selectedConstructionId;
+  String selectedConstructionSite;
+
+  String selectedDealerId;
+  String selectedDealer;
+
+  String selectedItemId;
+  String selectedItem;
+
+  String selectedCategory;
+  String selectedCategoryId;
+
+  bool validated = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectedDateFrom = widget.startDate;
+    selectedDateTo = widget.endDate;
+    selectedConstructionId = widget.constructionId;
+    selectedDealerId = widget.dealerId;
+    selectedItemId = widget.itemId;
+    selectedCategoryId = widget.categoryId;
   }
-}
 
-class F_StockFilter extends StatefulWidget {
   @override
-  _F_StockFilter createState() => _F_StockFilter();
-}
+  void didUpdateWidget(StockFilter oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if (widget.startDate != oldWidget.startDate) {
+      setState(() {
+        selectedDateFrom = widget.startDate;
+      });
+    }
+    if (widget.endDate != oldWidget.endDate) {
+      setState(() {
+        selectedDateTo = widget.endDate;
+      });
+    }
+    if (widget.constructionId != oldWidget.constructionId) {
+      setState(() {
+        selectedConstructionId = widget.constructionId;
+      });
+    }
+    if (widget.dealerId != oldWidget.dealerId) {
+      setState(() {
+        selectedDealerId = widget.dealerId;
+      });
+    }
+    if (widget.itemId != oldWidget.itemId) {
+      setState(() {
+        selectedItemId = widget.itemId;
+      });
+    }
+    if (widget.categoryId != oldWidget.categoryId) {
+      setState(() {
+        selectedCategoryId = widget.categoryId;
+      });
+    }
+  }
 
-class _F_StockFilter extends State<F_StockFilter> {
-
-  DateTime selectedDateFrom = DateTime.now();
-  DateTime selectedDateTo = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDateFrom,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: selectedDateTo,
     );
-    if (pickedFrom != null){
+    if (pickedFrom != null) {
       setState(() {
         print(customFormat.format(pickedFrom));
         selectedDateFrom = pickedFrom;
       });
     }
   }
+
   Future<Null> showPickerTo(BuildContext context) async {
     final DateTime pickedTo = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
-      firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      initialDate: selectedDateTo,
+      firstDate: selectedDateFrom,
+      lastDate: DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1)),
     );
-    if (pickedTo != null){
+    if (pickedTo != null) {
       setState(() {
         print(customFormat.format(pickedTo));
         selectedDateTo = pickedTo;
@@ -64,10 +138,9 @@ class _F_StockFilter extends State<F_StockFilter> {
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -82,25 +155,29 @@ class _F_StockFilter extends State<F_StockFilter> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Container(width: 10,),
-          rightAction: (){
+          rightActionBar: Container(
+            width: 10,
+          ),
+          rightAction: () {
             print('right action bar is pressed in appbar');
           },
           primaryText: 'Search Stock',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           child: SingleChildScrollView(
@@ -113,58 +190,332 @@ class _F_StockFilter extends State<F_StockFilter> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: 50,),
+                        SizedBox(
+                          height: 50,
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Dealer Name",style: titleStyle,),
-                              SizedBox(height: 15,),
-                              DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: ["Vasanth steels", "Sri Cements", "Vamsi Bricks"],
-                                  label: "Dealer Name",
-                                  onChanged: print,
-                                  selectedItem: "Choose Dealer Name",
-                                  showSearchBox: true),
-                              SizedBox(height: 20,),
-                              Text("Category",style: titleStyle,),
-                              SizedBox(height: 15,),
-                              DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: ["Iron", "Steel", "woods","Cement"],
-                                  label: "Category",
-                                  onChanged: print,
-                                  selectedItem: "Choose Category",
-                                  showSearchBox: true),
-                              SizedBox(height: 20,),
-                              Text("Item Name",style: titleStyle,),
-                              SizedBox(height: 15,),
-                              DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: ["Pvc plastic pipes", "8 thread TMT rods", "28 logs of wooden tile"],
-                                  label: "Item Name",
-                                  onChanged: print,
-                                  selectedItem: "Choose Item Name",
-                                  showSearchBox: true),
-                              SizedBox(height: 20,),
+                              // Text(
+                              //   "Construction Site",
+                              //   style: titleStyle,
+                              // ),
+                              // SizedBox(
+                              //   height: 15,
+                              // ),
+                              // StreamBuilder(
+                              //   stream: Firestore.instance
+                              //       .collection("constructionSite")
+                              //       .snapshots(),
+                              //   builder: (context,
+                              //       AsyncSnapshot<QuerySnapshot> snapshot) {
+                              //     if (!snapshot.hasData) {
+                              //       return Center(
+                              //           child: CircularProgressIndicator());
+                              //     } else {
+                              //       List<String> items = snapshot.data.documents
+                              //           .map((e) => (e.documentID.toString()))
+                              //           .toList();
+                              //       if (selectedConstructionId != null) {
+                              //         selectedConstructionSite = snapshot
+                              //             .data.documents
+                              //             .firstWhere((element) =>
+                              //                 element.documentID ==
+                              //                 selectedConstructionId)['name'];
+                              //       }
+
+                              //       return DropdownSearch(
+                              //         showSelectedItem: true,
+                              //         maxHeight: 400,
+                              //         mode: Mode.MENU,
+                              //         items: items,
+                              //         dropdownItemBuilder:
+                              //             (context, value, isTrue) {
+                              //           return ListTile(
+                              //             title: Text(snapshot.data.documents
+                              //                 .firstWhere((element) =>
+                              //                     element.documentID ==
+                              //                     value)['name']
+                              //                 .toString()),
+                              //             selected: isTrue,
+                              //             onTap: () {
+                              //               setState(() {
+                              //                 selectedConstructionSite =
+                              //                     snapshot.data.documents
+                              //                         .firstWhere((element) =>
+                              //                             element.documentID ==
+                              //                             value)['name']
+                              //                         .toString();
+                              //                 selectedConstructionId = value;
+                              //                 print(value);
+                              //                 print(selectedConstructionId);
+                              //               });
+                              //               Navigator.of(context).pop();
+                              //             },
+                              //           );
+                              //         },
+                              //         label: "Construction Site",
+                              //         onChanged: (value) {},
+                              //         selectedItem: selectedConstructionSite ??
+                              //             "Choose Construction Site",
+                              //         showSearchBox: true,
+                              //       );
+                              //     }
+                              //   },
+                              // ),
+                              // SizedBox(
+                              //   height: 20,
+                              // ),
+                              Text(
+                                "Dealer Name",
+                                style: titleStyle,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              StreamBuilder(
+                                stream: Firestore.instance
+                                    .collection("dealer")
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    List<String> items = snapshot.data.documents
+                                        .map((e) => (e.documentID.toString()))
+                                        .toList();
+                                    if (selectedDealer != null) {
+                                      selectedDealer = snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              selectedDealerId)['name'];
+                                    }
+                                    return DropdownSearch(
+                                      showSelectedItem: true,
+                                      maxHeight: 400,
+                                      mode: Mode.MENU,
+                                      items: items,
+                                      dropdownItemBuilder:
+                                          (context, value, isTrue) {
+                                        return ListTile(
+                                          title: Text(snapshot.data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString()),
+                                          selected: isTrue,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedDealer = snapshot
+                                                  .data.documents
+                                                  .firstWhere((element) =>
+                                                      element.documentID ==
+                                                      value)['name']
+                                                  .toString();
+                                              selectedDealerId = value;
+                                              print(value);
+                                              print(selectedDealerId);
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      label: "Dealer Name",
+                                      onChanged: (value) {},
+                                      selectedItem: selectedDealer ??
+                                          "Choose Dealer Name",
+                                      showSearchBox: true,
+                                      validate: (value) {
+                                        if (validated &&
+                                            (selectedCategory == null ||
+                                                selectedCategory.isEmpty)) {
+                                          return "Dealer cannot be empty";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Category",
+                                style: titleStyle,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              StreamBuilder(
+                                stream: Firestore.instance
+                                    .collection("category")
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    List<String> items = snapshot.data.documents
+                                        .map((e) => (e.documentID.toString()))
+                                        .toList();
+                                    if (selectedCategory != null) {
+                                      selectedCategory = snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              selectedCategoryId)['name']
+                                          .toString();
+                                    }
+                                    return DropdownSearch(
+                                      showSelectedItem: true,
+                                      maxHeight: 400,
+                                      mode: Mode.MENU,
+                                      items: items,
+                                      dropdownItemBuilder:
+                                          (context, value, isTrue) {
+                                        return ListTile(
+                                          title: Text(snapshot.data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString()),
+                                          selected: isTrue,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedCategory = snapshot
+                                                  .data.documents
+                                                  .firstWhere((element) =>
+                                                      element.documentID ==
+                                                      value)['name']
+                                                  .toString();
+                                              selectedCategoryId = value;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      label: "Category",
+                                      onChanged: (value) {},
+                                      selectedItem:
+                                          selectedCategory ?? "Choose Category",
+                                      showSearchBox: true,
+                                      validate: (value) {
+                                        if (validated &&
+                                            (selectedCategory == null ||
+                                                selectedCategory.isEmpty)) {
+                                          return "Category cannot be empty";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Item Name",
+                                style: titleStyle,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              StreamBuilder(
+                                stream: Firestore.instance
+                                    .collection("items")
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    List<String> items = snapshot.data.documents
+                                        .map((e) => (e.documentID.toString()))
+                                        .toList();
+                                    if (selectedItem != null) {
+                                      selectedItem = snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              selectedItemId)['name']
+                                          .toString();
+                                    }
+                                    return DropdownSearch(
+                                      showSelectedItem: true,
+                                      maxHeight: 400,
+                                      mode: Mode.MENU,
+                                      items: items,
+                                      dropdownItemBuilder:
+                                          (context, value, isTrue) {
+                                        return ListTile(
+                                          title: Text(snapshot.data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString()),
+                                          selected: isTrue,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedItem = snapshot
+                                                  .data.documents
+                                                  .firstWhere((element) =>
+                                                      element.documentID ==
+                                                      value)['name']
+                                                  .toString();
+                                              selectedItemId = value;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      label: "Item Name",
+                                      onChanged: (value) {},
+                                      selectedItem:
+                                          selectedItem ?? "Choose Item Name",
+                                      showSearchBox: true,
+                                      validate: (value) {
+                                        if (validated &&
+                                            (selectedItem == null ||
+                                                selectedItem.isEmpty)) {
+                                          return "Item Description cannot be empty";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Container(
-                                    width: MediaQuery.of(context).size.width / 2 - 25,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 -
+                                            25,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Text("From",style: titleStyle,),
-                                        SizedBox(height: 15,),
+                                        Text(
+                                          "From",
+                                          style: titleStyle,
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
                                         GestureDetector(
                                           onTap: () => showPickerFrom(context),
                                           child: Container(
@@ -175,26 +526,34 @@ class _F_StockFilter extends State<F_StockFilter> {
                                                   size: 18.0,
                                                   color: backgroundColor,
                                                 ),
-                                                SizedBox(width: 10,),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
                                                 Text(
                                                     '${customFormat2.format(selectedDateFrom)}',
-                                                    style: subTitleStyle
-                                                ),
+                                                    style: subTitleStyle),
                                               ],
                                             ),
                                           ),
                                         ),
-
                                       ],
                                     ),
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width / 2 - 25,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 -
+                                            25,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Text("To",style: titleStyle,),
-                                        SizedBox(height: 15,),
+                                        Text(
+                                          "To",
+                                          style: titleStyle,
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
                                         GestureDetector(
                                           onTap: () => showPickerTo(context),
                                           child: Container(
@@ -205,11 +564,12 @@ class _F_StockFilter extends State<F_StockFilter> {
                                                   size: 18.0,
                                                   color: backgroundColor,
                                                 ),
-                                                SizedBox(width: 10,),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
                                                 Text(
                                                     '${customFormat2.format(selectedDateTo)}',
-                                                    style: subTitleStyle
-                                                ),
+                                                    style: subTitleStyle),
                                               ],
                                             ),
                                           ),
@@ -222,7 +582,9 @@ class _F_StockFilter extends State<F_StockFilter> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 30,),
+                        SizedBox(
+                          height: 30,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -231,10 +593,39 @@ class _F_StockFilter extends State<F_StockFilter> {
                               width: 180,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => StockDataList(),),
-                                  );
+                                  // widget.returnFunction(
+                                  //     selectedDateFrom,
+                                  //     selectedDateTo,
+                                  //     selectedConstructionId,
+                                  //     selectedDealerId,
+                                  //     selectedCategoryId,
+                                  //     selectedItemId);
+                                  if (_formKey.currentState.validate() &&
+                                      selectedDealerId != null &&
+                                      selectedCategoryId != null &&
+                                      selectedItemId != null) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => StockDataList(
+                                          selectedDateFrom,
+                                          selectedDateTo,
+                                          selectedDealerId,
+                                          selectedCategoryId,
+                                          selectedItemId,
+                                          selectedDealer,
+                                          selectedCategory,
+                                          selectedItem,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    setState(() {
+                                      validated = true;
+                                    });
+                                  }
+
+                                  // Navigator.of(context).pop();
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -257,12 +648,13 @@ class _F_StockFilter extends State<F_StockFilter> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 500,),
+                        SizedBox(
+                          height: 500,
+                        ),
                       ],
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -271,4 +663,3 @@ class _F_StockFilter extends State<F_StockFilter> {
     );
   }
 }
-
