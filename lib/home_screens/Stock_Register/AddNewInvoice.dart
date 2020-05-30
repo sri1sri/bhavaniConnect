@@ -932,7 +932,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                     },
                                     'item': {
                                       "itemId": selectedItemId,
-                                      "ItemName": selectedItem,
+                                      "itemName": selectedItem,
                                     },
                                     'category': {
                                       "categoryId": selectedCategoryId,

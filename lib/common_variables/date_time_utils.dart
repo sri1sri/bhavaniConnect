@@ -7,6 +7,8 @@ class DateTimeUtils {
   static final DateFormat _monthDayYearFormat = new DateFormat("MMM dd, yyyy");
   static final DateFormat _firstDayFormat = new DateFormat("MMM dd");
   static final DateFormat _dayMonthYearFormat = new DateFormat("dd MMM yyyy");
+  static final DateFormat _dayMonthYearTimeFormat =
+      new DateFormat("dd MMM yyyy H:mm a");
   static final DateFormat _fullDayFormat = new DateFormat("EEE MMM dd, yyyy");
   static final DateFormat _apiDayFormat = new DateFormat("yyyy-MM-dd");
   static final DateFormat _monthDaytimeFormat =
@@ -28,6 +30,8 @@ class DateTimeUtils {
   static String slashDateFormat(DateTime d) => _slashDateFormat.format(d);
   static String dotDateFormat(DateTime d) => _dotDateFormat.format(d);
   static String dayMonthFormat(DateTime d) => _dayMonthFormat.format(d);
+  static String dayMonthYearTimeFormat(DateTime d) =>
+      _dayMonthYearTimeFormat.format(d);
 
   static const List<String> weekdays = const [
     "Sun",

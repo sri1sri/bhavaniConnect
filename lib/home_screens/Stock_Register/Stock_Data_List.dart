@@ -278,7 +278,7 @@ class _StockDataList extends State<StockDataList> {
                                         .toDate()),
                                 site: item['construction_site']
                                     ['constructionSite'],
-                                itemDescription: item['item']['ItemName'],
+                                itemDescription: item['item']['itemName'],
                                 category: item['category']['categoryName'],
                                 umo: item['unit']['unitName'],
                                 supplierName: item['dealer']['dealerName'],
@@ -494,7 +494,7 @@ class _StockDataList extends State<StockDataList> {
           DateTimeUtils.slashDateFormat(
               (result['purchase_date'] as Timestamp).toDate()),
           result['construction_site']['constructionSite'],
-          result['item']['ItemName'],
+          result['item']['itemName'],
           result['category']['categoryName'],
           result['unit']['unitName'],
           result['dealer']['dealerName'],

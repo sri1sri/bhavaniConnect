@@ -108,7 +108,7 @@ class _DetailDescription extends State<DetailDescription> {
                                           ['constructionSite']),
                                   subtext(
                                     "Item\nDescription",
-                                    result['item']['ItemName'],
+                                    result['item']['itemName'],
                                   ),
                                   subtext("Category",
                                       result['category']['categoryName']),

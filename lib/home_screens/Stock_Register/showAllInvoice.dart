@@ -147,12 +147,12 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
                           size,
                           context,
                           result[index].documentID,
-                          DateTimeUtils.formatDayMonthYear(
+                          DateTimeUtils.dayMonthYearTimeFormat(
                               (result[index]['added_on'] as Timestamp)
                                   .toDate()),
                           result[index]['construction_site']
                               ['constructionSite'],
-                          "28 Tons of TMT rods with steel blend.",
+                          "${result[index]['item']['itemName']} with ${result[index]['category']['categoryName']} blend.",
                           result[index]['category']['categoryName'],
                           result[index]['invoice_no'],
                           double.parse(result[index]['total_amount_gst'])
