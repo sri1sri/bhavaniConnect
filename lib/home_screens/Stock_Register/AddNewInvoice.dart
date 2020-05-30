@@ -912,7 +912,6 @@ class _AddInvoiceState extends State<AddInvoice> {
                                   selectedUnits != null &&
                                   selectedItem != null) {
                                 _formKey.currentState.save();
-                                print('jaip ho');
                                 String documentId =
                                     "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                 try {
@@ -961,6 +960,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                         _totalPriceController.text,
                                     'remarks': _remarkController.text,
                                     "added_on": FieldValue.serverTimestamp(),
+                                    "purchase_date": selectedDate,
                                   });
                                   Navigator.pop(context);
                                 } catch (err) {

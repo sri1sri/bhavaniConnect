@@ -95,8 +95,13 @@ class _DetailDescription extends State<DetailDescription> {
                                       DateTimeUtils.slashDateFormat(
                                           (result['added_on'] as Timestamp)
                                               .toDate())),
-                                  subtext("Created By", "Vasanth (Manager)"),
-                                  subtext("Purchased Date", "29/Oct/2020"),
+                                  subtext("Created By",
+                                      "${result['created_by']['name']}  (${result['created_by']['role']})"),
+                                  subtext(
+                                      "Purchased Date",
+                                      DateTimeUtils.slashDateFormat(
+                                          (result['purchase_date'] as Timestamp)
+                                              .toDate())),
                                   subtext(
                                       "Site",
                                       result['construction_site']
@@ -108,7 +113,8 @@ class _DetailDescription extends State<DetailDescription> {
                                   subtext("Category",
                                       result['category']['categoryName']),
                                   subtext("Uom", result['unit']['unitName']),
-                                  subtext("Supplier name", "Vasanth Steels"),
+                                  subtext("Supplier name",
+                                      result['dealer']['dealerName']),
                                   subtext("Invoice No.", result['invoice_no']),
                                   subtext("Received Quantity",
                                       result['received_quantity']),
