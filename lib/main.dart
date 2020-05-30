@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
 
         var profile = snapshot.data;
 
-        setUserRole(profile['role']);
+        setUserParams(profile);
 
         print(profile);
         if (profile['name'] == null) {
@@ -101,10 +101,13 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  setUserRole(String role) async {
+  setUserParams(Map profile) async {
     var prefs = await SharedPreferences.getInstance();
-    if (role != null) {
-      prefs.setString("userRole", role);
+    if (profile != null && profile['role'] != null) {
+      prefs.setString("userRole", profile['role']);
+    }
+    if (profile != null && profile['name'] != null) {
+      prefs.setString("userName", profile['name']);
     }
   }
 

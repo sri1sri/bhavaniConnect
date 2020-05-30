@@ -138,9 +138,9 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
                 children: <Widget>[
                   userRole != null &&
                           (userRole == UserRoles.Admin ||
-                              userRole == UserRoles.SiteEngineer ||
-                              userRole == UserRoles.Accountant ||
-                              userRole == UserRoles.Securtiy)
+                              userRole == UserRoles.Manager ||
+                              userRole == UserRoles.StoreManager ||
+                              userRole == UserRoles.Supervisor)
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -219,9 +219,9 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
       ),
       floatingActionButton: userRole != null &&
               (userRole == UserRoles.Admin ||
-                  userRole == UserRoles.SiteEngineer ||
-                  userRole == UserRoles.Accountant ||
-                  userRole == UserRoles.Securtiy)
+                  userRole == UserRoles.StoreManager ||
+                  userRole == UserRoles.Manager ||
+                  userRole == UserRoles.Supervisor)
           ? FloatingActionButton(
               onPressed: isEnable ? () => handleSubmit() : null,
               //   onPressed: () {
@@ -288,6 +288,11 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
+      enabled: userRole != null &&
+          (userRole == UserRoles.Admin ||
+              userRole == UserRoles.Manager ||
+              userRole == UserRoles.StoreManager ||
+              userRole == UserRoles.Supervisor),
       child: Card(
         elevation: 1,
         child: Container(

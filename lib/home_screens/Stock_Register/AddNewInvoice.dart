@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +8,7 @@ import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddInvoice extends StatefulWidget {
   final String currentUserId;
@@ -39,6 +41,28 @@ class _AddInvoiceState extends State<AddInvoice> {
 
   String selectedCategory;
   String selectedCategoryId;
+
+  UserRoles userRole;
+  String userRoleValue;
+
+  String userName;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
+  }
 
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
@@ -555,7 +579,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                               ),
                             ),
 
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
                             ),
@@ -896,7 +920,11 @@ class _AddInvoiceState extends State<AddInvoice> {
                                       .collection('stockRegister')
                                       .document(documentId)
                                       .setData({
-                                    'created_by': widget.currentUserId,
+                                    'created_by': {
+                                      "id": widget.currentUserId,
+                                      "name": userName,
+                                      "role": userRoleValue,
+                                    },
                                     'documentId': documentId,
                                     'construction_site': {
                                       "constructionId": selectedConstructionId,

@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
+import 'package:bhavaniconnect/home_screens/Stock_Register/ViewDataCsv.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class StockDataList extends StatefulWidget {
   final DateTime startDate;
@@ -33,6 +38,8 @@ class StockDataList extends StatefulWidget {
 
 class _StockDataList extends State<StockDataList> {
   int index = 0;
+
+  List<DocumentSnapshot> snapshotDocuments = [];
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +86,8 @@ class _StockDataList extends State<StockDataList> {
             Navigator.pop(context, true);
           },
           rightActionBar: Icon(Icons.print, size: 25, color: Colors.white),
-          rightAction: () {
-            print('right action bar is pressed in appbar');
+          rightAction: () async {
+            _generateCSVAndView(context, snapshotDocuments);
           },
           primaryText: 'Stock Register',
           tabBarWidget: null,
@@ -156,6 +163,8 @@ class _StockDataList extends State<StockDataList> {
                         return Center(child: CircularProgressIndicator());
                       } else {
                         List<DocumentSnapshot> result = snapshot.data.documents;
+
+                        snapshotDocuments = snapshot.data.documents;
 
                         return DataTable(
                           onSelectAll: (b) {},
@@ -442,6 +451,78 @@ class _StockDataList extends State<StockDataList> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _generateCSVAndView(context, documents) async {
+    List<DocumentSnapshot> data = documents;
+    int i = 0;
+    List<List<String>> csvData = [
+      // headers
+      <String>[
+        'S.No.',
+        'Created On',
+        'Created By',
+        "Purchased Date",
+        "Site",
+        "Item Description",
+        "Category",
+        "Uom",
+        "Dealer Name",
+        "Invoice No.",
+        "Received Quantity",
+        "Issued Quantity",
+        "Balance Quantity",
+        "Rate",
+        "Sub Total",
+        "GST Amount",
+        "Total Amount",
+        "Remarks"
+      ],
+      // data
+      ...data.map((result) {
+        i++;
+        [
+          i.toString(),
+          DateTimeUtils.slashDateFormat(
+              (result['added_on'] as Timestamp).toDate()),
+          "Vasanth (Manager)",
+          "29/Oct/2020",
+          result['construction_site']['constructionSite'],
+          result['item']['ItemName'],
+          result['category']['categoryName'],
+          result['unit']['unitName'],
+          "Vasanth Steels",
+          result['invoice_no'],
+          result['received_quantity'],
+          result['issued_quantity'],
+          result['balance_quantity'],
+          "₹${result['rate']}",
+          "₹${result['sub_total']}",
+          "₹${result['gst_amount']}",
+          "₹${result['total_amount_gst']}",
+          result['remarks']
+        ];
+      }),
+    ];
+
+    String csv = const ListToCsvConverter().convert(csvData);
+
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/stockRegisterDocs.csv';
+
+    // create file
+    final File file = File(path);
+    // Save csv string using default configuration
+    // , as field separator
+    // " as text delimiter and
+    // \r\n as eol.
+    await file.writeAsString(csv);
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LoadAndViewCsvPage(path: path),
       ),
     );
   }
