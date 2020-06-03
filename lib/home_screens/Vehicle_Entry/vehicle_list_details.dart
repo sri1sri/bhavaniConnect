@@ -14,28 +14,22 @@ import 'package:flutter/material.dart';
 
 import 'vehicle_details_trip.dart';
 
-class DaySelection extends StatelessWidget {
+class DaySelection extends StatefulWidget {
+  final String currentUserId;
+
+  const DaySelection({Key key, this.currentUserId}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_DaySelection(),
-    );
-  }
+  _DaySelection createState() => _DaySelection();
 }
 
-class F_DaySelection extends StatefulWidget {
-  @override
-  _F_DaySelection createState() => _F_DaySelection();
-}
-
-class _F_DaySelection extends State<F_DaySelection> {
+class _DaySelection extends State<DaySelection> {
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -51,27 +45,30 @@ class _F_DaySelection extends State<F_DaySelection> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar:Icon(Icons.search,size: 25,color: Colors.white,),
-          rightAction: (){
-            GoToPage(
-                context,
-                VehicleFilter(
-                ));
+          rightActionBar: Icon(
+            Icons.search,
+            size: 25,
+            color: Colors.white,
+          ),
+          rightAction: () {
+            GoToPage(context, VehicleFilter());
           },
           primaryText: 'Vehicle Entries',
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           height: double.infinity,
@@ -79,21 +76,53 @@ class _F_DaySelection extends State<F_DaySelection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 20,),
-                VehicleDetails(size,context,"29 Oct 2020","12.30 am","Bhavani Vivan","Vasanth Agencies","Tractor","Vasanthakumar (Security)","Srivatsav (Manager)","Approved",AddVehicleDetails()),
-                VehicleDetails(size,context,"02 Nov 2020","04.20 pm","Bhavani Aravindam","Sri Agencies","Road Roller","Vamsi (Security)","Vatsav (Manager)","Pending",AddVehicleCountDetails()),
-                VehicleDetails(size,context,"14 Nov 2020","02.54 am","Bhavani Vivan","Vamsi Agencies","Borewell","Vimal (Security)","Rockstar (Manager)","Declined",AddVehicleCountDetails()),
+                SizedBox(
+                  height: 20,
+                ),
+                VehicleDetails(
+                    size,
+                    context,
+                    "29 Oct 2020",
+                    "12.30 am",
+                    "Bhavani Vivan",
+                    "Vasanth Agencies",
+                    "Tractor",
+                    "Vasanthakumar (Security)",
+                    "Srivatsav (Manager)",
+                    "Approved",
+                    AddVehicleDetails()),
+                VehicleDetails(
+                    size,
+                    context,
+                    "02 Nov 2020",
+                    "04.20 pm",
+                    "Bhavani Aravindam",
+                    "Sri Agencies",
+                    "Road Roller",
+                    "Vamsi (Security)",
+                    "Vatsav (Manager)",
+                    "Pending",
+                    AddVehicleCountDetails()),
+                VehicleDetails(
+                    size,
+                    context,
+                    "14 Nov 2020",
+                    "02.54 am",
+                    "Bhavani Vivan",
+                    "Vamsi Agencies",
+                    "Borewell",
+                    "Vimal (Security)",
+                    "Rockstar (Manager)",
+                    "Declined",
+                    AddVehicleCountDetails()),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton:  FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoToPage(
-              context,
-              AddVehicle(
-              ));
+          GoToPage(context, AddVehicle());
         },
         child: Icon(Icons.add),
         backgroundColor: backgroundColor,
@@ -102,28 +131,33 @@ class _F_DaySelection extends State<F_DaySelection> {
   }
 }
 
-Widget VehicleDetails(Size size, BuildContext context,String date,String time,String site,String dealer,String category,String requestedBy,String approvedBy,String approvalStatus,Widget goto)
-{
-  return  GestureDetector(
-    onTap: (){
-      GoToPage(
-          context,
-          goto);
+Widget VehicleDetails(
+    Size size,
+    BuildContext context,
+    String date,
+    String time,
+    String site,
+    String dealer,
+    String category,
+    String requestedBy,
+    String approvedBy,
+    String approvalStatus,
+    Widget goto) {
+  return GestureDetector(
+    onTap: () {
+      GoToPage(context, goto);
     },
     child: Padding(
-      padding: const EdgeInsets.only(right:15.0,left: 15,top: 20),
+      padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
       child: Container(
         width: double.infinity,
         height: 240,
         child: Stack(
           children: <Widget>[
             Positioned(
-              right:15,
+              right: 15,
               top: 0,
-              child:Text(
-                  "$date - $time",
-                  style: descriptionStyleDarkBlur3
-              ),
+              child: Text("$date - $time", style: descriptionStyleDarkBlur3),
             ),
             Positioned(
               bottom: 0,
@@ -144,36 +178,26 @@ Widget VehicleDetails(Size size, BuildContext context,String date,String time,St
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                        site,
-                        style: subTitleStyle1
-                    ),
+                    Text(site, style: subTitleStyle1),
                     SizedBox(height: 10),
                     Text(
                       "Dealer: $dealer",
                       style: descriptionStyleDarkBlur1,
                     ),
                     SizedBox(height: 10),
-                    Text(
-                        category,
-                        style: subTitleStyle
-                    ),
+                    Text(category, style: subTitleStyle),
                     SizedBox(height: 10),
                     Expanded(
-                      child: Text(
-                          "Requested By:\n$requestedBy",
+                      child: Text("Requested By:\n$requestedBy",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: descriptionStyleDark1
-                      ),
+                          style: descriptionStyleDark1),
                     ),
                     Expanded(
-                      child: Text(
-                          "Approved By: \n$approvedBy",
+                      child: Text("Approved By: \n$approvedBy",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: descriptionStyleDark1
-                      ),
+                          style: descriptionStyleDark1),
                     ),
                   ],
                 ),
@@ -189,18 +213,17 @@ Widget VehicleDetails(Size size, BuildContext context,String date,String time,St
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color:approvalStatus == 'Approved' ? Colors.green.withOpacity(0.8) :
-                    (approvalStatus == 'Pending' ? Colors.orange.withOpacity(0.8) :
-                    Colors.red.withOpacity(0.8)),
+                    color: approvalStatus == 'Approved'
+                        ? Colors.green.withOpacity(0.8)
+                        : (approvalStatus == 'Pending'
+                            ? Colors.orange.withOpacity(0.8)
+                            : Colors.red.withOpacity(0.8)),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24),
                       bottomRight: Radius.circular(24),
                     ),
                   ),
-                  child: Text(
-                      approvalStatus,
-                      style: subTitleStyleLight
-                  ),
+                  child: Text(approvalStatus, style: subTitleStyleLight),
                 ),
               ),
             ),

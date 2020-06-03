@@ -43,8 +43,6 @@ class StockDataList extends StatefulWidget {
 class _StockDataList extends State<StockDataList> {
   int index = 0;
 
-  List<DocumentSnapshot> snapshotDocuments = [];
-
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -59,23 +57,6 @@ class _StockDataList extends State<StockDataList> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    print(widget.constructionId);
-    print('construction Id');
-    Firestore.instance
-        .collection("stockRegister")
-        .where("construction.constructionId", isEqualTo: widget.constructionId)
-        .where("category.categoryId", isEqualTo: widget.categoryId)
-        .where("item.itemId", isEqualTo: widget.itemId)
-        .where("dealer.dealerId", isEqualTo: widget.dealerId)
-        .where("added_on", isGreaterThan: widget.startDate)
-        .where("added_on", isLessThan: widget.endDate)
-        .orderBy('added_on', descending: true)
-        .getDocuments();
   }
 
   Widget _buildContent(BuildContext context) {
@@ -94,7 +75,7 @@ class _StockDataList extends State<StockDataList> {
           },
           rightActionBar: Icon(Icons.print, size: 25, color: Colors.white),
           rightAction: () async {
-            _generateCSVAndView(context, snapshotDocuments);
+            _generateCSVAndView(context);
           },
           primaryText: 'Stock Register',
           tabBarWidget: null,
@@ -165,6 +146,8 @@ class _StockDataList extends State<StockDataList> {
                   child: StreamBuilder(
                     stream: Firestore.instance
                         .collection("stockRegister")
+                        .where('construction_site.constructionId',
+                            isEqualTo: widget.constructionId)
                         .where("category.categoryId",
                             isEqualTo: widget.categoryId)
                         .where("item.itemId", isEqualTo: widget.itemId)
@@ -183,9 +166,6 @@ class _StockDataList extends State<StockDataList> {
                         );
                       } else {
                         List<DocumentSnapshot> result = snapshot.data.documents;
-
-                        snapshotDocuments = snapshot.data.documents;
-
                         return DataTable(
                           onSelectAll: (b) {},
                           sortAscending: true,
@@ -478,7 +458,7 @@ class _StockDataList extends State<StockDataList> {
     );
   }
 
-  Future<void> _generateCSVAndView(context, documents) async {
+  Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
         .collection("stockRegister")
         .where("category.categoryId", isEqualTo: widget.categoryId)

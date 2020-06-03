@@ -1,39 +1,64 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AddProgressRemarks extends StatelessWidget {
+class AddProgressRemarks extends StatefulWidget {
+  final String currentUserId;
+  final String documentId;
+  final String tableName;
+
+  const AddProgressRemarks(
+      {Key key, this.currentUserId, this.documentId, this.tableName})
+      : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_AddProgressRemarks(),
-    );
-  }
+  _AddProgressRemarks createState() => _AddProgressRemarks();
 }
 
-class F_AddProgressRemarks extends StatefulWidget {
-  @override
-  _F_AddProgressRemarks createState() => _F_AddProgressRemarks();
-}
-
-class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
+class _AddProgressRemarks extends State<AddProgressRemarks> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _yesterdayProgressController = TextEditingController();
+  final TextEditingController _yesterdayProgressController =
+      TextEditingController();
   final FocusNode _yesterdayProgressFocusNode = FocusNode();
   final TextEditingController _remarkController = TextEditingController();
   final FocusNode _remarkFocusNode = FocusNode();
+
+  UserRoles userRole;
+  String userRoleValue;
+
+  String userName;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -48,25 +73,29 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Container(width: 10,),
-          rightAction: (){
+          rightActionBar: Container(
+            width: 10,
+          ),
+          rightAction: () {
             print('right action bar is pressed in appbar');
           },
           primaryText: 'Add Progress',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           child: Form(
@@ -77,21 +106,32 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 20,),
-                          Text("Yesterday's Progress",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Yesterday's Progress",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             controller: _yesterdayProgressController,
                             //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'Yesterdays Progress cant\'t be empty.',
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'Yesterdays Progress cant\'t be empty.',
                             focusNode: _yesterdayProgressFocusNode,
                             // onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
@@ -112,15 +152,24 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
                               fontFamily: "Poppins",
                             ),
                           ),
-                          SizedBox(height: 20,),
-                          Text("Remarks",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Remarks",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             controller: _remarkController,
                             //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'Remarks cant\'t be empty.',
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'Remarks cant\'t be empty.',
                             focusNode: _remarkFocusNode,
                             //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
@@ -141,13 +190,15 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
                               fontFamily: "Poppins",
                             ),
                           ),
-                          SizedBox(height: 20,),
-
-
+                          SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -156,7 +207,68 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
                           width: 180,
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.pop(context,true);
+                              if (_formKey.currentState.validate()) {
+                                _formKey.currentState.save();
+                                String documentId = DateTimeUtils
+                                    .currentDayDateTimeNow
+                                    .millisecondsSinceEpoch
+                                    .toString();
+                                try {
+                                  Firestore.instance
+                                      .collection(
+                                          'activityProgress/${widget.documentId}/${widget.documentId}')
+                                      .document(documentId)
+                                      .setData({
+                                    'created_by': {
+                                      "id": widget.currentUserId,
+                                      "name": userName,
+                                      "role": userRoleValue,
+                                    },
+                                    'documentId': documentId,
+                                    'yesterday_progress':
+                                        _yesterdayProgressController.text,
+                                    'remark': _remarkController.text,
+                                    "added_on": FieldValue.serverTimestamp(),
+                                  }).then((value) async {
+                                    int totalProgress = 0;
+                                    QuerySnapshot result = await Firestore
+                                        .instance
+                                        .collection(
+                                            'activityProgress/${widget.documentId}/${widget.documentId}')
+                                        .getDocuments();
+
+                                    if (result != null &&
+                                        result.documents != null) {
+                                      for (int i = 0;
+                                          i < result.documents.length;
+                                          i++) {
+                                        totalProgress += int.parse(result
+                                            .documents[i]['yesterday_progess']);
+                                      }
+
+                                      Firestore.instance
+                                          .collection(widget.tableName)
+                                          .document(widget.documentId)
+                                          .updateData({
+                                        'total_progress': totalProgress
+                                      });
+
+                                      Navigator.pop(context);
+                                    }
+                                  });
+                                } catch (err) {
+                                  setState(() {
+                                    // isProcessing = false;
+                                    // error = err;
+                                  });
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      // isProcessing = false;
+                                    });
+                                  }
+                                }
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -179,7 +291,9 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 500,),
+                    SizedBox(
+                      height: 500,
+                    ),
                   ],
                 ),
               ),
@@ -190,4 +304,3 @@ class _F_AddProgressRemarks extends State<F_AddProgressRemarks> {
     );
   }
 }
-

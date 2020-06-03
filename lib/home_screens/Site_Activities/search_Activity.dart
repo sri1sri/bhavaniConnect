@@ -7,30 +7,19 @@ import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SearchActivity extends StatelessWidget {
+class SearchActivity extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_SearchActivity(),
-    );
-  }
+  _SearchActivity createState() => _SearchActivity();
 }
 
-class F_SearchActivity extends StatefulWidget {
-  @override
-  _F_SearchActivity createState() => _F_SearchActivity();
-}
-
-class _F_SearchActivity extends State<F_SearchActivity> {
-
+class _SearchActivity extends State<SearchActivity> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -45,25 +34,29 @@ class _F_SearchActivity extends State<F_SearchActivity> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Container(width: 10,),
-          rightAction: (){
+          rightActionBar: Container(
+            width: 10,
+          ),
+          rightAction: () {
             print('right action bar is pressed in appbar');
           },
           primaryText: 'Search Activity',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           child: Form(
@@ -74,26 +67,47 @@ class _F_SearchActivity extends State<F_SearchActivity> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Construction Site",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          Text(
+                            "Construction Site",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           DropdownSearch(
                               showSelectedItem: true,
                               maxHeight: 500,
                               mode: Mode.DIALOG,
-                              items: ["Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham",],
+                              items: [
+                                "Bhavani Vivan",
+                                "Bahavani Aravindham",
+                                "Bhavani Vivan",
+                                "Bahavani Aravindham",
+                                "Bhavani Vivan",
+                                "Bahavani Aravindham",
+                              ],
                               label: "Construction Site",
                               onChanged: print,
                               selectedItem: "Choose Construction Site",
                               showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Block",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Block",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           DropdownSearch(
                               showSelectedItem: true,
                               maxHeight: 400,
@@ -103,37 +117,63 @@ class _F_SearchActivity extends State<F_SearchActivity> {
                               onChanged: print,
                               selectedItem: "Choose Block",
                               showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Category",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Category",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           DropdownSearch(
                               showSelectedItem: true,
                               maxHeight: 400,
                               mode: Mode.MENU,
-                              items: ["Iron", "Steel", "Sand" ,"Cement","Bricks"],
+                              items: [
+                                "Iron",
+                                "Steel",
+                                "Sand",
+                                "Cement",
+                                "Bricks"
+                              ],
                               label: "Category",
                               onChanged: print,
                               selectedItem: "Choose Category",
                               showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Sub Category",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Sub Category",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           DropdownSearch(
                               showSelectedItem: true,
                               maxHeight: 400,
                               mode: Mode.MENU,
-                              items: ["Vasanth steels", "Sri Cements", "Vamsi Bricks"],
+                              items: [
+                                "Vasanth steels",
+                                "Sri Cements",
+                                "Vamsi Bricks"
+                              ],
                               label: "Sub Category",
                               onChanged: print,
                               selectedItem: "Choose Sub Category",
                               showSearchBox: true),
-                          SizedBox(height: 20,),
-
-
+                          SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -144,7 +184,9 @@ class _F_SearchActivity extends State<F_SearchActivity> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => SiteActivities(),),
+                                MaterialPageRoute(
+                                  builder: (context) => SiteActivities(),
+                                ),
                               );
                             },
                             child: Container(
@@ -168,7 +210,9 @@ class _F_SearchActivity extends State<F_SearchActivity> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 300,),
+                    SizedBox(
+                      height: 300,
+                    ),
                   ],
                 ),
               ),
@@ -179,4 +223,3 @@ class _F_SearchActivity extends State<F_SearchActivity> {
     );
   }
 }
-

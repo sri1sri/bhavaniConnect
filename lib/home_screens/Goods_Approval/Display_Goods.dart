@@ -8,30 +8,22 @@ import 'package:flutter/material.dart';
 
 import 'Add_Goods.dart';
 
+class GoodsScreen extends StatefulWidget {
+  final String currentUserId;
 
+  const GoodsScreen({Key key, this.currentUserId}) : super(key: key);
 
-class GoodsScreen extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_GoodsScreen(),
-    );
-  }
+  _GoodsScreen createState() => _GoodsScreen();
 }
 
-class F_GoodsScreen extends StatefulWidget {
-  @override
-  _F_GoodsScreen createState() => _F_GoodsScreen();
-}
-
-class _F_GoodsScreen extends State<F_GoodsScreen> {
+class _GoodsScreen extends State<GoodsScreen> {
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -47,21 +39,23 @@ class _F_GoodsScreen extends State<F_GoodsScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
           primaryText: 'Goods Details',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           height: double.infinity,
@@ -69,22 +63,53 @@ class _F_GoodsScreen extends State<F_GoodsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 10,),
-                goodsDetails(size,context,"29 Oct 2020","12.30 am","Bhavani Vivan","Vasanth Agencies","Iron/Steel","Vasanthakumar (Security)","Srivatsav (Manager)","Approved"),
-                goodsDetails(size,context,"02 Nov 2020","04.20 pm","Bhavani Aravindam","Sri Agencies","Sand","Vamsi (Security)","Vatsav (Manager)","Pending"),
-                goodsDetails(size,context,"14 Nov 2020","02.54 am","Bhavani Vivan","Vamsi Agencies","Plastics","Vimal (Security)","Rockstar (Manager)","Declined"),
-                SizedBox(height: 100,),
+                SizedBox(
+                  height: 10,
+                ),
+                goodsDetails(
+                    size,
+                    context,
+                    "29 Oct 2020",
+                    "12.30 am",
+                    "Bhavani Vivan",
+                    "Vasanth Agencies",
+                    "Iron/Steel",
+                    "Vasanthakumar (Security)",
+                    "Srivatsav (Manager)",
+                    "Approved"),
+                goodsDetails(
+                    size,
+                    context,
+                    "02 Nov 2020",
+                    "04.20 pm",
+                    "Bhavani Aravindam",
+                    "Sri Agencies",
+                    "Sand",
+                    "Vamsi (Security)",
+                    "Vatsav (Manager)",
+                    "Pending"),
+                goodsDetails(
+                    size,
+                    context,
+                    "14 Nov 2020",
+                    "02.54 am",
+                    "Bhavani Vivan",
+                    "Vamsi Agencies",
+                    "Plastics",
+                    "Vimal (Security)",
+                    "Rockstar (Manager)",
+                    "Declined"),
+                SizedBox(
+                  height: 100,
+                ),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton:  FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoToPage(
-              context,
-              AddGoods(
-              ));
+          GoToPage(context, AddGoods());
         },
         child: Icon(Icons.add),
         backgroundColor: backgroundColor,
@@ -93,22 +118,28 @@ class _F_GoodsScreen extends State<F_GoodsScreen> {
   }
 }
 
-Widget goodsDetails(Size size, BuildContext context,String date,String time,String site,String dealer,String category,String requestedBy,String approvedBy,String approvalStatus)
-{
-  return  Padding(
-    padding: const EdgeInsets.only(right:15.0,left: 15,top: 20),
+Widget goodsDetails(
+    Size size,
+    BuildContext context,
+    String date,
+    String time,
+    String site,
+    String dealer,
+    String category,
+    String requestedBy,
+    String approvedBy,
+    String approvalStatus) {
+  return Padding(
+    padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
     child: Container(
       width: double.infinity,
       height: 240,
       child: Stack(
         children: <Widget>[
           Positioned(
-            right:15,
+            right: 15,
             top: 0,
-            child:Text(
-                "$date - $time",
-                style: descriptionStyleDarkBlur3
-            ),
+            child: Text("$date - $time", style: descriptionStyleDarkBlur3),
           ),
           Positioned(
             bottom: 0,
@@ -129,36 +160,26 @@ Widget goodsDetails(Size size, BuildContext context,String date,String time,Stri
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                      site,
-                      style: subTitleStyle1
-                  ),
+                  Text(site, style: subTitleStyle1),
                   SizedBox(height: 10),
                   Text(
                     "Dealer: $dealer",
                     style: descriptionStyleDarkBlur1,
                   ),
                   SizedBox(height: 10),
-                  Text(
-                      category,
-                      style: subTitleStyle
-                  ),
+                  Text(category, style: subTitleStyle),
                   SizedBox(height: 10),
                   Expanded(
-                    child: Text(
-                        "Requested By:\n$requestedBy",
+                    child: Text("Requested By:\n$requestedBy",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: descriptionStyleDark1
-                    ),
+                        style: descriptionStyleDark1),
                   ),
                   Expanded(
-                    child: Text(
-                        "Approved By: \n$approvedBy",
+                    child: Text("Approved By: \n$approvedBy",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: descriptionStyleDark1
-                    ),
+                        style: descriptionStyleDark1),
                   ),
                 ],
               ),
@@ -174,18 +195,17 @@ Widget goodsDetails(Size size, BuildContext context,String date,String time,Stri
                 alignment: Alignment.center,
                 padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color:approvalStatus == 'Approved' ? Colors.green.withOpacity(0.8) :
-                  (approvalStatus == 'Pending' ? Colors.orange.withOpacity(0.8) :
-                  Colors.red.withOpacity(0.8)),
+                  color: approvalStatus == 'Approved'
+                      ? Colors.green.withOpacity(0.8)
+                      : (approvalStatus == 'Pending'
+                          ? Colors.orange.withOpacity(0.8)
+                          : Colors.red.withOpacity(0.8)),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(24),
                     bottomRight: Radius.circular(24),
                   ),
                 ),
-                child: Text(
-                    approvalStatus,
-                    style: subTitleStyleLight
-                ),
+                child: Text(approvalStatus, style: subTitleStyleLight),
               ),
             ),
           ),

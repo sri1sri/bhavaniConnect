@@ -1,38 +1,65 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Concrete_Entries/Concrete_HomePage.dart';
-import 'package:bhavaniconnect/home_screens/Labour_Report/Daily_labour_Report.dart';
-import 'package:bhavaniconnect/home_screens/Site_Activities/site_Activities_HomePage.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:intl/intl.dart';
-import 'package:vector_math/vector_math.dart' as math;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AddLabourReport extends StatelessWidget {
+class AddLabourReport extends StatefulWidget {
+  final String currentUserId;
+
+  const AddLabourReport({Key key, this.currentUserId}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_AddLabourReport(),
-    );
-  }
+  _AddLabourReport createState() => _AddLabourReport();
 }
 
-class F_AddLabourReport extends StatefulWidget {
-  @override
-  _F_AddLabourReport createState() => _F_AddLabourReport();
-}
-
-class _F_AddLabourReport extends State<F_AddLabourReport> {
+class _AddLabourReport extends State<AddLabourReport> {
   DateTime selectedDate = DateTime.now();
   DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
+
+  bool validated = false;
+
+  String selectedConstructionSite;
+  String selectedConstructionId;
+
+  String selectedBlock;
+  String selectedBlockId;
+
+  String selectedDealer;
+  String selectedDealerId;
+
+  String labourType;
+
+  UserRoles userRole;
+  String userRoleValue;
+
+  String userName;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
+  }
+
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
@@ -40,13 +67,14 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
       firstDate: DateTime(1930),
       lastDate: DateTime(2010),
     );
-    if (pickedFrom != null){
+    if (pickedFrom != null) {
       setState(() {
         print(customFormat.format(pickedFrom));
         selectedDate = pickedFrom;
       });
     }
   }
+
   Future<Null> showPickerTo(BuildContext context) async {
     final DateTime pickedTo = await showDatePicker(
       context: context,
@@ -54,7 +82,7 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
       firstDate: DateTime(1930),
       lastDate: DateTime(2010),
     );
-    if (pickedTo != null){
+    if (pickedTo != null) {
       setState(() {
         print(customFormat.format(pickedTo));
         selectedDateInvoice = pickedTo;
@@ -71,10 +99,9 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -89,25 +116,29 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Container(width: 10,),
-          rightAction: (){
+          rightActionBar: Container(
+            width: 10,
+          ),
+          rightAction: () {
             print('right action bar is pressed in appbar');
           },
           primaryText: 'Add Labour Report',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           child: Form(
@@ -118,14 +149,21 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Date",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          Text(
+                            "Date",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           GestureDetector(
                             onTap: () => showPickerFrom(context),
                             child: Container(
@@ -136,72 +174,273 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
                                     size: 30.0,
                                     color: backgroundColor,
                                   ),
-                                  SizedBox(width: 10,),
-                                  Text(
-                                      '${customFormat2.format(selectedDate)}',
-                                      style: highlightDescription
+                                  SizedBox(
+                                    width: 10,
                                   ),
+                                  Text('${customFormat2.format(selectedDate)}',
+                                      style: highlightDescription),
                                 ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 20,),
-                          Text("Labour Type",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Labour Type",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           DropdownSearch(
                               showSelectedItem: true,
                               maxHeight: 400,
                               mode: Mode.MENU,
-                              items: ["Self Employees","Out Sourcing Employees"],
+                              items: [
+                                "Self Employees",
+                                "Out Sourcing Employees"
+                              ],
                               label: "Labour Type",
-                              onChanged: print,
-                              selectedItem: "Choose Labour Type",
+                              onChanged: (value) {
+                                setState(() {
+                                  labourType = value;
+                                });
+                              },
+                              selectedItem: labourType ?? "Choose Labour Type",
+                              validate: (value) {
+                                if (validated && labourType == null) {
+                                  return "Labour Type cannot be empty";
+                                } else {
+                                  return null;
+                                }
+                              },
                               showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Construction Site",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham",],
-                              label: "Construction Site",
-                              onChanged: print,
-                              selectedItem: "Choose Construction Site",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Block",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["1st", "2nd", "3rd", "4th"],
-                              label: "Block",
-                              onChanged: print,
-                              selectedItem: "Choose Block",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Dealer Name",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["Vasanth Agencies", "Vatsav constructions", "Vamsi Workers"],
-                              label: "Dealer Name",
-                              onChanged: print,
-                              selectedItem: "Choose Dealer Name",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("No. of People",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Construction Site",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("constructionSite")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedConstructionSite = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedConstructionId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Construction Site",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedConstructionSite ??
+                                      "Choose Construction Site",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedConstructionSite == null ||
+                                            selectedConstructionSite.isEmpty)) {
+                                      return "Construction Site cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Block",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("blocks")
+                                .orderBy('name', descending: false)
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedBlock = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedBlockId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Block",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedBlock ?? "Choose Block",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedBlock == null ||
+                                            selectedBlock.isEmpty)) {
+                                      return "Block cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Dealer Name",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("dealer")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedDealer = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedDealerId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Dealer Name",
+                                  onChanged: (value) {},
+                                  selectedItem:
+                                      selectedDealer ?? "Choose Dealer Name",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedDealer == null ||
+                                            selectedDealer.isEmpty)) {
+                                      return "Dealer Name cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "No. of People",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             controller: _noofPeopleController,
                             //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'No. of People cant\'t be empty.',
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'No. of People cant\'t be empty.',
                             focusNode: _noofPeopleFocusNode,
                             //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
@@ -222,15 +461,24 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
                               fontFamily: "Poppins",
                             ),
                           ),
-                          SizedBox(height: 20,),
-                          Text("Purpose",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Purpose",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             controller: _purposeController,
                             //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'Purpose cant\'t be empty.',
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'Purpose cant\'t be empty.',
                             focusNode: _purposeFocusNode,
                             //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
@@ -251,13 +499,15 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
                               fontFamily: "Poppins",
                             ),
                           ),
-                          SizedBox(height: 20,),
-
-
+                          SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -265,11 +515,63 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => LabourEntries(),),
-                              );
+                            onTap: () async {
+                              if (_formKey.currentState.validate() &&
+                                  selectedDealer != null &&
+                                  selectedConstructionSite != null &&
+                                  selectedBlock != null &&
+                                  labourType != null) {
+                                _formKey.currentState.save();
+                                String documentId =
+                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                                try {
+                                  await Firestore.instance
+                                      .collection('labourReport')
+                                      .document(documentId)
+                                      .setData({
+                                    'created_by': {
+                                      "id": widget.currentUserId,
+                                      "name": userName,
+                                      "role": userRoleValue,
+                                    },
+                                    'documentId': documentId,
+                                    'construction_site': {
+                                      "constructionId": selectedConstructionId,
+                                      "constructionSite":
+                                          selectedConstructionSite,
+                                    },
+                                    'block': {
+                                      "blockId": selectedBlockId,
+                                      "blockName": selectedBlock,
+                                    },
+                                    'dealer': {
+                                      "dealerId": selectedDealerId,
+                                      "dealerName": selectedDealer,
+                                    },
+                                    'labour_type': labourType,
+                                    'no_of_people': _noofPeopleController.text,
+                                    'purpose': _purposeController.text,
+                                    "added_on": FieldValue.serverTimestamp(),
+                                    "selected_date": selectedDate,
+                                  });
+                                  Navigator.pop(context);
+                                } catch (err) {
+                                  setState(() {
+                                    // isProcessing = false;
+                                    // error = err;
+                                  });
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      // isProcessing = false;
+                                    });
+                                  }
+                                }
+                              } else {
+                                setState(() {
+                                  validated = true;
+                                });
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -292,7 +594,9 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 50,
+                    ),
                   ],
                 ),
               ),
@@ -303,5 +607,3 @@ class _F_AddLabourReport extends State<F_AddLabourReport> {
     );
   }
 }
-
-

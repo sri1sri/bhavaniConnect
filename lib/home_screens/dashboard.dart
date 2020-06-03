@@ -170,7 +170,11 @@ class _Dashboard extends State<Dashboard> {
 //
                                 case 'Approvals':
                                   {
-                                    GoToPage(context, GoodsScreen());
+                                    GoToPage(
+                                        context,
+                                        GoodsScreen(
+                                          currentUserId: widget.currentUserId,
+                                        ));
                                   }
                                   break;
 //                        case 'Store':
@@ -197,18 +201,28 @@ class _Dashboard extends State<Dashboard> {
                                   {
                                     GoToPage(
                                       context,
-                                      DisplayAttendance(),
+                                      DisplayAttendance(
+                                        currentUserId: widget.currentUserId,
+                                      ),
                                     );
                                   }
                                   break;
                                 case 'Catalog':
                                   {
-                                    GoToPage(context, StockScreen());
+                                    GoToPage(
+                                        context,
+                                        StockScreen(
+                                          currentUserId: widget.currentUserId,
+                                        ));
                                   }
                                   break;
                                 case 'Vehicle Entries':
                                   {
-                                    GoToPage(context, DaySelection());
+                                    GoToPage(
+                                        context,
+                                        DaySelection(
+                                          currentUserId: widget.currentUserId,
+                                        ));
                                   }
                                   break;
                                 case 'Stock Register':
@@ -222,17 +236,29 @@ class _Dashboard extends State<Dashboard> {
                                   break;
                                 case 'Site Activities':
                                   {
-                                    GoToPage(context, SiteActivities());
+                                    GoToPage(
+                                        context,
+                                        SiteActivities(
+                                          currentUserId: widget.currentUserId,
+                                        ));
                                   }
                                   break;
                                 case 'Concrete Entries':
                                   {
-                                    GoToPage(context, ConcreteEntries());
+                                    GoToPage(
+                                        context,
+                                        ConcreteEntries(
+                                          currentUserId: widget.currentUserId,
+                                        ));
                                   }
                                   break;
                                 case 'Labour Report':
                                   {
-                                    GoToPage(context, LabourEntries());
+                                    GoToPage(
+                                        context,
+                                        LabourEntries(
+                                          currentUserId: widget.currentUserId,
+                                        ));
                                   }
                                   break;
 

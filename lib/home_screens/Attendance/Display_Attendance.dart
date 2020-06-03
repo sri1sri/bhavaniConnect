@@ -1,4 +1,3 @@
-
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
@@ -9,21 +8,15 @@ import 'package:flutter/material.dart';
 
 import 'Add_Attendance.dart';
 
-class DisplayAttendance extends StatelessWidget {
+class DisplayAttendance extends StatefulWidget {
+  final String currentUserId;
+
+  const DisplayAttendance({Key key, this.currentUserId}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_DisplayAttendance(),
-    );
-  }
+  _DisplayAttendance createState() => _DisplayAttendance();
 }
 
-class F_DisplayAttendance extends StatefulWidget {
-  @override
-  _F_DisplayAttendance createState() => _F_DisplayAttendance();
-}
-
-class _F_DisplayAttendance extends State<F_DisplayAttendance> {
+class _DisplayAttendance extends State<DisplayAttendance> {
   int selectedValue;
   SearchDialog(BuildContext context) {
     Dialog fancyDialog = Dialog(
@@ -55,66 +48,102 @@ class _F_DisplayAttendance extends State<F_DisplayAttendance> {
                   },
                   itemExtent: 40.0,
                   children: const [
-                    Text('January',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('February',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('March',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('April',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('May',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('June',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('July',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('August',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('September',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('October',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('November',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
-                    Text('December',style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Quicksand',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25.0),),
+                    Text(
+                      'January',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'February',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'March',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'April',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'May',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'June',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'July',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'August',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'September',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'October',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'November',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
+                    Text(
+                      'December',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Quicksand',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25.0),
+                    ),
                   ],
                 ),
               ),
@@ -130,11 +159,9 @@ class _F_DisplayAttendance extends State<F_DisplayAttendance> {
                   topRight: Radius.circular(12),
                 ),
               ),
-              child: Align(alignment: Alignment.center,
-                child: Text(
-                  "Select a Month",
-                  style: appBarTitleStyle
-                ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text("Select a Month", style: appBarTitleStyle),
               ),
             ),
             Align(
@@ -155,10 +182,7 @@ class _F_DisplayAttendance extends State<F_DisplayAttendance> {
                   ),
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      "Search",
-                      style: appBarTitleStyle
-                    ),
+                    child: Text("Search", style: appBarTitleStyle),
                   ),
                 ),
               ),
@@ -189,13 +213,13 @@ class _F_DisplayAttendance extends State<F_DisplayAttendance> {
     showDialog(
         context: context, builder: (BuildContext context) => fancyDialog);
   }
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -208,125 +232,132 @@ class _F_DisplayAttendance extends State<F_DisplayAttendance> {
 
   Widget _buildContent(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: PreferredSize(
-          preferredSize:
-          Size.fromHeight(70),
-          child: Container(
-            decoration: BoxDecoration(
-              color: backgroundColor,
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 15,),
-                Container(
-                  height: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 45,
-                          left: 20,
-                        ),
-                        child: InkWell(
-                          child: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-                          onTap: (){
-                            Navigator.pop(context,true);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Daily Attendance",
-                              textAlign: TextAlign.center,
-                              style: appBarTitleStyle,
-                            ),
-                          ],
-
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                            top: 35,
-                            right: 10,
-                          ),
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.people,size: 25,color: Colors.white,),
-                                onPressed: (){
-                                  GoToPage(
-                                      context,
-                                      SearchEmployeeAttendance(
-                                      ));
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.search,size: 25,color: Colors.white,),
-                                onPressed: (){
-                             SearchDialog(context);
-                                },
-                              )
-                            ],
-                          )
-                      ),
-                    ],
+        backgroundColor: backgroundColor,
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(70),
+            child: Container(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+              ),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-              ],
-
-            ),
-          )
-      ),
-      body:ClipRRect(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
-        child: Container(
-            color: Colors.white,
-            height: double.infinity,
-            child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 20,),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            attendanceCard("29","Oct","2020","10.30 am","05.45 pm"),
-                            attendanceCard("30","Oct","2020","10.50 am","06.33 pm"),
-                            attendanceCard("02","Nov","2020","11.00 am","07.50 pm"),
-                            attendanceCard("06","Nov","2020","10.22 am","06.32 pm"),
-                          ],
+                  Container(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 45,
+                            left: 20,
+                          ),
+                          child: InkWell(
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context, true);
+                            },
+                          ),
                         ),
-                      ),
-                    ]
-                )
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Daily Attendance",
+                                textAlign: TextAlign.center,
+                                style: appBarTitleStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                              top: 35,
+                              right: 10,
+                            ),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.people,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    GoToPage(
+                                        context, SearchEmployeeAttendance());
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.search,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    SearchDialog(context);
+                                  },
+                                )
+                              ],
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             )),
-      ),
-        floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked,
+        body: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
+          child: Container(
+              color: Colors.white,
+              height: double.infinity,
+              child: SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          attendanceCard(
+                              "29", "Oct", "2020", "10.30 am", "05.45 pm"),
+                          attendanceCard(
+                              "30", "Oct", "2020", "10.50 am", "06.33 pm"),
+                          attendanceCard(
+                              "02", "Nov", "2020", "11.00 am", "07.50 pm"),
+                          attendanceCard(
+                              "06", "Nov", "2020", "10.22 am", "06.32 pm"),
+                        ],
+                      ),
+                    ),
+                  ]))),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(40.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
-                onTap: (){
-            GoToPage(
-             context,AddAttendance());
-
+                onTap: () {
+                  GoToPage(context, AddAttendance());
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -335,96 +366,137 @@ class _F_DisplayAttendance extends State<F_DisplayAttendance> {
                   ),
                   height: 35,
                   width: 80,
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("ADD",style: subTitleStyleLight1,),
+                      Text(
+                        "ADD",
+                        style: subTitleStyleLight1,
+                      ),
                     ],
                   ),
                 ),
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 }
 
-Widget attendanceCard(String day,String month,String year,String inTime,String outTime) {
+Widget attendanceCard(
+    String day, String month, String year, String inTime, String outTime) {
   return Padding(
-    padding: const EdgeInsets.only(top:10.0,bottom: 10),
+    padding: const EdgeInsets.only(top: 10.0, bottom: 10),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(15)
-          ),
+              color: backgroundColor, borderRadius: BorderRadius.circular(15)),
           height: 90,
           width: 70,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(day,style: titleStylelight,),
-              Text(month,style: descriptionStyleLite1,),
-              Text(year,style: descriptionStyleLite1,)
+              Text(
+                day,
+                style: titleStylelight,
+              ),
+              Text(
+                month,
+                style: descriptionStyleLite1,
+              ),
+              Text(
+                year,
+                style: descriptionStyleLite1,
+              )
             ],
           ),
         ),
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
         Container(
-          decoration: BoxDecoration(
-              color: backgroundColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(15)
-          ),
-          height: 90,
-          width: 300,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.call_received,size: 30,color: Colors.green,),
-                  SizedBox(width: 7,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("Punch In",style: descriptionStyleDark,),
-                      SizedBox(height: 5,),
-                      Text(inTime,style: subTitleStyleDark1,)
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(width: 5,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 2,
-                  height: double.maxFinite,
-                  color: Colors.grey,
+            decoration: BoxDecoration(
+                color: backgroundColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(15)),
+            height: 90,
+            width: 300,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.call_received,
+                      size: 30,
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      width: 7,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Punch In",
+                          style: descriptionStyleDark,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          inTime,
+                          style: subTitleStyleDark1,
+                        )
+                      ],
+                    )
+                  ],
                 ),
-              ),
-              SizedBox(width: 5,),
-              Row(
-                children: [
-                  Icon(Icons.call_made,size: 30,color: Colors.red,),
-                  SizedBox(width: 7,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Punch Out",style: descriptionStyleDark,),
-                      SizedBox(height: 5,),
-                      Text(outTime,style: subTitleStyleDark1,)
-                    ],
-                  )
-                ],
-              ),
-            ],
-          )
-        )
+                SizedBox(
+                  width: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 2,
+                    height: double.maxFinite,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.call_made,
+                      size: 30,
+                      color: Colors.red,
+                    ),
+                    SizedBox(
+                      width: 7,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Punch Out",
+                          style: descriptionStyleDark,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          outTime,
+                          style: subTitleStyleDark1,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ))
       ],
     ),
   );

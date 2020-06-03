@@ -1,37 +1,53 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Add_Progress&Remarks.dart';
-import 'package:bhavaniconnect/home_screens/Site_Activities/add_Site_Activity.dart';
-import 'package:bhavaniconnect/home_screens/Stock_Register/AddNewInvoice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class EntryDescription extends StatelessWidget {
+class EntryDescription extends StatefulWidget {
+  final String currentUserId;
+  final String documentId;
+
+  const EntryDescription({Key key, this.currentUserId, this.documentId})
+      : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_EntryDescription(),
-    );
+  _EntryDescription createState() => _EntryDescription();
+}
+
+class _EntryDescription extends State<EntryDescription> {
+  int index = 0;
+  int totalProgress = 0;
+
+  UserRoles userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserRoles();
   }
-}
 
-class F_EntryDescription extends StatefulWidget {
-  @override
-  _F_EntryDescription createState() => _F_EntryDescription();
-}
+  getUserRoles() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    setState(() {
+      userRole = userRoleValues[role];
+    });
+  }
 
-class _F_EntryDescription extends State<F_EntryDescription> {
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -46,154 +62,302 @@ class _F_EntryDescription extends State<F_EntryDescription> {
     return Scaffold(
         backgroundColor: backgroundColor,
         appBar: PreferredSize(
-          preferredSize:
-          Size.fromHeight(70),
+          preferredSize: Size.fromHeight(70),
           child: CustomAppBarDark(
-            leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-            leftAction: (){
-              Navigator.pop(context,true);
+            leftActionBar: Icon(
+              Icons.arrow_back_ios,
+              size: 25,
+              color: Colors.white,
+            ),
+            leftAction: () {
+              Navigator.pop(context, true);
             },
             primaryText: 'Entry Details',
             tabBarWidget: null,
           ),
         ),
-        body:ClipRRect(
+        body: ClipRRect(
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(50.0),
-              topLeft: Radius.circular(50.0)),
+              topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
           child: Container(
               color: Colors.white,
-              child: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(height: 20,),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              subtext("Created On", "29/Oct/2020"),
-                              subtext("Created By", "Vasanth (Manager)"),
-                              subtext("Site", "Bhavani Vivan"),
-                              subtext("Block", "2nd"),
-                              subtext("Concrete Type", "Super Strong"),
-                              Divider(
-                                thickness: 1,
-                                color: Colors.black45,
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                  onSelectAll: (b) {},
-                                  sortAscending: true,
-                                  showCheckboxColumn: false,
-                                  dataRowHeight: 70.0,
-                                  columns: <DataColumn>[
-                                    DataColumn(label: Text("S.No.",style: subTitleStyle1,)),
-                                    DataColumn(label: Text("Date",style: subTitleStyle1,)),
-                                    DataColumn(label: Text("Yesterday’s\nProgress",style: subTitleStyle1,)),
-                                    DataColumn(label: Text("Total\nProgress",style: subTitleStyle1,)),
-                                    DataColumn(label: Text("Added By",style: subTitleStyle1,)),
-                                    DataColumn(label: Text("Remarks",style: subTitleStyle1,)),
-                                  ],
-                                  rows: items
-                                      .map(
-                                        (itemRow) => DataRow(onSelectChanged: (b) {},
-                                      cells: [
-                                        DataCell(
-                                          Text(itemRow.slNo,style:descriptionStyleDark,),
-                                          showEditIcon: false,
-                                          placeholder: false,
-                                        ),
-                                        DataCell(
-                                          Text(itemRow.date,style:descriptionStyleDark,),
-                                          showEditIcon: false,
-                                          placeholder: false,
-                                        ),
-                                        DataCell(
-                                          Text(itemRow.yestProg,style:descriptionStyleDark,),
-                                          showEditIcon: false,
-                                          placeholder: false,
-                                        ),
-                                        DataCell(
-                                          Text(itemRow.totalprog,style:descriptionStyleDark,),
-                                          showEditIcon: false,
-                                          placeholder: false,
-                                        ),
-                                        DataCell(
-                                          Text(itemRow.addedBy,style:descriptionStyleDark,),
-                                          showEditIcon: false,
-                                          placeholder: false,
-                                        ),
-                                        DataCell(
-                                          Text(itemRow.remarks,style:descriptionStyleDark,),
-                                          showEditIcon: false,
-                                          placeholder: false,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                      .toList(),
-                                ),
-                              ),
-                              Divider(
-                                thickness: 1,
-                                color: Colors.black45,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Remarks:",style: subTitleStyle ,),
-                                    SizedBox(height: 5,),
-                                    Text("Transfer from store to construction site",style: descriptionStyleDarkBlur1,)
-                                  ],
-                                ),
-                              ),
-                            ],
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection("concreteEntries")
+                    .orderBy('added_on', descending: true)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    var result = snapshot.data.documents;
+                    return SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        SizedBox(height: 550,),
-                      ]
-                  )
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                subtext(
+                                    "Created On",
+                                    DateTimeUtils.slashDateFormat(
+                                        (result[0]['added_on'] as Timestamp)
+                                            .toDate())),
+                                subtext("Created By",
+                                    "${result[0]['created_by']['name']}  (${result[0]['created_by']['role']})"),
+                                subtext(
+                                    "Site",
+                                    result[0]['construction_site']
+                                        ['constructionSite']),
+                                subtext(
+                                    "Block", result[0]['block']['blockName']),
+                                subtext(
+                                    "Concrete Type",
+                                    result[0]['concrete_type']
+                                        ['concreteTypeName']),
+                                Divider(
+                                  thickness: 1,
+                                  color: Colors.black45,
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: StreamBuilder(
+                                      stream: Firestore.instance
+                                          .collection("activityProgress")
+                                          .document(widget.documentId)
+                                          .collection(widget.documentId)
+                                          // .orderBy('added_on',
+                                          //     descending: false)
+                                          .snapshots(),
+                                      builder: (context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        index = 0;
+                                        totalProgress = 0;
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else {
+                                          var result = snapshot.data.documents;
+                                          print(result);
+                                          if (result != null &&
+                                              result.length > 0) {
+                                            return DataTable(
+                                              onSelectAll: (b) {},
+                                              sortAscending: true,
+                                              showCheckboxColumn: false,
+                                              dataRowHeight: 70.0,
+                                              columns: <DataColumn>[
+                                                DataColumn(
+                                                    label: Text(
+                                                  "S.No.",
+                                                  style: subTitleStyle1,
+                                                )),
+                                                DataColumn(
+                                                    label: Text(
+                                                  "Date",
+                                                  style: subTitleStyle1,
+                                                )),
+                                                DataColumn(
+                                                    label: Text(
+                                                  "Yesterday’s\nProgress",
+                                                  style: subTitleStyle1,
+                                                )),
+                                                DataColumn(
+                                                    label: Text(
+                                                  "Total\nProgress",
+                                                  style: subTitleStyle1,
+                                                )),
+                                                DataColumn(
+                                                    label: Text(
+                                                  "Added By",
+                                                  style: subTitleStyle1,
+                                                )),
+                                                DataColumn(
+                                                    label: Text(
+                                                  "Remarks",
+                                                  style: subTitleStyle1,
+                                                )),
+                                              ],
+                                              rows: result.map((row) {
+                                                index++;
+                                                print(
+                                                    row['yesterday_progress']);
+                                                totalProgress += int.parse(
+                                                    row['yesterday_progress']);
+                                                ItemInfo itemRow = ItemInfo(
+                                                    slNo: index.toString(),
+                                                    date: DateTimeUtils
+                                                        .formatDayMonthYear(
+                                                            (row['added_on']
+                                                                    as Timestamp)
+                                                                .toDate()),
+                                                    yestProg:
+                                                        row['yesterday_progress']
+                                                            .toString(),
+                                                    totalprog: totalProgress
+                                                        .toString(),
+                                                    addedBy: row['created_by']
+                                                            ['role']
+                                                        .toString(),
+                                                    remarks: row['remark']
+                                                        .toString());
+                                                return DataRow(
+                                                  onSelectChanged: (b) {},
+                                                  cells: [
+                                                    DataCell(
+                                                      Text(
+                                                        itemRow.slNo,
+                                                        style:
+                                                            descriptionStyleDark,
+                                                      ),
+                                                      showEditIcon: false,
+                                                      placeholder: false,
+                                                    ),
+                                                    DataCell(
+                                                      Text(
+                                                        itemRow.date,
+                                                        style:
+                                                            descriptionStyleDark,
+                                                      ),
+                                                      showEditIcon: false,
+                                                      placeholder: false,
+                                                    ),
+                                                    DataCell(
+                                                      Text(
+                                                        itemRow.yestProg,
+                                                        style:
+                                                            descriptionStyleDark,
+                                                      ),
+                                                      showEditIcon: false,
+                                                      placeholder: false,
+                                                    ),
+                                                    DataCell(
+                                                      Text(
+                                                        itemRow.totalprog,
+                                                        style:
+                                                            descriptionStyleDark,
+                                                      ),
+                                                      showEditIcon: false,
+                                                      placeholder: false,
+                                                    ),
+                                                    DataCell(
+                                                      Text(
+                                                        itemRow.addedBy,
+                                                        style:
+                                                            descriptionStyleDark,
+                                                      ),
+                                                      showEditIcon: false,
+                                                      placeholder: false,
+                                                    ),
+                                                    DataCell(
+                                                      Text(
+                                                        itemRow.remarks,
+                                                        style:
+                                                            descriptionStyleDark,
+                                                      ),
+                                                      showEditIcon: false,
+                                                      placeholder: false,
+                                                    ),
+                                                  ],
+                                                );
+                                              }).toList(),
+                                            );
+                                          }
+                                          return Container(
+                                            child: Center(
+                                              child: Text(
+                                                "No Data Available",
+                                                style: descriptionStyleDark,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }),
+                                ),
+                                Divider(
+                                  thickness: 1,
+                                  color: Colors.black45,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Remarks:",
+                                        style: subTitleStyle,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "Transfer from store to construction site",
+                                        style: descriptionStyleDarkBlur1,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 550,
+                          ),
+                        ]));
+                  }
+                },
               )),
         ),
-        floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              GestureDetector(
-                onTap: (){
-                  GoToPage(
-                      context,
-                      AddProgressRemarks(
-                      ));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: backgroundColor,
-                  ),
-                  height: 40,
-                  width: 90,
-
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("ADD",style: subTitleStyleLight1,),
-                    ],
-                  ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: userRole != null &&
+                (userRole == UserRoles.Admin ||
+                    userRole == UserRoles.Manager ||
+                    userRole == UserRoles.StoreManager)
+            ? Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        GoToPage(
+                            context,
+                            AddProgressRemarks(
+                              currentUserId: widget.currentUserId,
+                              documentId: widget.documentId,
+                              tableName: "concreteEntries",
+                            ));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: backgroundColor,
+                        ),
+                        height: 40,
+                        width: 90,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "ADD",
+                              style: subTitleStyleLight1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        )
-    );
+              )
+            : null);
   }
 }
 
@@ -203,14 +367,8 @@ Widget subtext(String _left, String _right) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(
-            '$_left :',
-            style: subTitleStyle
-        ),
-        Text(
-            '$_right',
-            style: descriptionStyleDarkBlur1
-        ),
+        Text('$_left :', style: subTitleStyle),
+        Text('$_right', style: descriptionStyleDarkBlur1),
       ],
     ),
   );
@@ -222,19 +380,12 @@ Widget totalsubtext(String _left, String _right) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(
-            '$_left :',
-            style: titleStyle
-        ),
-        Text(
-            '$_right',
-            style: highlight
-        ),
+        Text('$_left :', style: titleStyle),
+        Text('$_right', style: highlight),
       ],
     ),
   );
 }
-
 
 class ItemInfo {
   String slNo;
@@ -261,43 +412,33 @@ var items = <ItemInfo>[
       yestProg: "30",
       totalprog: "220",
       addedBy: "Manager",
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '2',
       date: '29/Oct/2020',
       yestProg: "30",
       totalprog: "220",
       addedBy: "Manager",
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '3',
       date: '29/Oct/2020',
       yestProg: "30",
       totalprog: "220",
       addedBy: "Manager",
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '4',
       date: '29/Oct/2020',
       yestProg: "30",
       totalprog: "220",
       addedBy: "Manager",
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '5',
       date: '29/Oct/2020',
       yestProg: "30",
       totalprog: "220",
       addedBy: "Manager",
-      remarks: 'Transfer from store to cnstruction Site'
-
-  ),
+      remarks: 'Transfer from store to cnstruction Site'),
 ];

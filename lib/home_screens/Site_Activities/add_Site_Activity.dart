@@ -1,36 +1,69 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Site_Activities/site_Activities_HomePage.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:intl/intl.dart';
-import 'package:vector_math/vector_math.dart' as math;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AddSiteActivity extends StatelessWidget {
+class AddSiteActivity extends StatefulWidget {
+  final String currentUserId;
+
+  const AddSiteActivity({Key key, this.currentUserId}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_AddSiteActivity(),
-    );
-  }
+  _AddSiteActivity createState() => _AddSiteActivity();
 }
 
-class F_AddSiteActivity extends StatefulWidget {
-  @override
-  _F_AddSiteActivity createState() => _F_AddSiteActivity();
-}
-
-class _F_AddSiteActivity extends State<F_AddSiteActivity> {
+class _AddSiteActivity extends State<AddSiteActivity> {
   DateTime selectedDate = DateTime.now();
   DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
+
+  bool validated = false;
+
+  String selectedConstructionSite;
+  String selectedConstructionId;
+
+  String selectedUnits;
+  String selectedUnitsId;
+
+  String selectedBlock;
+  String selectedBlockId;
+
+  String selectedCategory;
+  String selectedCategoryId;
+
+  String selectedSubCategory;
+  String selectedSubCategoryId;
+
+  UserRoles userRole;
+  String userRoleValue;
+
+  String userName;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
+  }
+
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
@@ -38,13 +71,14 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
       firstDate: DateTime(1930),
       lastDate: DateTime(2010),
     );
-    if (pickedFrom != null){
+    if (pickedFrom != null) {
       setState(() {
         print(customFormat.format(pickedFrom));
         selectedDate = pickedFrom;
       });
     }
   }
+
   Future<Null> showPickerTo(BuildContext context) async {
     final DateTime pickedTo = await showDatePicker(
       context: context,
@@ -52,7 +86,7 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
       firstDate: DateTime(1930),
       lastDate: DateTime(2010),
     );
-    if (pickedTo != null){
+    if (pickedTo != null) {
       setState(() {
         print(customFormat.format(pickedTo));
         selectedDateInvoice = pickedTo;
@@ -62,19 +96,14 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _yesterdayProgressController = TextEditingController();
-  final FocusNode _yesterdayProgressFocusNode = FocusNode();
-  final TextEditingController _totalprogressController = TextEditingController();
-  final FocusNode _totalprogressFocusNode = FocusNode();
   final TextEditingController _remarkController = TextEditingController();
   final FocusNode _remarkFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -89,25 +118,29 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Container(width: 10,),
-          rightAction: (){
+          rightActionBar: Container(
+            width: 10,
+          ),
+          rightAction: () {
             print('right action bar is pressed in appbar');
           },
           primaryText: 'Add Activity',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           child: Form(
@@ -118,14 +151,21 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Date",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          Text(
+                            "Date",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           GestureDetector(
                             onTap: () => showPickerFrom(context),
                             child: Container(
@@ -136,142 +176,377 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
                                     size: 30.0,
                                     color: backgroundColor,
                                   ),
-                                  SizedBox(width: 10,),
-                                  Text(
-                                      '${customFormat2.format(selectedDate)}',
-                                      style: highlightDescription
+                                  SizedBox(
+                                    width: 10,
                                   ),
+                                  Text('${customFormat2.format(selectedDate)}',
+                                      style: highlightDescription),
                                 ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 20,),
-                          Text("Construction Site",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham",],
-                              label: "Construction Site",
-                              onChanged: print,
-                              selectedItem: "Choose Construction Site",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Block",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["1st", "2nd", "3rd", "4th"],
-                              label: "Block",
-                              onChanged: print,
-                              selectedItem: "Choose Block",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Category",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["Iron", "Steel", "Sand" ,"Cement","Bricks"],
-                              label: "Category",
-                              onChanged: print,
-                              selectedItem: "Choose Category",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Sub Category",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["Vasanth steels", "Sri Cements", "Vamsi Bricks"],
-                              label: "Sub Category",
-                              onChanged: print,
-                              selectedItem: "Choose Sub Category",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("UOM",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["Mtr", "Tons", "Nos" ,"units"],
-                              label: "Uom",
-                              onChanged: print,
-                              selectedItem: "Choose UOM",
-                              showSearchBox: true),
-                          SizedBox(height: 20,),
-                          Text("Yesterdays Progress",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          TextFormField(
-                            controller: _yesterdayProgressController,
-                            //initialValue: _name,
-                            textInputAction: TextInputAction.done,
-                            obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'Yesterdays Progress cant\'t be empty.',
-                            focusNode: _yesterdayProgressFocusNode,
-                            // onSaved: (value) => _name = value,
-                            decoration: new InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.data_usage,
-                                color: backgroundColor,
-                              ),
-                              labelText: 'Enter Yesterdays Progress',
-                              //fillColor: Colors.redAccent,
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(5.0),
-                                borderSide: new BorderSide(),
-                              ),
-                            ),
-
-                            keyboardType: TextInputType.number,
-                            style: new TextStyle(
-                              fontFamily: "Poppins",
-                            ),
+                          SizedBox(
+                            height: 20,
                           ),
-                          SizedBox(height: 20,),
-                          Text("Total Progress",style: titleStyle,),
-                          SizedBox(height: 20,),
-                          TextFormField(
-                            controller: _totalprogressController,
-                            //initialValue: _name,
-                            textInputAction: TextInputAction.done,
-                            obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'Total Progress cant\'t be empty.',
-                            focusNode: _totalprogressFocusNode,
-                            //onSaved: (value) => _name = value,
-                            decoration: new InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.trip_origin,
-                                color: backgroundColor,
-                              ),
-                              labelText: 'Enter Total Progress',
-                              //fillColor: Colors.redAccent,
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(5.0),
-                                borderSide: new BorderSide(),
-                              ),
-                            ),
-
-                            keyboardType: TextInputType.number,
-                            style: new TextStyle(
-                              fontFamily: "Poppins",
-                            ),
+                          Text(
+                            "Construction Site",
+                            style: titleStyle,
                           ),
-                          SizedBox(height: 20,),
-                          Text("Remarks",style: titleStyle,),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("constructionSite")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedConstructionSite = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedConstructionId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Construction Site",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedConstructionSite ??
+                                      "Choose Construction Site",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedConstructionSite == null ||
+                                            selectedConstructionSite.isEmpty)) {
+                                      return "Construction Site cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Block",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("blocks")
+                                .orderBy('name', descending: false)
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedBlock = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedBlockId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Block",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedBlock ?? "Choose Block",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedBlock == null ||
+                                            selectedBlock.isEmpty)) {
+                                      return "Block cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Category",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("category")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedCategory = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedCategoryId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Category",
+                                  onChanged: (value) {},
+                                  selectedItem:
+                                      selectedCategory ?? "Choose Category",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedCategory == null ||
+                                            selectedCategory.isEmpty)) {
+                                      return "Category cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Sub Category",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("subCategory")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedSubCategory = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedSubCategoryId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Sub Category",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedSubCategory ??
+                                      "Choose Sub Category",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedSubCategory == null ||
+                                            selectedSubCategory.isEmpty)) {
+                                      return "Sub Category cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "UOM",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("units")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedUnits = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedUnitsId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "UOM",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedUnits ?? "Choose UOM",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedUnits == null ||
+                                            selectedUnits.isEmpty)) {
+                                      return "UOM cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Remarks",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             controller: _remarkController,
                             //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
-                            validator: (value) => value.isNotEmpty ? null : 'Remarks cant\'t be empty.',
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'Remarks cant\'t be empty.',
                             focusNode: _remarkFocusNode,
                             //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
@@ -292,13 +567,15 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
                               fontFamily: "Poppins",
                             ),
                           ),
-                          SizedBox(height: 20,),
-
-
+                          SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -307,10 +584,76 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
                           width: 180,
                           child: GestureDetector(
                             onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SiteActivities(),),
-                      );
+                              if (_formKey.currentState.validate() &&
+                                  selectedSubCategory != null &&
+                                  selectedConstructionSite != null &&
+                                  selectedBlock != null &&
+                                  selectedCategory != null &&
+                                  selectedUnits != null) {
+                                _formKey.currentState.save();
+                                String documentId =
+                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+
+                                String currentDayTime = DateTimeUtils
+                                    .currentDayDateTimeNow
+                                    .millisecondsSinceEpoch
+                                    .toString();
+
+                                try {
+                                  Firestore.instance
+                                      .collection('siteActivities')
+                                      .document(documentId)
+                                      .setData({
+                                    'created_by': {
+                                      "id": widget.currentUserId,
+                                      "name": userName,
+                                      "role": userRoleValue,
+                                    },
+                                    'documentId': documentId,
+                                    'construction_site': {
+                                      "constructionId": selectedConstructionId,
+                                      "constructionSite":
+                                          selectedConstructionSite,
+                                    },
+                                    'block': {
+                                      "blockId": selectedBlockId,
+                                      "blockName": selectedBlock,
+                                    },
+                                    'category': {
+                                      "categoryId": selectedCategoryId,
+                                      "categoryName": selectedCategory,
+                                    },
+                                    'sub_category': {
+                                      "subCategoryId": selectedSubCategoryId,
+                                      "subCategoryName": selectedSubCategory,
+                                    },
+                                    'unit': {
+                                      "unitId": selectedUnitsId,
+                                      "unitName": selectedUnits,
+                                    },
+                                    'remark': _remarkController.text,
+                                    "added_on": FieldValue.serverTimestamp(),
+                                    "selected_date": selectedDate,
+                                  }).then((value) {
+                                    Navigator.pop(context);
+                                  });
+                                } catch (err) {
+                                  setState(() {
+                                    // isProcessing = false;
+                                    // error = err;
+                                  });
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      // isProcessing = false;
+                                    });
+                                  }
+                                }
+                              } else {
+                                setState(() {
+                                  validated = true;
+                                });
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -333,7 +676,9 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 50,
+                    ),
                   ],
                 ),
               ),
@@ -344,4 +689,3 @@ class _F_AddSiteActivity extends State<F_AddSiteActivity> {
     );
   }
 }
-

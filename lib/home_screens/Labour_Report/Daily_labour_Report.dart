@@ -1,41 +1,57 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Labour_Report/Add_report.dart';
 import 'package:bhavaniconnect/home_screens/Labour_Report/Detail_Report.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Print_Reports.dart';
 
+class LabourEntries extends StatefulWidget {
+  final String currentUserId;
 
+  const LabourEntries({Key key, this.currentUserId}) : super(key: key);
 
-class LabourEntries extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_LabourEntries(),
-    );
-  }
+  _LabourEntries createState() => _LabourEntries();
 }
 
-class F_LabourEntries extends StatefulWidget {
-  @override
-  _F_LabourEntries createState() => _F_LabourEntries();
-}
-
-class _F_LabourEntries extends State<F_LabourEntries> {
+class _LabourEntries extends State<LabourEntries> {
   int _n = 0;
+
+  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
+  DateTime endFilterDate =
+      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
+
+  UserRoles userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserRoles();
+  }
+
+  getUserRoles() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    setState(() {
+      userRole = userRoleValues[role];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -51,127 +67,109 @@ class _F_LabourEntries extends State<F_LabourEntries> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
-          rightActionBar: Icon(Icons.print,size: 25,color: Colors.white,),
-          rightAction: (){
+          rightActionBar: userRole != null &&
+                  (userRole == UserRoles.Admin ||
+                      userRole == UserRoles.Manager ||
+                      userRole == UserRoles.Accountant ||
+                      userRole == UserRoles.SiteEngineer)
+              ? Icon(
+                  Icons.print,
+                  size: 25,
+                  color: Colors.white,
+                )
+              : Container(height: 0, width: 0),
+          rightAction: () {
             GoToPage(
                 context,
                 PrintReport(
+                  startDate: startFilterDate,
+                  endDate: endFilterDate,
                 ));
           },
           primaryText: 'Daily Labour Report',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
-        child: Container(
-          color: Colors.white,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 20,),
-//                SingleChildScrollView(
-//                  scrollDirection: Axis.horizontal,
-//                  child: DataTable(
-//                    onSelectAll: (b) {},
-//                    sortAscending: true,
-//                    showCheckboxColumn: false,
-//                    dataRowHeight: 70.0,
-//                    columns: <DataColumn>[
-//                      DataColumn(label: Text("S.No.",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Created On",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Created By",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Labour Type",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Construction Site",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Block",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Dealer Name",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("No. of People ",style: subTitleStyle1,)),
-//                      DataColumn(label: Text("Propose",style: subTitleStyle1,)),
-//                    ],
-//                    rows: items
-//                        .map(
-//                          (itemRow) => DataRow(onSelectChanged: (b) {GoToPage(
-//                          context,
-//                              DetailReport());},
-//                        cells: [
-//                          DataCell(
-//                            Text(itemRow.slNo,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.date,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.createdBy,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.labourType,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.site,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.block,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.dealerName,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.noofPeople,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.purpose,style:descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                        ],
-//                      ),
-//                    )
-//                        .toList(),
-//                  ),
-//                ),
-                LabourEntry(size, context,"29 Oct 2020","Bhavani Vivan","Out Sourcing Employess","2A","Plumbing","Vasanth Agencies"),
-                SizedBox(height: 600,)
-              ],
-            ),
-          ),
-        ),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
+        child: userRole != null && userRole != UserRoles.Securtiy
+            ? Container(
+                color: Colors.white,
+                child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection("labourReport")
+                        .where("added_on", isGreaterThan: startFilterDate)
+                        .where("added_on", isLessThan: endFilterDate)
+                        .orderBy('added_on', descending: true)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        var result = snapshot.data.documents;
+                        return ListView.builder(
+                          itemCount: result.length,
+                          itemBuilder: (context, index) {
+                            return LabourEntry(
+                              size,
+                              context,
+                              result[index].documentID,
+                              DateTimeUtils.dayMonthYearTimeFormat(
+                                  (result[index]['added_on'] as Timestamp)
+                                      .toDate()),
+                              result[index]['construction_site']
+                                  ['constructionSite'],
+                              result[index]['labour_type'],
+                              result[index]['block']['blockName'],
+                              result[index]['purpose'],
+                              result[index]['dealer']['dealerName'],
+                              topPadding: index == 0 ? 40 : 20,
+                            );
+                          },
+                        );
+                      }
+                    }),
+              )
+            : Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: Colors.white,
+                child: Center(
+                  child: Text(
+                    "No access widget",
+                    style: titleStyle,
+                  ),
+                ),
+              ),
       ),
-      floatingActionButton:  FloatingActionButton(
-        onPressed: () {
-          GoToPage(
-              context,
-              AddLabourReport(
-              ));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: backgroundColor,
-      ),
+      floatingActionButton: userRole != null &&
+              (userRole == UserRoles.Admin ||
+                  userRole == UserRoles.SiteEngineer ||
+                  userRole == UserRoles.Manager)
+          ? FloatingActionButton(
+              onPressed: () {
+                GoToPage(
+                  context,
+                  AddLabourReport(
+                    currentUserId: widget.currentUserId,
+                  ),
+                );
+              },
+              child: Icon(Icons.add),
+              backgroundColor: backgroundColor,
+            )
+          : null,
     );
   }
 }
@@ -210,9 +208,7 @@ var items = <ItemInfo>[
       labourType: "Self employees",
       dealerName: "Vasanth Agencies",
       noofPeople: "20",
-      purpose: "Plumbing"
-
-  ),
+      purpose: "Plumbing"),
   ItemInfo(
       slNo: '2',
       date: '29/Oct/2020',
@@ -222,9 +218,7 @@ var items = <ItemInfo>[
       labourType: "Out Sourcing employees",
       dealerName: "Vasanth Agencies",
       noofPeople: "20",
-      purpose: "Plumbing"
-
-  ),
+      purpose: "Plumbing"),
   ItemInfo(
       slNo: '3',
       date: '29/Oct/2020',
@@ -234,9 +228,7 @@ var items = <ItemInfo>[
       labourType: "Self employees",
       dealerName: "Vasanth Agencies",
       noofPeople: "20",
-      purpose: "Plumbing"
-
-  ),
+      purpose: "Plumbing"),
   ItemInfo(
       slNo: '4',
       date: '29/Oct/2020',
@@ -246,9 +238,7 @@ var items = <ItemInfo>[
       labourType: "Out Sourcing employees",
       dealerName: "Vasanth Agencies",
       noofPeople: "20",
-      purpose: "Plumbing"
-
-  ),
+      purpose: "Plumbing"),
   ItemInfo(
       slNo: '5',
       createdBy: "Vasanth (Manager)",
@@ -258,32 +248,35 @@ var items = <ItemInfo>[
       labourType: "Self employees",
       dealerName: "Vasanth Agencies",
       noofPeople: "20",
-      purpose: "Plumbing"
-
-  ),
-
+      purpose: "Plumbing"),
 ];
 
-Widget LabourEntry(Size size, BuildContext context,String date,String site,String labourType,String block,String purpose,String dealerName)
-{
-  return  GestureDetector(
-    onTap: (){
-      GoToPage(context,DetailReport());
+Widget LabourEntry(
+    Size size,
+    BuildContext context,
+    String documentId,
+    String date,
+    String site,
+    String labourType,
+    String block,
+    String purpose,
+    String dealerName,
+    {double topPadding = 20.0}) {
+  return GestureDetector(
+    onTap: () {
+      GoToPage(context, DetailReport());
     },
     child: Padding(
-      padding: const EdgeInsets.only(right:15.0,left: 15,top: 20),
+      padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
         height: 210,
         child: Stack(
           children: <Widget>[
             Positioned(
-              right:15,
+              right: 15,
               top: 0,
-              child:Text(
-                  date,
-                  style: descriptionStyleDarkBlur3
-              ),
+              child: Text(date, style: descriptionStyleDarkBlur3),
             ),
             Positioned(
               bottom: 0,
@@ -304,10 +297,7 @@ Widget LabourEntry(Size size, BuildContext context,String date,String site,Strin
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                        site,
-                        style: subTitleStyle1
-                    ),
+                    Text(site, style: subTitleStyle1),
                     SizedBox(height: 10),
                     Text(
                       "Block: $block",
@@ -315,18 +305,13 @@ Widget LabourEntry(Size size, BuildContext context,String date,String site,Strin
                     ),
                     SizedBox(height: 10),
                     Expanded(
-                      child: Text(
-                          labourType,
+                      child: Text(labourType,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: subTitleStyleDark1
-                      ),
+                          style: subTitleStyleDark1),
                     ),
                     SizedBox(height: 10),
-                    Text(
-                        dealerName,
-                        style: subTitleStyle
-                    ),
+                    Text(dealerName, style: subTitleStyle),
                     SizedBox(height: 10),
                   ],
                 ),
@@ -348,10 +333,7 @@ Widget LabourEntry(Size size, BuildContext context,String date,String site,Strin
                       bottomRight: Radius.circular(24),
                     ),
                   ),
-                  child: Text(
-                      purpose,
-                      style: subTitleStyleLight
-                  ),
+                  child: Text(purpose, style: subTitleStyleLight),
                 ),
               ),
             ),

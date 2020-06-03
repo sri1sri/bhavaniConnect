@@ -7,21 +7,15 @@ import 'package:bhavaniconnect/home_screens/Add_Stock/Add_Stock_Screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class StockScreen extends StatelessWidget {
+class StockScreen extends StatefulWidget {
+  final String currentUserId;
+
+  const StockScreen({Key key, this.currentUserId}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_StockScreen(),
-    );
-  }
+  _StockScreen createState() => _StockScreen();
 }
 
-class F_StockScreen extends StatefulWidget {
-  @override
-  _F_StockScreen createState() => _F_StockScreen();
-}
-
-class _F_StockScreen extends State<F_StockScreen> {
+class _StockScreen extends State<StockScreen> {
   var Stock = [
     "Item",
     "Category",
