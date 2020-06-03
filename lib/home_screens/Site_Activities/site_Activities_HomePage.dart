@@ -143,7 +143,12 @@ class _SiteActivities extends State<SiteActivities> {
                                         color: Colors.white,
                                       ),
                                       onPressed: () {
-                                        GoToPage(context, PrintActivity());
+                                        GoToPage(
+                                            context,
+                                            PrintActivity(
+                                              startDate: startFilterDate,
+                                              endDate: endFilterDate,
+                                            ));
                                       },
                                     )
                                   : Container(),

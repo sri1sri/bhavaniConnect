@@ -10,6 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PrintActivity extends StatefulWidget {
+  final DateTime startDate;
+  final DateTime endDate;
+
+  const PrintActivity({Key key, this.startDate, this.endDate})
+      : super(key: key);
   @override
   _PrintActivity createState() => _PrintActivity();
 }
@@ -33,6 +38,14 @@ class _PrintActivity extends State<PrintActivity> {
 
   String selectedSubCategory;
   String selectedSubCategoryId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectedDateFrom = widget.startDate;
+    selectedDateTo = widget.endDate;
+  }
 
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(

@@ -87,7 +87,12 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                 )
               : Container(height: 0, width: 0),
           rightAction: () {
-            GoToPage(context, PrintEntries());
+            GoToPage(
+                context,
+                PrintEntries(
+                  startDate: startFilterDate,
+                  endDate: endFilterDate,
+                ));
           },
           primaryText: 'Concrete Entries',
           tabBarWidget: null,

@@ -631,6 +631,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                                       "unitId": selectedUnitsId,
                                       "unitName": selectedUnits,
                                     },
+                                    'total_progress': "0",
                                     'remark': _remarkController.text,
                                     "added_on": FieldValue.serverTimestamp(),
                                     "selected_date": selectedDate,

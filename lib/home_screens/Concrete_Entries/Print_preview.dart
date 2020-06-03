@@ -39,6 +39,21 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Firestore.instance
+        .collection("concreteEntries")
+        .where("construction_site.constructionId",
+            isEqualTo: widget.constructionId)
+        .where('concrete_type.concreteTypeId', isEqualTo: widget.concreteTypeId)
+        .where("block.blockId", isEqualTo: widget.blockId)
+        .where("added_on", isGreaterThan: widget.startDate)
+        .where("added_on", isLessThan: widget.endDate)
+        .orderBy('added_on', descending: true)
+        .getDocuments();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
   }
@@ -84,7 +99,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
           child: SingleChildScrollView(
             child: StreamBuilder(
                 stream: Firestore.instance
-                    .collection("siteActivities")
+                    .collection("concreteEntries")
                     .where("construction_site.constructionId",
                         isEqualTo: widget.constructionId)
                     .where('concrete_type.concreteTypeId',
@@ -104,8 +119,8 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
                     );
                   } else {
                     List<DocumentSnapshot> result = snapshot.data.documents;
-                    child:
-                    Column(
+
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(

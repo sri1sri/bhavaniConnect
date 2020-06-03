@@ -45,6 +45,22 @@ class _PrintPreview extends State<PrintPreview> {
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Firestore.instance
+        .collection("siteActivities")
+        .where("construction_site.constructionId",
+            isEqualTo: widget.constructionId)
+        .where('category.categoryId', isEqualTo: widget.categoryId)
+        .where("block.blockId", isEqualTo: widget.blockId)
+        .where("sub_category.subCategoryId", isEqualTo: widget.subCategoryId)
+        .where("added_on", isGreaterThan: widget.startDate)
+        .where("added_on", isLessThan: widget.endDate)
+        .orderBy('added_on', descending: true)
+        .getDocuments();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
   }

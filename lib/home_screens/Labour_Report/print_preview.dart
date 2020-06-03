@@ -45,6 +45,17 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Firestore.instance
+        .collection("labourReport")
+        .where("construction_site.constructionId",
+            isEqualTo: widget.constructionId)
+        .where('labour_type', isEqualTo: widget.labourType)
+        .where("block.blockId", isEqualTo: widget.blockId)
+        .where("dealer.dealerId", isEqualTo: widget.dealerId)
+        .where("added_on", isGreaterThan: widget.startDate)
+        .where("added_on", isLessThan: widget.endDate)
+        .orderBy('added_on', descending: true)
+        .getDocuments();
   }
 
   @override
