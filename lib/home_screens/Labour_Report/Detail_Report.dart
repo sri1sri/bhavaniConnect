@@ -97,7 +97,7 @@ class _DetailReport extends State<DetailReport> {
                               subtext("Dealer Name",
                                   result[0]['dealer']['dealerName']),
                               subtext(
-                                  "No. of People", result[0]['no_of_peoples']),
+                                  "No. of People", result[0]['no_of_people']),
                               subtext("Purpose", result[0]['purpose']),
                             ],
                           ),

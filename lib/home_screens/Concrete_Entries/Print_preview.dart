@@ -129,7 +129,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
                         Column(
                           children: [
                             Text(
-                              "21 October to 30 November",
+                              "${DateTimeUtils.dayMonthFormat(widget.startDate)} to ${DateTimeUtils.dayMonthFormat(widget.endDate)}",
                               style: subTitleStyleDark1,
                             ),
                             SizedBox(
@@ -139,7 +139,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${DateTimeUtils.dayMonthFormat(widget.startDate)} to ${DateTimeUtils.dayMonthFormat(widget.endDate)}",
+                                  widget.constructionSite ?? "All",
                                   style: descriptionStyleDarkBlur2,
                                 ),
                                 Text(
@@ -210,19 +210,23 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
                               index++;
                               ItemInfo itemRow = ItemInfo(
                                 slNo: index.toString(),
-                                block: item['block']['blockName'],
+                                block: item['block']['blockName'] ?? '',
                                 concType: item['concrete_type']
-                                    ['concreteTypeName'],
+                                        ['concreteTypeName'] ??
+                                    '',
                                 createdBy:
                                     "${item['created_by']['name']}  (${item['created_by']['role']})",
-                                totalProg: item['total_progress'],
-                                date: DateTimeUtils.slashDateFormat(
-                                    (item['added_on'] as Timestamp).toDate()),
-                                remarks: item['remark'],
+                                totalProg: item['total_progress'] ?? '',
+                                date: item['added_on'] != null
+                                    ? DateTimeUtils.slashDateFormat(
+                                        (item['added_on'] as Timestamp)
+                                            .toDate())
+                                    : '',
+                                remarks: item['remark'] ?? '',
                                 site: item['construction_site']
-                                    ['constructionSite'],
+                                        ['constructionSite'] ??
+                                    '',
                               );
-
                               return DataRow(
                                 onSelectChanged: (b) {},
                                 cells: [

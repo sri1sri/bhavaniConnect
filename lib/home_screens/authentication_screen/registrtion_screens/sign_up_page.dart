@@ -88,9 +88,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<Null> showPicker(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: initialDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
 
     if (picked != null) {

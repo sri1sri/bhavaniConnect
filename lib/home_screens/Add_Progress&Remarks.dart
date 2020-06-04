@@ -213,6 +213,7 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                     .currentDayDateTimeNow
                                     .millisecondsSinceEpoch
                                     .toString();
+                                int totalProgress = 0;
                                 try {
                                   Firestore.instance
                                       .collection(
@@ -230,7 +231,6 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                     'remark': _remarkController.text,
                                     "added_on": FieldValue.serverTimestamp(),
                                   }).then((value) async {
-                                    int totalProgress = 0;
                                     QuerySnapshot result = await Firestore
                                         .instance
                                         .collection(
@@ -242,17 +242,18 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                       for (int i = 0;
                                           i < result.documents.length;
                                           i++) {
-                                        totalProgress += int.parse(result
-                                            .documents[i]['yesterday_progess']);
+                                        totalProgress = totalProgress +
+                                            int.parse(result.documents[i]
+                                                ['yesterday_progress']);
                                       }
 
                                       Firestore.instance
                                           .collection(widget.tableName)
                                           .document(widget.documentId)
                                           .updateData({
-                                        'total_progress': totalProgress
+                                        'total_progress':
+                                            totalProgress.toString()
                                       });
-
                                       Navigator.pop(context);
                                     }
                                   });

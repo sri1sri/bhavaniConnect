@@ -3,7 +3,6 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Concrete_Entries/Concrete_HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:intl/intl.dart';
@@ -62,9 +61,9 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -77,9 +76,9 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
   Future<Null> showPickerTo(BuildContext context) async {
     final DateTime pickedTo = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {
@@ -91,12 +90,6 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _yesterdayProgressController =
-      TextEditingController();
-  final FocusNode _yesterdayProgressFocusNode = FocusNode();
-  final TextEditingController _totalprogressController =
-      TextEditingController();
-  final FocusNode _totalprogressFocusNode = FocusNode();
   final TextEditingController _remarkController = TextEditingController();
   final FocusNode _remarkFocusNode = FocusNode();
   @override
@@ -480,6 +473,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                                       "concreteTypeId": selectedConcreteTypeId,
                                       "concreteTypeName": selectedConcreteType,
                                     },
+                                    'total_progress': "0",
                                     'remark': _remarkController.text,
                                     "added_on": FieldValue.serverTimestamp(),
                                     "selected_date": selectedDate,

@@ -102,7 +102,7 @@ class _OTPPageState extends State<OTPPage> {
               height: 10,
             ),
             Text(
-              'Enter OTP sent to +91 9585753459.',
+              'Enter OTP sent to +91 ${this.phoneNo}.',
               style: descriptionStyle,
               textAlign: TextAlign.center,
             ),

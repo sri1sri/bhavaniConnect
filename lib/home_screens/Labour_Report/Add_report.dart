@@ -63,9 +63,9 @@ class _AddLabourReport extends State<AddLabourReport> {
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -78,9 +78,9 @@ class _AddLabourReport extends State<AddLabourReport> {
   Future<Null> showPickerTo(BuildContext context) async {
     final DateTime pickedTo = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {

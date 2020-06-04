@@ -3,8 +3,6 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Concrete_Entries/Print_preview.dart';
-import 'package:bhavaniconnect/home_screens/Site_Activities/print_preview.dart';
-import 'package:bhavaniconnect/home_screens/Site_Activities/site_Activities_HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,9 +47,9 @@ class _PrintEntries extends State<PrintEntries> {
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDateFrom,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: widget.startDate,
     );
     if (pickedFrom != null) {
       setState(() {
@@ -64,9 +62,9 @@ class _PrintEntries extends State<PrintEntries> {
   Future<Null> showPickerTo(BuildContext context) async {
     final DateTime pickedTo = await showDatePicker(
       context: context,
-      initialDate: DateTime(2010),
+      initialDate: selectedDateTo,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: widget.endDate,
     );
     if (pickedTo != null) {
       setState(() {

@@ -337,7 +337,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
 
   Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
-        .collection("stockRegister")
+        .collection("labourReport")
         .where("construction_site.constructionId",
             isEqualTo: widget.constructionId)
         .where("block.blockId", isEqualTo: widget.blockId)

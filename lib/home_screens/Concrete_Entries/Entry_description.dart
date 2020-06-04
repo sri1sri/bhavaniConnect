@@ -108,6 +108,11 @@ class _EntryDescription extends State<EntryDescription> {
                                     DateTimeUtils.slashDateFormat(
                                         (result[0]['added_on'] as Timestamp)
                                             .toDate())),
+                                subtext(
+                                    "Selected Date",
+                                    DateTimeUtils.slashDateFormat((result[0]
+                                            ['selected_date'] as Timestamp)
+                                        .toDate())),
                                 subtext("Created By",
                                     "${result[0]['created_by']['name']}  (${result[0]['created_by']['role']})"),
                                 subtext(
@@ -192,22 +197,23 @@ class _EntryDescription extends State<EntryDescription> {
                                                 totalProgress += int.parse(
                                                     row['yesterday_progress']);
                                                 ItemInfo itemRow = ItemInfo(
-                                                    slNo: index.toString(),
-                                                    date: DateTimeUtils
-                                                        .formatDayMonthYear(
-                                                            (row['added_on']
-                                                                    as Timestamp)
-                                                                .toDate()),
-                                                    yestProg:
-                                                        row['yesterday_progress']
-                                                            .toString(),
-                                                    totalprog: totalProgress
-                                                        .toString(),
-                                                    addedBy: row['created_by']
-                                                            ['role']
-                                                        .toString(),
-                                                    remarks: row['remark']
-                                                        .toString());
+                                                  slNo: index.toString(),
+                                                  date: DateTimeUtils
+                                                      .formatDayMonthYear(
+                                                          (row['added_on']
+                                                                  as Timestamp)
+                                                              .toDate()),
+                                                  yestProg:
+                                                      row['yesterday_progress']
+                                                          .toString(),
+                                                  totalprog:
+                                                      totalProgress.toString(),
+                                                  addedBy: row['created_by']
+                                                          ['role']
+                                                      .toString(),
+                                                  remarks:
+                                                      row['remark'].toString(),
+                                                );
                                                 return DataRow(
                                                   onSelectChanged: (b) {},
                                                   cells: [

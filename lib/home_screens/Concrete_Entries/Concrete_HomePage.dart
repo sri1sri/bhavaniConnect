@@ -132,7 +132,7 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                               result[index]['concrete_type']
                                   ['concreteTypeName'],
                               result[index]['block']['blockName'],
-                              "80",
+                              result[index]['total_progress'],
                               topPadding: index == 0 ? 40 : 20,
                             );
                           },

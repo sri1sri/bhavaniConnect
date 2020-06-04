@@ -241,7 +241,8 @@ class _PrintPreview extends State<PrintPreview> {
                                   ['constructionSite'],
                               date: DateTimeUtils.slashDateFormat(
                                   (item['added_on'] as Timestamp).toDate()),
-                              createdBy: item['created_by']['name'],
+                              createdBy:
+                                  "${item['created_by']['name']}  (${item['created_by']['role']})",
                               category: item['category']['categoryName'],
                               subCategory: item['sub_category']
                                   ['subCategoryName'],

@@ -111,6 +111,12 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
                                       (result[0]['added_on'] as Timestamp)
                                           .toDate()),
                                 ),
+                                subtext(
+                                  "Selected Date",
+                                  DateTimeUtils.slashDateFormat(
+                                      (result[0]['selected_date'] as Timestamp)
+                                          .toDate()),
+                                ),
                                 subtext("Created By",
                                     "${result[0]['created_by']['name']}  (${result[0]['created_by']['role']})"),
                                 subtext(
