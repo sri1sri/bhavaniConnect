@@ -2,11 +2,13 @@ import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Attendance/Employee_Attendance_Search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Add_Attendance.dart';
 
@@ -25,10 +27,30 @@ class _DisplayAttendance extends State<DisplayAttendance> {
   DateTime now = DateTime.now();
   String userSelected;
 
+  UserRoles userRole;
+  String userRoleValue;
+
+  String userName;
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     userSelected = widget.currentUserId;
+
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
   }
 
   SearchDialog(BuildContext context) {
@@ -302,28 +324,32 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                             ),
                             child: Row(
                               children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.people,
-                                    size: 25,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    GoToPage(context, SearchEmployeeAttendance(
-                                      employeeSearch: (userId, month) {
-                                        setState(() {
-                                          if (userId != null) {
-                                            userSelected = userId;
-                                          }
+                                userRole == UserRoles.Manager ||
+                                        userRole == UserRoles.Admin
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.people,
+                                          size: 25,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          GoToPage(context,
+                                              SearchEmployeeAttendance(
+                                            employeeSearch: (userId, month) {
+                                              setState(() {
+                                                if (userId != null) {
+                                                  userSelected = userId;
+                                                }
 
-                                          if (month != null) {
-                                            monthSelected = month;
-                                          }
-                                        });
-                                      },
-                                    ));
-                                  },
-                                ),
+                                                if (month != null) {
+                                                  monthSelected = month;
+                                                }
+                                              });
+                                            },
+                                          ));
+                                        },
+                                      )
+                                    : Container(),
                                 IconButton(
                                   icon: Icon(
                                     Icons.search,
