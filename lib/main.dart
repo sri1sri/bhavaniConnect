@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bhavaniconnect/geo/geo_util.dart';
 import 'package:bhavaniconnect/home_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/login_screens/phone_number_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/registrtion_screens/sign_up_page.dart';
@@ -7,7 +8,10 @@ import 'package:bhavaniconnect/home_screens/authentication_screen/splash_screens
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'geo/point.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,6 +112,20 @@ class _MyAppState extends State<MyApp> {
     }
     if (profile != null && profile['name'] != null) {
       prefs.setString("userName", profile['name']);
+    }
+    if (profile != null && profile['construction_site'] != null) {
+      prefs.setString(
+          "constructionId", profile['construction_site']['constructionId']);
+      prefs.setString(
+          "constructionSite", profile['construction_site']['constructionSite']);
+      DocumentSnapshot siteDocument = await Firestore.instance
+          .collection('constructionSite')
+          .document(profile['construction_site']['constructionId'])
+          .get();
+      LatLng location = GeoUtil.locationToPoint(siteDocument);
+
+      prefs.setDouble("siteLatitude", location.latitude);
+      prefs.setDouble("siteLongitude", location.longitude);
     }
   }
 

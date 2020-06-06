@@ -1,8 +1,10 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Attendance/Employee_Attendance_Search.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +20,17 @@ class DisplayAttendance extends StatefulWidget {
 
 class _DisplayAttendance extends State<DisplayAttendance> {
   int selectedValue;
+  int monthSelected = DateTime.now().month;
+  int yearSelected = DateTime.now().year;
+  DateTime now = DateTime.now();
+  String userSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    userSelected = widget.currentUserId;
+  }
+
   SearchDialog(BuildContext context) {
     Dialog fancyDialog = Dialog(
       shape: RoundedRectangleBorder(
@@ -42,9 +55,9 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                 child: CupertinoPicker(
                   onSelectedItemChanged: (value) {
                     setState(() {
-                      selectedValue = value;
+                      selectedValue = value + 1;
+                      monthSelected = value + 1;
                     });
-                    print(value);
                   },
                   itemExtent: 40.0,
                   children: const [
@@ -296,8 +309,19 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                     color: Colors.white,
                                   ),
                                   onPressed: () {
-                                    GoToPage(
-                                        context, SearchEmployeeAttendance());
+                                    GoToPage(context, SearchEmployeeAttendance(
+                                      employeeSearch: (userId, month) {
+                                        setState(() {
+                                          if (userId != null) {
+                                            userSelected = userId;
+                                          }
+
+                                          if (month != null) {
+                                            monthSelected = month;
+                                          }
+                                        });
+                                      },
+                                    ));
                                   },
                                 ),
                                 IconButton(
@@ -335,16 +359,21 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          attendanceCard(
-                              "29", "Oct", "2020", "10.30 am", "05.45 pm"),
-                          attendanceCard(
-                              "30", "Oct", "2020", "10.50 am", "06.33 pm"),
-                          attendanceCard(
-                              "02", "Nov", "2020", "11.00 am", "07.50 pm"),
-                          attendanceCard(
-                              "06", "Nov", "2020", "10.22 am", "06.32 pm"),
-                        ],
+                        children: List.generate(
+                            DateTimeUtils.daysInMonth(
+                                monthSelected, yearSelected), (index) {
+                          DateTime dateTime =
+                              DateTime(yearSelected, monthSelected, index + 1);
+                          if (now
+                                  .toUtc()
+                                  .difference(dateTime.toUtc())
+                                  .inMilliseconds >
+                              0) {
+                            return attendanceCard(dateTime);
+                          } else {
+                            return Container();
+                          }
+                        }),
                       ),
                     ),
                   ]))),
@@ -357,7 +386,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  GoToPage(context, AddAttendance());
+                  GoToPage(context, AddAttendance(currentUserId: userSelected));
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -381,123 +410,162 @@ class _DisplayAttendance extends State<DisplayAttendance> {
           ),
         ));
   }
-}
 
-Widget attendanceCard(
-    String day, String month, String year, String inTime, String outTime) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 10.0, bottom: 10),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              color: backgroundColor, borderRadius: BorderRadius.circular(15)),
-          height: 90,
-          width: 70,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                day,
-                style: titleStylelight,
-              ),
-              Text(
-                month,
-                style: descriptionStyleLite1,
-              ),
-              Text(
-                year,
-                style: descriptionStyleLite1,
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Container(
-            decoration: BoxDecoration(
-                color: backgroundColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(15)),
-            height: 90,
-            width: 300,
-            child: Row(
+  Widget attendanceCard(DateTime datetime) {
+    String day;
+    String month;
+    String year;
+    String inTime;
+    String outTime;
+
+    String documentId =
+        datetime.millisecondsSinceEpoch.toString() + userSelected;
+    print(documentId);
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+      child: StreamBuilder(
+        stream: Firestore.instance
+            .collection('attendance')
+            .document(documentId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator();
+          } else {
+            day = DateTimeUtils.formatDay(datetime);
+            month = DateTimeUtils.formatAbbrMonth(datetime);
+            year = DateTimeUtils.yearFormat(datetime);
+            if (snapshot.data != null && snapshot.data.data != null) {
+              inTime = DateTimeUtils.hourMinuteFormat(
+                  (snapshot.data.data['punch_in'] as Timestamp).toDate());
+              outTime = DateTimeUtils.hourMinuteFormat(
+                  (snapshot.data.data['punch_out'] as Timestamp).toDate());
+            }
+
+            return Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.call_received,
-                      size: 30,
-                      color: Colors.green,
-                    ),
-                    SizedBox(
-                      width: 7,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Punch In",
-                          style: descriptionStyleDark,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          inTime,
-                          style: subTitleStyleDark1,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 2,
-                    height: double.maxFinite,
-                    color: Colors.grey,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: BorderRadius.circular(15)),
+                  height: 90,
+                  width: 70,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        day,
+                        style: titleStylelight,
+                      ),
+                      Text(
+                        month,
+                        style: descriptionStyleLite1,
+                      ),
+                      Text(
+                        year,
+                        style: descriptionStyleLite1,
+                      )
+                    ],
                   ),
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 10,
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.call_made,
-                      size: 30,
-                      color: Colors.red,
-                    ),
-                    SizedBox(
-                      width: 7,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Punch Out",
-                          style: descriptionStyleDark,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          outTime,
-                          style: subTitleStyleDark1,
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                Container(
+                    decoration: BoxDecoration(
+                        color: backgroundColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(15)),
+                    alignment: Alignment.center,
+                    height: 90,
+                    width: 300,
+                    child: inTime == null
+                        ? Text(
+                            DateTimeUtils.weekDayFormat(datetime) == "Sunday"
+                                ? "Holiday"
+                                : "Absent",
+                            style: subTitleStyleDark1,
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.call_received,
+                                    size: 30,
+                                    color: Colors.green,
+                                  ),
+                                  SizedBox(
+                                    width: 7,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Punch In",
+                                        style: descriptionStyleDark,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        inTime,
+                                        style: subTitleStyleDark1,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 2,
+                                  height: double.maxFinite,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.call_made,
+                                    size: 30,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    width: 7,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Punch Out",
+                                        style: descriptionStyleDark,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        outTime,
+                                        style: subTitleStyleDark1,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ))
               ],
-            ))
-      ],
-    ),
-  );
+            );
+          }
+        },
+      ),
+    );
+  }
 }

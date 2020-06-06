@@ -24,7 +24,7 @@ class ConcreteEntries extends StatefulWidget {
 class _ConcreteEntries extends State<ConcreteEntries> {
   int _n = 0;
 
-  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
+  DateTime startFilterDate = DateTime(2010);
   DateTime endFilterDate =
       DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
 
@@ -90,7 +90,7 @@ class _ConcreteEntries extends State<ConcreteEntries> {
             GoToPage(
                 context,
                 PrintEntries(
-                  startDate: startFilterDate,
+                  startDate: DateTimeUtils.currentDayDateTimeNow,
                   endDate: endFilterDate,
                 ));
           },

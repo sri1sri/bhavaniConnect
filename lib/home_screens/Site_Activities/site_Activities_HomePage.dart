@@ -146,7 +146,8 @@ class _SiteActivities extends State<SiteActivities> {
                                         GoToPage(
                                             context,
                                             PrintActivity(
-                                              startDate: startFilterDate,
+                                              startDate: DateTimeUtils
+                                                  .currentDayDateTimeNow,
                                               endDate: endFilterDate,
                                             ));
                                       },
@@ -191,7 +192,7 @@ class _SiteActivities extends State<SiteActivities> {
                                       .toDate()),
                               result[index]['construction_site']
                                   ['constructionSite'],
-                              "28 Tons of TMT rods with steel blend.",
+                              "${result[index]['category']['categoryName']} with ${result[index]['sub_category']['subCategoryName']}",
                               result[index]['category']['categoryName'],
                               result[index]['block']['blockName'],
                               result[index]['total_progress'].toString(),

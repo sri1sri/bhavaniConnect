@@ -7,6 +7,7 @@ class DateTimeUtils {
   static final DateFormat _monthDayYearFormat = new DateFormat("MMM dd, yyyy");
   static final DateFormat _firstDayFormat = new DateFormat("MMM dd");
   static final DateFormat _dayMonthYearFormat = new DateFormat("dd MMM yyyy");
+  static final DateFormat _weekDayFormat = new DateFormat("EEEE");
   static final DateFormat _dayMonthYearTimeFormat =
       new DateFormat("dd MMM yyyy H:mm a");
   static final DateFormat _fullDayFormat = new DateFormat("EEE MMM dd, yyyy");
@@ -17,21 +18,31 @@ class DateTimeUtils {
   static final DateFormat _dotDateFormat = new DateFormat('dd.MM.yyy');
   static final DateFormat _slashDateFormat = new DateFormat('dd/MMM/yyyy');
   static final DateFormat _dayMonthFormat = new DateFormat("dd MMMM");
+  static final DateFormat _monthFormat = new DateFormat("MMMM");
+  static final DateFormat _monthAbbrFormat = new DateFormat("MMM");
+  static final DateFormat _yearFormat = new DateFormat("yyyy");
+  static final DateFormat _hourMinuteDifferenceFormat = new DateFormat("hh:mm");
 
   static String formatMonthYear(DateTime d) => _monthYearFormat.format(d);
   static String formatDayMonthYear(DateTime d) => _dayMonthYearFormat.format(d);
   static String formatDay(DateTime d) => _dayFormat.format(d);
   static String formatMonthDayYear(DateTime d) => _monthDayYearFormat.format(d);
   static String formatFirstDay(DateTime d) => _firstDayFormat.format(d);
+  static String formatMonth(DateTime d) => _monthFormat.format(d);
+  static String formatAbbrMonth(DateTime d) => _monthAbbrFormat.format(d);
   static String fullDayFormat(DateTime d) => _fullDayFormat.format(d);
+  static String weekDayFormat(DateTime d) => _weekDayFormat.format(d);
   static String apiDayFormat(DateTime d) => _apiDayFormat.format(d);
   static String monthDayTimeFormat(DateTime d) => _monthDaytimeFormat.format(d);
   static String hourMinuteFormat(DateTime d) => _hourMinuteFormat.format(d);
+  static String hourMinuteDifferenceFormat(DateTime d) =>
+      _hourMinuteDifferenceFormat.format(d);
   static String slashDateFormat(DateTime d) => _slashDateFormat.format(d);
   static String dotDateFormat(DateTime d) => _dotDateFormat.format(d);
   static String dayMonthFormat(DateTime d) => _dayMonthFormat.format(d);
   static String dayMonthYearTimeFormat(DateTime d) =>
       _dayMonthYearTimeFormat.format(d);
+  static String yearFormat(DateTime d) => _yearFormat.format(d);
 
   static const List<String> weekdays = const [
     "Sun",
@@ -41,6 +52,21 @@ class DateTimeUtils {
     "Thu",
     "Fri",
     "Sat"
+  ];
+
+  static const List<String> months = const [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ];
 
   static int weekOfYear(DateTime date) {
@@ -65,24 +91,6 @@ class DateTimeUtils {
       var diff = higherDate.difference(firstDayOfWeek).inDays;
       return diff.abs() < 7;
     }
-  }
-
-  /// The list of days in a given month
-  static List<DateTime> daysInMonth(DateTime month) {
-    var first = firstDayOfMonth(month);
-    var daysBefore = first.weekday;
-    var firstToDisplay = first.subtract(new Duration(days: daysBefore));
-    var last = lastDayOfMonth(month);
-
-    var daysAfter = 7 - last.weekday;
-
-    // If the last day is sunday (7) the entire week must be rendered
-    if (daysAfter == 0) {
-      daysAfter = 7;
-    }
-
-    var lastToDisplay = last.add(new Duration(days: daysAfter));
-    return daysInRange(firstToDisplay, lastToDisplay).toList();
   }
 
   static bool isFirstDayOfMonth(DateTime day) {
@@ -192,6 +200,25 @@ class DateTimeUtils {
     return new DateTime(year, month);
   }
 
+  static String getDifferenceTime(DateTime d1, DateTime d2) {
+    int diff = d2.toUtc().difference(d1.toUtc()).inMilliseconds;
+    print(d1.millisecondsSinceEpoch - d2.millisecondsSinceEpoch);
+    print(d1.millisecondsSinceEpoch);
+    print(d2.millisecondsSinceEpoch);
+    if (diff > 0) {
+      var result;
+      var seconds = diff / 1000;
+      var hours = 0;
+      var minutes = 0;
+
+      hours = (seconds / 3600).floor();
+      minutes = ((seconds % 3600) / 60).floor();
+      return "$hours:$minutes";
+    } else {
+      return "-";
+    }
+  }
+
   static DateTime previousWeek(DateTime w) {
     return w.subtract(new Duration(days: 7));
   }
@@ -272,5 +299,39 @@ class DateTimeUtils {
       result = "${years.round()} years";
 
     return "$result $suffix";
+  }
+
+  static int daysInMonth(int monthNum, int year) {
+    List<int> monthLength = new List(12);
+
+    monthLength[0] = 31;
+    monthLength[2] = 31;
+    monthLength[4] = 31;
+    monthLength[6] = 31;
+    monthLength[7] = 31;
+    monthLength[9] = 31;
+    monthLength[11] = 31;
+    monthLength[3] = 30;
+    monthLength[8] = 30;
+    monthLength[5] = 30;
+    monthLength[10] = 30;
+
+    if (leapYear(year) == true)
+      monthLength[1] = 29;
+    else
+      monthLength[1] = 28;
+
+    return monthLength[monthNum - 1];
+  }
+
+  static leapYear(int year) {
+    bool leapYear = false;
+
+    bool leap = ((year % 100 == 0) && (year % 400 != 0));
+    if (leap == true)
+      leapYear = false;
+    else if (year % 4 == 0) leapYear = true;
+
+    return leapYear;
   }
 }

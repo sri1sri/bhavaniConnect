@@ -317,26 +317,26 @@ Widget LabourEntry(
                 ),
               ),
             ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: SizedBox(
-                height: 50,
-                width: size.width * .40,
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      bottomRight: Radius.circular(24),
-                    ),
-                  ),
-                  child: Text(purpose, style: subTitleStyleLight),
-                ),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 0,
+            //   right: 0,
+            //   child: SizedBox(
+            //     height: 50,
+            //     width: size.width * .40,
+            //     child: Container(
+            //       alignment: Alignment.center,
+            //       padding: EdgeInsets.symmetric(vertical: 10),
+            //       decoration: BoxDecoration(
+            //         color: backgroundColor,
+            //         borderRadius: BorderRadius.only(
+            //           topLeft: Radius.circular(24),
+            //           bottomRight: Radius.circular(24),
+            //         ),
+            //       ),
+            //       child: Text(purpose, style: subTitleStyleLight),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
