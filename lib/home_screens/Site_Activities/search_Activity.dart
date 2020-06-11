@@ -2,18 +2,39 @@ import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Site_Activities/site_Activities_HomePage.dart';
+import 'package:bhavaniconnect/home_screens/Site_Activities/search_result_site_activities.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchActivity extends StatefulWidget {
+  final String currentUserId;
+
+  const SearchActivity({Key key, this.currentUserId}) : super(key: key);
   @override
   _SearchActivity createState() => _SearchActivity();
 }
 
 class _SearchActivity extends State<SearchActivity> {
   final _formKey = GlobalKey<FormState>();
+  bool validated = false;
+
+  String selectedConstructionSite;
+  String selectedConstructionId;
+
+  String selectedUnits;
+  String selectedUnitsId;
+
+  String selectedBlock;
+  String selectedBlockId;
+
+  String selectedCategory;
+  String selectedCategoryId;
+
+  String selectedSubCategory;
+  String selectedSubCategoryId;
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -82,22 +103,65 @@ class _SearchActivity extends State<SearchActivity> {
                           SizedBox(
                             height: 20,
                           ),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 500,
-                              mode: Mode.DIALOG,
-                              items: [
-                                "Bhavani Vivan",
-                                "Bahavani Aravindham",
-                                "Bhavani Vivan",
-                                "Bahavani Aravindham",
-                                "Bhavani Vivan",
-                                "Bahavani Aravindham",
-                              ],
-                              label: "Construction Site",
-                              onChanged: print,
-                              selectedItem: "Choose Construction Site",
-                              showSearchBox: true),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("constructionSite")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedConstructionSite = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedConstructionId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Construction Site",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedConstructionSite ??
+                                      "Choose Construction Site",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedConstructionSite == null ||
+                                            selectedConstructionSite.isEmpty)) {
+                                      return "Construction Site cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -108,15 +172,65 @@ class _SearchActivity extends State<SearchActivity> {
                           SizedBox(
                             height: 20,
                           ),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: ["1st", "2nd", "3rd", "4th"],
-                              label: "Block",
-                              onChanged: print,
-                              selectedItem: "Choose Block",
-                              showSearchBox: true),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("blocks")
+                                .orderBy('name', descending: false)
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedBlock = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedBlockId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Block",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedBlock ?? "Choose Block",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedBlock == null ||
+                                            selectedBlock.isEmpty)) {
+                                      return "Block cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -127,21 +241,65 @@ class _SearchActivity extends State<SearchActivity> {
                           SizedBox(
                             height: 20,
                           ),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: [
-                                "Iron",
-                                "Steel",
-                                "Sand",
-                                "Cement",
-                                "Bricks"
-                              ],
-                              label: "Category",
-                              onChanged: print,
-                              selectedItem: "Choose Category",
-                              showSearchBox: true),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("category")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedCategory = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedCategoryId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Category",
+                                  onChanged: (value) {},
+                                  selectedItem:
+                                      selectedCategory ?? "Choose Category",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedCategory == null ||
+                                            selectedCategory.isEmpty)) {
+                                      return "Category cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -152,19 +310,65 @@ class _SearchActivity extends State<SearchActivity> {
                           SizedBox(
                             height: 20,
                           ),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: [
-                                "Vasanth steels",
-                                "Sri Cements",
-                                "Vamsi Bricks"
-                              ],
-                              label: "Sub Category",
-                              onChanged: print,
-                              selectedItem: "Choose Sub Category",
-                              showSearchBox: true),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("subCategory")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedSubCategory = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedSubCategoryId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Sub Category",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedSubCategory ??
+                                      "Choose Sub Category",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedSubCategory == null ||
+                                            selectedSubCategory.isEmpty)) {
+                                      return "Sub Category cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -185,7 +389,20 @@ class _SearchActivity extends State<SearchActivity> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SiteActivities(),
+                                  builder: (context) => SearchResultActivities(
+                                    currentUserId: widget.currentUserId,
+                                    selectedConstructionId:
+                                        selectedConstructionId,
+                                    selectedConstructionSite:
+                                        selectedConstructionSite,
+                                    selectedBlock: selectedBlock,
+                                    selectedBlockId: selectedBlockId,
+                                    selectedCategory: selectedCategory,
+                                    selectedCategoryId: selectedCategoryId,
+                                    selectedSubCategory: selectedSubCategory,
+                                    selectedSubCategoryId:
+                                        selectedSubCategoryId,
+                                  ),
                                 ),
                               );
                             },

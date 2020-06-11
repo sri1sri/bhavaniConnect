@@ -11,17 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PrintReport extends StatefulWidget {
-  final DateTime startDate;
-  final DateTime endDate;
+  // final DateTime startDate;
+  // final DateTime endDate;
 
-  const PrintReport({Key key, this.startDate, this.endDate}) : super(key: key);
+  // const PrintReport({Key key, this.startDate, this.endDate}) : super(key: key);
   @override
   _PrintReport createState() => _PrintReport();
 }
 
 class _PrintReport extends State<PrintReport> {
-  DateTime selectedDateFrom = DateTime.now();
-  DateTime selectedDateTo = DateTime.now();
+  DateTime selectedDateFrom = DateTime(2010);
+  DateTime selectedDateTo = DateTime(2010);
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -38,20 +38,12 @@ class _PrintReport extends State<PrintReport> {
 
   bool validated = false;
 
-  @override
-  void initState() {
-    super.initState();
-
-    selectedDateFrom = widget.startDate;
-    selectedDateTo = widget.endDate;
-  }
-
   Future<Null> showPickerFrom(BuildContext context) async {
     final DateTime pickedFrom = await showDatePicker(
       context: context,
       initialDate: selectedDateFrom,
       firstDate: DateTime(1930),
-      lastDate: widget.startDate,
+      lastDate: selectedDateTo,
     );
     if (pickedFrom != null) {
       setState(() {
@@ -66,7 +58,7 @@ class _PrintReport extends State<PrintReport> {
       context: context,
       initialDate: selectedDateTo,
       firstDate: DateTime(1930),
-      lastDate: widget.endDate,
+      lastDate: selectedDateTo,
     );
     if (pickedTo != null) {
       setState(() {

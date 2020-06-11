@@ -1,40 +1,34 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
-import 'package:vector_math/vector_math.dart' as math;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AddVehicle extends StatelessWidget {
+class AddVehicle extends StatefulWidget {
+  final String currentUserId;
+
+  const AddVehicle({Key key, this.currentUserId}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: F_AddVehicle(),
-    );
-  }
+  _AddVehicle createState() => _AddVehicle();
 }
 
-class F_AddVehicle extends StatefulWidget {
-  @override
-  _F_AddVehicle createState() => _F_AddVehicle();
-}
-
-class _F_AddVehicle extends State<F_AddVehicle> {
+class _AddVehicle extends State<AddVehicle> {
   final _formKey = GlobalKey<FormState>();
   String _myActivity;
   String _myActivityResult;
   FocusNode focusNode = FocusNode();
-  final TextEditingController _sellerNameController = TextEditingController();
-  final FocusNode _sellerNameFocusNode = FocusNode();
-  final TextEditingController _vehicleNumberController = TextEditingController();
+  // final TextEditingController _sellerNameController = TextEditingController();
+  // final FocusNode _sellerNameFocusNode = FocusNode();
+  final TextEditingController _vehicleNumberController =
+      TextEditingController();
   final FocusNode _vehicleNumbeFocusNode = FocusNode();
-  final TextEditingController _UnitController = TextEditingController();
-  final FocusNode _UnitFocusNode = FocusNode();
+  final TextEditingController _unitController = TextEditingController();
+  final FocusNode _unitFocusNode = FocusNode();
   List dataSource = [
     {
       "display": "Running",
@@ -65,6 +59,36 @@ class _F_AddVehicle extends State<F_AddVehicle> {
       "value": "Football Practice",
     },
   ];
+  // int _key;
+  // _collapse() {
+  //   int newKey;
+  //   do {
+  //     _key = new Random().nextInt(10000);
+  //   } while (newKey == _key);
+  // }
+
+  String vehicleCategory = '';
+  String vehicleCategoryId;
+
+  String selectedConstructionSite;
+  String selectedConstructionId;
+  bool validated = false;
+
+  String selectedDealer;
+  String selectedDealerId;
+
+  String _selectedUnitId;
+  String _selectedUnit;
+  String _selectedVehicleType = '';
+
+  UserRoles userRole;
+  String userRoleValue;
+  String userName;
+  // String userConstructionSiteId;
+  // String userConstructionSite;
+  List<String> permissionDocId = [];
+  List<String> permissionDocUserName = [];
+  List<String> permissionDocUserRole = [];
 
   @override
   void initState() {
@@ -73,19 +97,66 @@ class _F_AddVehicle extends State<F_AddVehicle> {
     _myActivityResult = '';
     focusNode.addListener(() {
       focusNode.unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
-//      focusNode.
+      //      focusNode.
+    });
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    // userConstructionSiteId = prefs.getString("userConstSiteId");
+    // userConstructionSite = prefs.getString("userConstSite");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
     });
   }
 
-//  _saveForm() {
-//    var form = formKey.currentState;
-//    if (form.validate()) {
-//      setState(() {
-//        _myActivityResult = _myActivity;
-//      });
-//    }
-//  }
+  permissionSetData(
+      String vehicleDocumentId, constructionSite, constructionId) async {
+    permissionDocId = [];
+    permissionDocUserName = [];
+    permissionDocUserRole = [];
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection("userData")
+        .where("construction_site.constructionId", isEqualTo: constructionId)
+        .where("role",
+            whereIn: ["Supervisor", "Store Manager", "Manager"]).getDocuments();
+    var list = querySnapshot.documents;
 
+    for (int i = 0; i < list.length; i++) {
+      permissionDocId.add(list[i].documentID);
+      permissionDocUserName.add(list[i].data['name']);
+      permissionDocUserRole.add(list[i].data['role']);
+    }
+
+    // print(permissionDocId.length);
+    // print("-------------$permissionDocId---------------");
+    // print("-------------$permissionDocUserName---------------");
+    // print("-------------$permissionDocUserRole---------------");
+
+    await Firestore.instance
+        .collection('pendingRequests')
+        .document(vehicleDocumentId)
+        .setData({
+      'collectionDocId': vehicleDocumentId,
+      'created_by': {
+        "id": widget.currentUserId,
+        "name": userName,
+        "role": userRoleValue,
+      },
+      'permission_by': {
+        "id": permissionDocId,
+        "name": permissionDocUserName,
+        "role": permissionDocUserRole,
+      },
+      "added_on": FieldValue.serverTimestamp(),
+      'collectionName': "vehicleEntries"
+    });
+  }
 
   var category = [
     "Jcb/Hitachi",
@@ -114,19 +185,15 @@ class _F_AddVehicle extends State<F_AddVehicle> {
     "images/c10.png",
     "images/inventory.png",
     "images/c11.png",
-
-
   ];
-
 
   int _n = 0;
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
-
   }
 
-  Widget offlineWidget (BuildContext context){
+  Widget offlineWidget(BuildContext context) {
     return CustomOfflineWidget(
       onlineChild: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -141,17 +208,21 @@ class _F_AddVehicle extends State<F_AddVehicle> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize:
-        Size.fromHeight(70),
+        preferredSize: Size.fromHeight(72),
         child: CustomAppBarDark(
-          leftActionBar: Icon(Icons.arrow_back_ios,size: 25,color: Colors.white,),
-          leftAction: (){
-            Navigator.pop(context,true);
+          leftActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: Colors.white,
+          ),
+          leftAction: () {
+            Navigator.pop(context, true);
           },
           rightActionBar: Container(
             padding: EdgeInsets.only(top: 10),
             child: InkWell(
-                child: Icon(Icons.more_vert,
+                child: Icon(
+                  Icons.more_vert,
                   color: backgroundColor,
                   size: 30,
                 ),
@@ -161,20 +232,18 @@ class _F_AddVehicle extends State<F_AddVehicle> {
 //                    MaterialPageRoute(
 //                        builder: (context) => SettingsPage() ),
 //                  );
-                }
-            ),
+                }),
           ),
-          rightAction: (){
+          rightAction: () {
             print('right action bar is pressed in appbar');
           },
           primaryText: 'Add vehicle',
           tabBarWidget: null,
         ),
       ),
-      body:ClipRRect(
+      body: ClipRRect(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50.0),
-            topLeft: Radius.circular(50.0)),
+            topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
           child: Form(
@@ -183,166 +252,312 @@ class _F_AddVehicle extends State<F_AddVehicle> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text("Vehicle category",style: titleStyle,),
+                  SizedBox(
+                    height: 30,
                   ),
-            ExpansionTile(
-              title: Text("Choose the Vehicle",style: descriptionStyleDarkBlur1,),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 420,
-                    child: Expanded(
-                      child: GridView.builder(
-                        itemCount: category.length,
-                        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,mainAxisSpacing: 5,crossAxisSpacing: 10
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return new GestureDetector(
-                            child: new Card(
-                              elevation: 10.0,
-                              child: new Container(
-                                alignment: Alignment.center,
-                                margin: new EdgeInsets.only(
-                                    top: 5.0, bottom: 0.0, left: 0.0, right: 0.0),
-                                child: new Column(
-                                  children: <Widget>[
-                                    Image.asset(
-                                      F_image[index],height: 70,
-                                    ),
-                                    SizedBox(height: 5,),
-                                    new Text(
-                                      category[index],
-                                      style: descriptionStyle,
-                                    ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(10.0),
+                  //   child: Text(
+                  //     "Vehicle category",
+                  //     style: titleStyle,
+                  //   ),
+                  // ),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(color: Color(0xffBFBFBF), width: 1),
+                  //     borderRadius: BorderRadius.all(
+                  //       Radius.circular(5),
+                  //     ),
+                  //   ),
+                  //   margin: EdgeInsets.only(left: 10, right: 10),
+                  //   child: ExpansionTile(
+                  //       key: new Key(_key.toString()),
+                  //       title: Text(
+                  //         vehicleCategory != ""
+                  //             ? vehicleCategory
+                  //             : "Choose the Vehicle",
+                  //         style: descriptionStyleDarkBlur1,
+                  //       ),
+                  //       children: [
+                  //         Padding(
+                  //           padding: const EdgeInsets.all(10.0),
+                  //           child: Container(
+                  //             height: 420,
+                  //             child: Expanded(
+                  //               child: GridView.builder(
+                  //                 itemCount: category.length,
+                  //                 gridDelegate:
+                  //                     new SliverGridDelegateWithFixedCrossAxisCount(
+                  //                         crossAxisCount: 3,
+                  //                         mainAxisSpacing: 5,
+                  //                         crossAxisSpacing: 10),
+                  //                 itemBuilder:
+                  //                     (BuildContext context, int index) {
+                  //                   return new GestureDetector(
+                  //                     child: new Card(
+                  //                       elevation: 10.0,
+                  //                       child: new Container(
+                  //                         alignment: Alignment.center,
+                  //                         margin: new EdgeInsets.only(
+                  //                             top: 5.0,
+                  //                             bottom: 0.0,
+                  //                             left: 0.0,
+                  //                             right: 0.0),
+                  //                         child: new Column(
+                  //                           children: <Widget>[
+                  //                             Image.asset(
+                  //                               F_image[index],
+                  //                               height: 70,
+                  //                             ),
+                  //                             SizedBox(
+                  //                               height: 5,
+                  //                             ),
+                  //                             new Text(
+                  //                               category[index],
+                  //                               style: descriptionStyle,
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     onTap: () {
+                  //                       setState(() {
+                  //                         vehicleCategory =
+                  //                             category[index].toString();
+                  //                         vehicleCategoryId = "$index";
+                  //                         _collapse();
+                  //                       });
+                  //                       // switch (category[index]) {
+                  //                       //   case 'Jcb/Hitachi':
+                  //                       //     {
+                  //                       //       print("case 1 is selected");
+                  //                       //     }
+                  //                       //     break;
 
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              switch (category[index]) {
-                                case 'Jcb/Hitachi':
-                                  {
-                                    print("case 1 is selected");
-                                  }
-                                  break;
+                  //                       //   case 'Tractor':
+                  //                       //     {
+                  //                       //       print("case 2 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'Road Roller':
+                  //                       //     {
+                  //                       //       print("case 3 is selected");
+                  //                       //     }
+                  //                       //     break;
 
-                                case 'Tractor':
-                                  {
-                                    print("case 2 is selected");
-                                  }
-                                  break;
-                                case 'Road Roller':
-                                  {
-                                    print("case 3 is selected");
-                                  }
-                                  break;
+                  //                       //   case 'Cement Mixer':
+                  //                       //     {
+                  //                       //       print("case 4 is selected");
+                  //                       //     }
+                  //                       //     break;
 
-                                case 'Cement Mixer':
-                                  {
-                                    print("case 4 is selected");
-                                  }
-                                  break;
+                  //                       //   case 'Excavator':
+                  //                       //     {
+                  //                       //       print("case 5 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'BoreWell':
+                  //                       //     {
+                  //                       //       print("case 6 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'Pickup Truck':
+                  //                       //     {
+                  //                       //       print("case 7 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'GoodsTruck':
+                  //                       //     {
+                  //                       //       print("case 8 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'Driller':
+                  //                       //     {
+                  //                       //       print("case 9 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'Crane':
+                  //                       //     {
+                  //                       //       print("case 10 is selected");
+                  //                       //     }
+                  //                       //     break;
 
-                                case 'Excavator':
-                                  {
-                                    print("case 5 is selected");
-                                  }
-                                  break;
-                                case 'BoreWell':
-                                  {
-                                    print("case 6 is selected");
-                                  }
-                                  break;
-                                case 'Pickup Truck':
-                                  {
-                                    print("case 7 is selected");
-                                  }
-                                  break;
-                                case 'GoodsTruck':
-                                  {
-                                    print("case 8 is selected");
-                                  }
-                                  break;
-                                case 'Driller':
-                                  {
-                                    print("case 9 is selected");
-                                  }
-                                  break;
-                                case 'Crane':
-                                  {
-                                    print("case 10 is selected");
-                                  }
-                                  break;
+                  //                       //   case 'Fork Lift':
+                  //                       //     {
+                  //                       //       print("case 11 is selected");
+                  //                       //     }
+                  //                       //     break;
+                  //                       //   case 'Others':
+                  //                       //     {
+                  //                       //       print("case 12 is selected");
+                  //                       //     }
+                  //                       //     break;
 
-                                case 'Fork Lift':
-                                  {
-                                    print("case 11 is selected");
-                                  }
-                                  break;
-                                case 'Others':
-                                  {
-                                    print("case 12 is selected");
-                                  }
-                                  break;
+                  //                       //   default:
+                  //                       //     {}
+                  //                       //     break;
 
-
-                                default:
-                                  {}
-                                  break;
-                              }
-
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ]
-            ),
+                  //                       // }
+                  //                     },
+                  //                   );
+                  //                 },
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ]),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Construction Site",style: titleStyle,),
-                        SizedBox(height: 20,),
-                        DropdownSearch(
-                            showSelectedItem: true,
-                            maxHeight: 400,
-                            mode: Mode.MENU,
-                            items: ["Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham","Bhavani Vivan", "Bahavani Aravindham",],
-                            label: "Construction Site",
-                            onChanged: print,
-                            selectedItem: "Choose Construction Site",
-                            showSearchBox: true),
-                        SizedBox(height: 20,),
-                        Text("Dealer Name",style: titleStyle,),
-                        SizedBox(height: 20,),
-                        DropdownSearch(
-                            showSelectedItem: true,
-                            maxHeight: 400,
-                            mode: Mode.MENU,
-                            items: ["Vasanth steels", "Sri Cements", "Vamsi Bricks"],
-                            label: "Dealer Name",
-                            onChanged: print,
-                            selectedItem: "Choose Dealer Name",
-                            showSearchBox: true),
-                        SizedBox(height: 20,),
-                        Text("Vehicle Number ",style: titleStyle,),
-                        SizedBox(height: 20,),
+                        Text(
+                          "Construction Site",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection("constructionSite")
+                              .snapshots(),
+                          builder:
+                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              List<String> items = snapshot.data.documents
+                                  .map((e) => (e.documentID.toString()))
+                                  .toList();
+                              return DropdownSearch(
+                                showSelectedItem: true,
+                                maxHeight: 400,
+                                mode: Mode.MENU,
+                                items: items,
+                                dropdownItemBuilder: (context, value, isTrue) {
+                                  return ListTile(
+                                    title: Text(snapshot.data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID == value)['name']
+                                        .toString()),
+                                    selected: isTrue,
+                                    onTap: () {
+                                      setState(() {
+                                        selectedConstructionSite = snapshot
+                                            .data.documents
+                                            .firstWhere((element) =>
+                                                element.documentID ==
+                                                value)['name']
+                                            .toString();
+                                        selectedConstructionId = value;
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                                label: "Construction Site",
+                                onChanged: (value) {},
+                                selectedItem: selectedConstructionId ??
+                                    "Choose Construction Site",
+                                showSearchBox: true,
+                                validate: (value) {
+                                  if (validated &&
+                                      (selectedConstructionSite == null ||
+                                          selectedConstructionSite.isEmpty)) {
+                                    return "Construction Site cannot be empty";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Dealer Name",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection("dealer")
+                              .snapshots(),
+                          builder:
+                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              List<String> items = snapshot.data.documents
+                                  .map((e) => (e.documentID.toString()))
+                                  .toList();
+                              return DropdownSearch(
+                                showSelectedItem: true,
+                                maxHeight: 400,
+                                mode: Mode.MENU,
+                                items: items,
+                                dropdownItemBuilder: (context, value, isTrue) {
+                                  return ListTile(
+                                    title: Text(snapshot.data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID == value)['name']
+                                        .toString()),
+                                    selected: isTrue,
+                                    onTap: () {
+                                      setState(() {
+                                        selectedDealer = snapshot.data.documents
+                                            .firstWhere((element) =>
+                                                element.documentID ==
+                                                value)['name']
+                                            .toString();
+                                        selectedDealerId = value;
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                                label: "Dealer Name",
+                                onChanged: (value) {},
+                                selectedItem:
+                                    selectedDealer ?? "Choose Dealer Name",
+                                showSearchBox: true,
+                                validate: (value) {
+                                  if (validated &&
+                                      (selectedDealer == null ||
+                                          selectedDealer.isEmpty)) {
+                                    return "Dealer Name cannot be empty";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Vehicle Number ",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
                           controller: _vehicleNumberController,
                           //initialValue: _name,
                           textInputAction: TextInputAction.done,
                           obscureText: false,
-                          validator: (value) => value.isNotEmpty ? null : 'company name cant\'t be empty.',
+                          validator: (value) => value.isNotEmpty
+                              ? null
+                              : 'company name cant\'t be empty.',
                           focusNode: _vehicleNumbeFocusNode,
                           //onSaved: (value) => _name = value,
                           decoration: new InputDecoration(
@@ -363,23 +578,32 @@ class _F_AddVehicle extends State<F_AddVehicle> {
                             fontFamily: "Poppins",
                           ),
                         ),
-                        Text("Units per Trip",style: titleStyle,),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Units per Trip",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
-                          controller: _UnitController,
+                          controller: _unitController,
                           //initialValue: _name,
                           textInputAction: TextInputAction.done,
                           obscureText: false,
-                          validator: (value) => value.isNotEmpty ? null : 'company name cant\'t be empty.',
-                          focusNode: _UnitFocusNode,
+                          validator: (value) => value.isNotEmpty
+                              ? null
+                              : 'company name cant\'t be empty.',
+                          focusNode: _unitFocusNode,
                           //onSaved: (value) => _name = value,
                           decoration: new InputDecoration(
                             prefixIcon: Icon(
                               Icons.keyboard,
                               color: backgroundColor,
                             ),
-                            labelText: 'Enter Vehicle Number',
-                            //fillColor: Colors.redAccent,
+                            labelText: 'Enter Units per Trip',
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(5.0),
                               borderSide: new BorderSide(),
@@ -391,35 +615,113 @@ class _F_AddVehicle extends State<F_AddVehicle> {
                             fontFamily: "Poppins",
                           ),
                         ),
-                        SizedBox(height: 20,),
-                        Text("Units",style: titleStyle,),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Units",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection("units")
+                              .snapshots(),
+                          builder:
+                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              List<String> items = snapshot.data.documents
+                                  .map((e) => (e.documentID.toString()))
+                                  .toList();
+                              return DropdownSearch(
+                                showSelectedItem: true,
+                                maxHeight: 400,
+                                mode: Mode.MENU,
+                                items: items,
+                                dropdownItemBuilder: (context, value, isTrue) {
+                                  return ListTile(
+                                    title: Text(snapshot.data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID == value)['name']
+                                        .toString()),
+                                    selected: isTrue,
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedUnit = snapshot.data.documents
+                                            .firstWhere((element) =>
+                                                element.documentID ==
+                                                value)['name']
+                                            .toString();
+                                        _selectedUnitId = value;
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                                label: "Units",
+                                onChanged: (value) {},
+                                selectedItem: _selectedUnit ?? "Choose Units",
+                                showSearchBox: true,
+                                validate: (value) {
+                                  if (validated &&
+                                      (_selectedUnit == null ||
+                                          _selectedUnit.isEmpty)) {
+                                    return "Units cannot be empty";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Vehicle Type",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         DropdownSearch(
-                            showSelectedItem: true,
-                            maxHeight: 400,
-                            mode: Mode.MENU,
-                            items: ["1", "2", "3"],
-                            label: "Units",
-                            onChanged: print,
-                            selectedItem: "Choose Units",
-                            showSearchBox: true),
-                        SizedBox(height: 20,),
-                        Text("Vehicle Type",style: titleStyle,),
-                        SizedBox(height: 20,),
-                        DropdownSearch(
-                            showSelectedItem: true,
-                            maxHeight: 200,
-                            mode: Mode.MENU,
-                            items: ["Trips", "Readings",],
-                            label: "Vehicle Type",
-                            onChanged: print,
-                            selectedItem: "Choose Vehicle Type",
-                            showSearchBox: true),
-                        SizedBox(height: 20,),
+                          showSelectedItem: true,
+                          maxHeight: 200,
+                          mode: Mode.MENU,
+                          items: [
+                            "Trips",
+                            "Readings",
+                          ],
+                          label: "Vehicle Type",
+                          // onChanged: print,
+                          // selectedItem: "Choose Vehicle Type",
+                          showSearchBox: true,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedVehicleType = value;
+                            });
+                          },
+                          selectedItem: _selectedVehicleType != ""
+                              ? _selectedVehicleType
+                              : "Choose Vehicle Type",
+                          validate: (value) => value == null
+                              ? 'Vehicle Type cannot be empty'
+                              : null,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -427,11 +729,88 @@ class _F_AddVehicle extends State<F_AddVehicle> {
                         height: 55,
                         width: 180,
                         child: GestureDetector(
-                          onTap: () {
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute(builder: (context) => LoginPage(),),
-//                      );
+                          onTap: () async {
+                            if (_formKey.currentState.validate() &&
+                                selectedConstructionSite != null &&
+                                vehicleCategory != null &&
+                                selectedDealer != null) {
+                              _formKey.currentState.save();
+
+                              String documentId =
+                                  "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                              try {
+                                await Firestore.instance
+                                    .collection('vehicleEntries')
+                                    .document(documentId)
+                                    .setData({
+                                  'created_by': {
+                                    "id": widget.currentUserId,
+                                    "name": userName,
+                                    "role": userRoleValue,
+                                    'at': FieldValue.serverTimestamp(),
+                                  },
+                                  'approved_by': userRole != UserRoles.Securtiy
+                                      ? {
+                                          "id": widget.currentUserId,
+                                          "name": userName,
+                                          "role": userRoleValue,
+                                          'at': FieldValue.serverTimestamp(),
+                                        }
+                                      : {
+                                          "id": '',
+                                          "name": '',
+                                          "role": '',
+                                          'at': FieldValue.serverTimestamp(),
+                                        },
+                                  'documentId': documentId,
+                                  'construction_site': {
+                                    "constructionId": selectedConstructionId,
+                                    "constructionSite":
+                                        selectedConstructionSite,
+                                  },
+                                  'dealer': {
+                                    "dealerId": selectedDealerId,
+                                    "dealerName": selectedDealer,
+                                  },
+                                  "vehicleNumber":
+                                      _vehicleNumberController.text,
+                                  "unitsPerTrip": _unitController.text,
+                                  "units": {
+                                    "unitId": _selectedUnitId,
+                                    "unitName": _selectedUnit,
+                                  },
+                                  "vehicleType": _selectedVehicleType,
+                                  "added_on": FieldValue.serverTimestamp(),
+                                  "status": userRole == UserRoles.Securtiy
+                                      ? "Pending"
+                                      : "Approved",
+                                });
+
+                                if (userRole == UserRoles.Securtiy)
+                                  permissionSetData(
+                                    documentId,
+                                    selectedConstructionSite,
+                                    selectedConstructionId,
+                                  );
+
+                                Navigator.pop(context);
+                              } catch (err) {
+                                setState(() {
+                                  // isProcessing = false;
+                                  // error = err;
+                                });
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    // isProcessing = false;
+                                  });
+                                }
+                              }
+                            } else {
+                              setState(() {
+                                validated = true;
+                              });
+                            }
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -454,7 +833,9 @@ class _F_AddVehicle extends State<F_AddVehicle> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 300,),
+                  SizedBox(
+                    height: 300,
+                  ),
                 ],
               ),
             ),
@@ -464,4 +845,3 @@ class _F_AddVehicle extends State<F_AddVehicle> {
     );
   }
 }
-

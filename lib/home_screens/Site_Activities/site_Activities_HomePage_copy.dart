@@ -3,28 +3,29 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Concrete_Entries/Entry_description.dart';
-import 'package:bhavaniconnect/home_screens/Concrete_Entries/Print_entries.dart';
-import 'package:bhavaniconnect/home_screens/Concrete_Entries/add_concrete_entry.dart';
+import 'package:bhavaniconnect/home_screens/Site_Activities/add_Site_Activity.dart';
+import 'package:bhavaniconnect/home_screens/Site_Activities/detail_description.dart';
+import 'package:bhavaniconnect/home_screens/Site_Activities/print_Activity.dart';
+import 'package:bhavaniconnect/home_screens/Site_Activities/search_Activity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ConcreteEntries extends StatefulWidget {
+class SiteActivities extends StatefulWidget {
   final String currentUserId;
 
-  const ConcreteEntries({Key key, this.currentUserId}) : super(key: key);
+  const SiteActivities({Key key, this.currentUserId}) : super(key: key);
+
   @override
-  _ConcreteEntries createState() => _ConcreteEntries();
+  _SiteActivities createState() => _SiteActivities();
 }
 
-class _ConcreteEntries extends State<ConcreteEntries> {
+class _SiteActivities extends State<SiteActivities> {
   int _n = 0;
 
-  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
+  DateTime startFilterDate = DateTime(2010);
   DateTime endFilterDate =
       DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
 
@@ -65,39 +66,101 @@ class _ConcreteEntries extends State<ConcreteEntries> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: CustomAppBarDark(
-          leftActionBar: Icon(
-            Icons.arrow_back_ios,
-            size: 25,
-            color: Colors.white,
-          ),
-          leftAction: () {
-            Navigator.pop(context, true);
-          },
-          rightActionBar: userRole != null &&
-                  (userRole == UserRoles.Admin ||
-                      userRole == UserRoles.Manager ||
-                      userRole == UserRoles.StoreManager ||
-                      userRole == UserRoles.Accountant)
-              ? Icon(
-                  Icons.print,
-                  size: 25,
-                  color: Colors.white,
-                )
-              : Container(height: 0, width: 0),
-          rightAction: () {
-            GoToPage(
-                context,
-                PrintEntries(
-                  startDate: startFilterDate,
-                  endDate: endFilterDate,
-                ));
-          },
-          primaryText: 'Concrete Entries',
-          tabBarWidget: null,
-        ),
-      ),
+          preferredSize: Size.fromHeight(70),
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  height: 80,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 45,
+                          left: 20,
+                        ),
+                        child: InkWell(
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context, true);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Site Activities",
+                              textAlign: TextAlign.center,
+                              style: appBarTitleStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                            top: 35,
+                            right: 20,
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.search,
+                                  size: 25,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  GoToPage(context, SearchActivity());
+                                },
+                              ),
+                              userRole != null &&
+                                      (userRole == UserRoles.Admin ||
+                                          userRole == UserRoles.Manager ||
+                                          userRole == UserRoles.Accountant ||
+                                          userRole == UserRoles.SiteEngineer)
+                                  ? IconButton(
+                                      icon: Icon(
+                                        Icons.print,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        GoToPage(
+                                            context,
+                                            PrintActivity(
+                                              startDate: DateTimeUtils
+                                                  .currentDayDateTimeNow,
+                                              endDate: endFilterDate,
+                                            ));
+                                      },
+                                    )
+                                  : Container(),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )),
       body: ClipRRect(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
@@ -106,9 +169,9 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                 color: Colors.white,
                 child: StreamBuilder(
                     stream: Firestore.instance
-                        .collection("concreteEntries")
-                        // .where("added_on", isGreaterThan: startFilterDate)
-                        // .where("added_on", isLessThan: endFilterDate)
+                        .collection("siteActivities")
+                        .where("added_on", isGreaterThan: startFilterDate)
+                        .where("added_on", isLessThan: endFilterDate)
                         .orderBy('added_on', descending: true)
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -119,7 +182,7 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                         return ListView.builder(
                           itemCount: result.length,
                           itemBuilder: (context, index) {
-                            return ConcreteEntry(
+                            return SiteActivity(
                               size,
                               context,
                               result[index].documentID,
@@ -129,10 +192,10 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                                       .toDate()),
                               result[index]['construction_site']
                                   ['constructionSite'],
-                              result[index]['concrete_type']
-                                  ['concreteTypeName'],
+                              "${result[index]['category']['categoryName']} with ${result[index]['sub_category']['subCategoryName']}",
+                              result[index]['category']['categoryName'],
                               result[index]['block']['blockName'],
-                              result[index]['total_progress'],
+                              result[index]['total_progress'].toString(),
                               topPadding: index == 0 ? 40 : 20,
                             );
                           },
@@ -155,12 +218,12 @@ class _ConcreteEntries extends State<ConcreteEntries> {
       floatingActionButton: userRole != null &&
               (userRole == UserRoles.Admin ||
                   userRole == UserRoles.Manager ||
-                  userRole == UserRoles.StoreManager)
+                  userRole == UserRoles.SiteEngineer)
           ? FloatingActionButton(
               onPressed: () {
                 GoToPage(
                     context,
-                    AddConcreteEntry(
+                    AddSiteActivity(
                       currentUserId: widget.currentUserId,
                     ));
               },
@@ -174,23 +237,27 @@ class _ConcreteEntries extends State<ConcreteEntries> {
 
 class ItemInfo {
   String slNo;
-  String createdBy;
   String date;
+  String createdBy;
   String site;
   String block;
-  String concreteType;
-  String yestProg;
+  String category;
+  String uom;
+  String subCategory;
+  String yesterdayProg;
   String totalProg;
   String remarks;
 
   ItemInfo({
     this.slNo,
-    this.date,
     this.createdBy,
+    this.date,
     this.site,
+    this.category,
+    this.uom,
     this.block,
-    this.concreteType,
-    this.yestProg,
+    this.subCategory,
+    this.yesterdayProg,
     this.totalProg,
     this.remarks,
   });
@@ -202,29 +269,47 @@ var items = <ItemInfo>[
       createdBy: "Vasanth (Manager)",
       date: '29/Oct/2020',
       site: 'Bhavani Vivan',
-      concreteType: "Strong Cement",
       block: "8th",
-      yestProg: "30",
+      category: 'Iron/Steel',
+      subCategory: 'TMT rod',
+      uom: 'Tons',
+      yesterdayProg: "20",
       totalProg: "60",
       remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '2',
-      createdBy: "Vasanth (Manager)",
       date: '29/Oct/2020',
       site: 'Bhavani Vivan',
+      createdBy: "Vasanth (Manager)",
       block: "8th",
-      concreteType: "Strong Cement",
-      yestProg: "30",
+      category: 'Iron/Steel',
+      subCategory: 'TMT rod',
+      uom: 'Tons',
+      yesterdayProg: "20",
       totalProg: "60",
       remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
       slNo: '3',
-      createdBy: "Vasanth (Manager)",
       date: '29/Oct/2020',
+      createdBy: "Vasanth (Manager)",
       site: 'Bhavani Vivan',
       block: "8th",
-      concreteType: "Strong Cement",
-      yestProg: "30",
+      category: 'Iron/Steel',
+      subCategory: 'TMT rod',
+      uom: 'Tons',
+      yesterdayProg: "20",
+      totalProg: "60",
+      remarks: 'Transfer from store to cnstruction Site'),
+  ItemInfo(
+      slNo: '3',
+      date: '29/Oct/2020',
+      site: 'Bhavani Vivan',
+      createdBy: "Vasanth (Manager)",
+      block: "8th",
+      category: 'Iron/Steel',
+      subCategory: 'TMT rod',
+      uom: 'Tons',
+      yesterdayProg: "20",
       totalProg: "60",
       remarks: 'Transfer from store to cnstruction Site'),
   ItemInfo(
@@ -233,30 +318,23 @@ var items = <ItemInfo>[
       date: '29/Oct/2020',
       site: 'Bhavani Vivan',
       block: "8th",
-      concreteType: "Strong Cement",
-      yestProg: "30",
-      totalProg: "60",
-      remarks: 'Transfer from store to cnstruction Site'),
-  ItemInfo(
-      slNo: '5',
-      createdBy: "Vasanth (Manager)",
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      concreteType: "Strong Cement",
-      yestProg: "30",
+      category: 'Iron/Steel',
+      subCategory: 'TMT rod',
+      uom: 'Tons',
+      yesterdayProg: "20",
       totalProg: "60",
       remarks: 'Transfer from store to cnstruction Site'),
 ];
 
-Widget ConcreteEntry(
+Widget SiteActivity(
     Size size,
     BuildContext context,
     String documentId,
     String currentUserId,
     String date,
     String site,
-    String concreteType,
+    String description,
+    String category,
     String block,
     String total,
     {double topPadding = 20.0}) {
@@ -264,7 +342,7 @@ Widget ConcreteEntry(
     onTap: () {
       GoToPage(
           context,
-          EntryDescription(
+          ActivityDetailDescription(
             currentUserId: currentUserId,
             documentId: documentId,
           ));
@@ -273,7 +351,7 @@ Widget ConcreteEntry(
       padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
-        height: 190,
+        height: 210,
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -291,7 +369,7 @@ Widget ConcreteEntry(
                   top: 24,
                   right: size.width * .35,
                 ),
-                height: 165,
+                height: 185,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -308,11 +386,12 @@ Widget ConcreteEntry(
                     ),
                     SizedBox(height: 10),
                     Expanded(
-                      child: Text(concreteType,
+                      child: Text(description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: subTitleStyleDark1),
                     ),
+                    Text(category, style: subTitleStyle),
                     SizedBox(height: 10),
                   ],
                 ),

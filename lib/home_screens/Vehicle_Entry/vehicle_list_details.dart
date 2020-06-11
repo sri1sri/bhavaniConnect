@@ -1,16 +1,17 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:bhavaniconnect/home_screens/Vehicle_Entry/Filtered_vehicle_list_details.dart';
 import 'package:bhavaniconnect/home_screens/Vehicle_Entry/filter_vehicle_list_details.dart';
 import 'package:bhavaniconnect/home_screens/Vehicle_Entry/vehicle_details_readings.dart';
 import 'package:bhavaniconnect/home_screens/Vehicle_Entry/add_vehicle_details.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'vehicle_details_trip.dart';
 
@@ -24,6 +25,30 @@ class DaySelection extends StatefulWidget {
 }
 
 class _DaySelection extends State<DaySelection> {
+  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
+  DateTime endFilterDate =
+      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
+  UserRoles userRole;
+  String userRoleValue;
+  // String userName;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      // userName = name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -55,14 +80,27 @@ class _DaySelection extends State<DaySelection> {
           leftAction: () {
             Navigator.pop(context, true);
           },
-          rightActionBar: Icon(
-            Icons.search,
-            size: 25,
-            color: Colors.white,
-          ),
-          rightAction: () {
-            GoToPage(context, VehicleFilter());
-          },
+          rightActionBar: (userRole == UserRoles.Manager ||
+                  userRole == UserRoles.Accountant ||
+                  userRole == UserRoles.Admin)
+              ? Icon(
+                  Icons.search,
+                  size: 25,
+                  color: Colors.white,
+                )
+              : null,
+          rightAction: (userRole == UserRoles.Manager ||
+                  userRole == UserRoles.Accountant ||
+                  userRole == UserRoles.Admin)
+              ? () {
+                  GoToPage(
+                      context,
+                      VehicleFilter(
+                        startDate: startFilterDate,
+                        endDate: endFilterDate,
+                      ));
+                }
+              : null,
           primaryText: 'Vehicle Entries',
         ),
       ),
@@ -72,83 +110,131 @@ class _DaySelection extends State<DaySelection> {
         child: Container(
           color: Colors.white,
           height: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                VehicleDetails(
-                    size,
-                    context,
-                    "29 Oct 2020",
-                    "12.30 am",
-                    "Bhavani Vivan",
-                    "Vasanth Agencies",
-                    "Tractor",
-                    "Vasanthakumar (Security)",
-                    "Srivatsav (Manager)",
-                    "Approved",
-                    AddVehicleDetails()),
-                VehicleDetails(
-                    size,
-                    context,
-                    "02 Nov 2020",
-                    "04.20 pm",
-                    "Bhavani Aravindam",
-                    "Sri Agencies",
-                    "Road Roller",
-                    "Vamsi (Security)",
-                    "Vatsav (Manager)",
-                    "Pending",
-                    AddVehicleCountDetails()),
-                VehicleDetails(
-                    size,
-                    context,
-                    "14 Nov 2020",
-                    "02.54 am",
-                    "Bhavani Vivan",
-                    "Vamsi Agencies",
-                    "Borewell",
-                    "Vimal (Security)",
-                    "Rockstar (Manager)",
-                    "Declined",
-                    AddVehicleCountDetails()),
-              ],
-            ),
-          ),
+          child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection("vehicleEntries")
+                  .where("added_on", isGreaterThan: startFilterDate)
+                  .where("added_on", isLessThan: endFilterDate)
+                  .orderBy('added_on', descending: true)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  var result = snapshot.data.documents;
+                  return ListView.builder(
+                    itemCount: result.length,
+                    itemBuilder: (context, index) {
+                      return VehicleDetails(
+                        size,
+                        context,
+                        DateTimeUtils.dayMonthYearTimeFormat(
+                            (result[index]['added_on'] as Timestamp).toDate()),
+                        // "12.30 am",
+                        result[index]['construction_site']['constructionSite'],
+                        result[index]['dealer']['dealerName'],
+                        result[index]['vehicleNumber'],
+                        "${result[index]['created_by']['name']} (${result[index]['created_by']['role']})",
+                        result[index]['approved_by'] != null
+                            ? "${result[index]['approved_by']['name']} (${result[index]['approved_by']['role']})"
+                            : "",
+                        result[index]['status'] != null
+                            ? result[index]['status']
+                            : "0",
+                        (userRole == UserRoles.Manager ||
+                                userRole == UserRoles.Securtiy ||
+                                userRole == UserRoles.Admin)
+                            ? (result[index]['status'] == "Approved")
+                                ? result[index]['vehicleType'] == "Trips"
+                                    ? AddVehicleCountDetails(
+                                        currentUserId: widget.currentUserId,
+                                        documentId: result[index]['documentId'],
+                                      )
+                                    : AddVehicleDetails(
+                                        currentUserId: widget.currentUserId,
+                                        documentId: result[index]['documentId'],
+                                      )
+                                : null
+                            : null,
+                        topPadding: index == 0 ? 40.0 : 20.0,
+                      );
+                    },
+                  );
+                }
+              }),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          GoToPage(context, AddVehicle());
-        },
-        child: Icon(Icons.add),
-        backgroundColor: backgroundColor,
-      ),
+      floatingActionButton: (userRole == UserRoles.Manager ||
+              userRole == UserRoles.Securtiy ||
+              userRole == UserRoles.Admin)
+          ? FloatingActionButton(
+              onPressed: () {
+                GoToPage(
+                    context,
+                    AddVehicle(
+                      currentUserId: widget.currentUserId,
+                    ));
+              },
+              child: Icon(Icons.add),
+              backgroundColor: backgroundColor,
+            )
+          : Container(),
     );
   }
+}
+
+Future<void> _showMyDialog(BuildContext context, String message) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('AlertDialog Title'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(message),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 Widget VehicleDetails(
     Size size,
     BuildContext context,
     String date,
-    String time,
+    // String time,
     String site,
     String dealer,
     String category,
     String requestedBy,
     String approvedBy,
     String approvalStatus,
-    Widget goto) {
+    Widget goto,
+    {double topPadding = 20.0}) {
   return GestureDetector(
     onTap: () {
-      GoToPage(context, goto);
+      goto != null
+          ? GoToPage(context, goto)
+          : _showMyDialog(
+              context,
+              (approvalStatus == '2' || approvalStatus == "Declined")
+                  ? "Can't open this because it has been rejected"
+                  : "Can't open till this has been approved");
     },
     child: Padding(
-      padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
+      padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
         height: 240,
@@ -157,7 +243,7 @@ Widget VehicleDetails(
             Positioned(
               right: 15,
               top: 0,
-              child: Text("$date - $time", style: descriptionStyleDarkBlur3),
+              child: Text("$date", style: descriptionStyleDarkBlur3), // - $time
             ),
             Positioned(
               bottom: 0,
@@ -185,7 +271,7 @@ Widget VehicleDetails(
                       style: descriptionStyleDarkBlur1,
                     ),
                     SizedBox(height: 10),
-                    Text(category, style: subTitleStyle),
+                    Text("Vehicle: $category", style: subTitleStyle),
                     SizedBox(height: 10),
                     Expanded(
                       child: Text("Requested By:\n$requestedBy",

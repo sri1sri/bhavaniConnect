@@ -13,16 +13,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SiteActivities extends StatefulWidget {
+class SearchResultActivities extends StatefulWidget {
   final String currentUserId;
+  final String selectedConstructionId;
+  final String selectedConstructionSite;
+  final String selectedBlock;
+  final String selectedBlockId;
+  final String selectedCategoryId;
+  final String selectedCategory;
+  final String selectedSubCategory;
+  final String selectedSubCategoryId;
 
-  const SiteActivities({Key key, this.currentUserId}) : super(key: key);
+  const SearchResultActivities({
+    Key key,
+    this.currentUserId,
+    this.selectedConstructionId,
+    this.selectedConstructionSite,
+    this.selectedBlock,
+    this.selectedBlockId,
+    this.selectedCategoryId,
+    this.selectedCategory,
+    this.selectedSubCategory,
+    this.selectedSubCategoryId,
+  }) : super(key: key);
 
   @override
-  _SiteActivities createState() => _SiteActivities();
+  _SearchResultActivitiesState createState() => _SearchResultActivitiesState();
 }
 
-class _SiteActivities extends State<SiteActivities> {
+class _SearchResultActivitiesState extends State<SearchResultActivities> {
   int _n = 0;
 
   DateTime startFilterDate = DateTime(2010);
@@ -82,7 +101,6 @@ class _SiteActivities extends State<SiteActivities> {
                 Container(
                   height: 80,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
@@ -101,64 +119,58 @@ class _SiteActivities extends State<SiteActivities> {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Site Activities",
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                          child: Center(
+                            child: Text(
+                              "Search Activities",
                               textAlign: TextAlign.center,
                               style: appBarTitleStyle,
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                            top: 35,
-                            right: 20,
-                          ),
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.search,
-                                  size: 25,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  GoToPage(
-                                      context,
-                                      SearchActivity(
-                                        currentUserId: widget.currentUserId,
-                                      ));
-                                },
-                              ),
-                              userRole != null &&
-                                      (userRole == UserRoles.Admin ||
-                                          userRole == UserRoles.Manager ||
-                                          userRole == UserRoles.Accountant ||
-                                          userRole == UserRoles.SiteEngineer)
-                                  ? IconButton(
-                                      icon: Icon(
-                                        Icons.print,
-                                        size: 25,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        GoToPage(
-                                            context,
-                                            PrintActivity(
-                                              startDate: DateTimeUtils
-                                                  .currentDayDateTimeNow,
-                                              endDate: endFilterDate,
-                                            ));
-                                      },
-                                    )
-                                  : Container(),
-                            ],
-                          )),
+                      // Padding(
+                      //     padding: EdgeInsets.only(
+                      //       top: 35,
+                      //       right: 20,
+                      //     ),
+                      //     child: Row(
+                      //       children: [
+                      //         IconButton(
+                      //           icon: Icon(
+                      //             Icons.search,
+                      //             size: 25,
+                      //             color: Colors.white,
+                      //           ),
+                      //           onPressed: () {
+                      //             GoToPage(context, SearchActivity());
+                      //           },
+                      //         ),
+                      //         userRole != null &&
+                      //                 (userRole == UserRoles.Admin ||
+                      //                     userRole == UserRoles.Manager ||
+                      //                     userRole == UserRoles.Accountant ||
+                      //                     userRole == UserRoles.SiteEngineer)
+                      //             ? IconButton(
+                      //                 icon: Icon(
+                      //                   Icons.print,
+                      //                   size: 25,
+                      //                   color: Colors.white,
+                      //                 ),
+                      //                 onPressed: () {
+                      //                   GoToPage(
+                      //                       context,
+                      //                       PrintActivity(
+                      //                         startDate: startFilterDate,
+                      //                         endDate: endFilterDate,
+                      //                       ));
+                      //                 },
+                      //               )
+                      //             : Container(),
+                      //       ],
+                      //     )),
                     ],
                   ),
                 ),
@@ -174,8 +186,16 @@ class _SiteActivities extends State<SiteActivities> {
                 child: StreamBuilder(
                     stream: Firestore.instance
                         .collection("siteActivities")
-                        .where("added_on", isGreaterThan: startFilterDate)
-                        .where("added_on", isLessThan: endFilterDate)
+                        .where("construction_site.constructionId",
+                            isEqualTo: widget.selectedConstructionId)
+                        .where('block.blockId',
+                            isEqualTo: widget.selectedBlockId)
+                        .where("category.selectedCategoryId",
+                            isEqualTo: widget.selectedCategoryId)
+                        .where('sub_category.selectedSubCategoryId',
+                            isEqualTo: widget.selectedSubCategoryId)
+                        // .where("added_on", isGreaterThan: startFilterDate)
+                        // .where("added_on", isLessThan: endFilterDate)
                         .orderBy('added_on', descending: true)
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -196,7 +216,7 @@ class _SiteActivities extends State<SiteActivities> {
                                       .toDate()),
                               result[index]['construction_site']
                                   ['constructionSite'],
-                              "${result[index]['category']['categoryName']} with ${result[index]['sub_category']['subCategoryName']}",
+                              "28 Tons of TMT rods with steel blend.",
                               result[index]['category']['categoryName'],
                               result[index]['sub_category']['subCategoryName'],
                               result[index]['block']['blockName'],
@@ -268,68 +288,68 @@ class ItemInfo {
   });
 }
 
-var items = <ItemInfo>[
-  ItemInfo(
-      slNo: '1',
-      createdBy: "Vasanth (Manager)",
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      category: 'Iron/Steel',
-      subCategory: 'TMT rod',
-      uom: 'Tons',
-      yesterdayProg: "20",
-      totalProg: "60",
-      remarks: 'Transfer from store to cnstruction Site'),
-  ItemInfo(
-      slNo: '2',
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      createdBy: "Vasanth (Manager)",
-      block: "8th",
-      category: 'Iron/Steel',
-      subCategory: 'TMT rod',
-      uom: 'Tons',
-      yesterdayProg: "20",
-      totalProg: "60",
-      remarks: 'Transfer from store to cnstruction Site'),
-  ItemInfo(
-      slNo: '3',
-      date: '29/Oct/2020',
-      createdBy: "Vasanth (Manager)",
-      site: 'Bhavani Vivan',
-      block: "8th",
-      category: 'Iron/Steel',
-      subCategory: 'TMT rod',
-      uom: 'Tons',
-      yesterdayProg: "20",
-      totalProg: "60",
-      remarks: 'Transfer from store to cnstruction Site'),
-  ItemInfo(
-      slNo: '3',
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      createdBy: "Vasanth (Manager)",
-      block: "8th",
-      category: 'Iron/Steel',
-      subCategory: 'TMT rod',
-      uom: 'Tons',
-      yesterdayProg: "20",
-      totalProg: "60",
-      remarks: 'Transfer from store to cnstruction Site'),
-  ItemInfo(
-      slNo: '4',
-      createdBy: "Vasanth (Manager)",
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      category: 'Iron/Steel',
-      subCategory: 'TMT rod',
-      uom: 'Tons',
-      yesterdayProg: "20",
-      totalProg: "60",
-      remarks: 'Transfer from store to cnstruction Site'),
-];
+// var items = <ItemInfo>[
+//   ItemInfo(
+//       slNo: '1',
+//       createdBy: "Vasanth (Manager)",
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       category: 'Iron/Steel',
+//       subCategory: 'TMT rod',
+//       uom: 'Tons',
+//       yesterdayProg: "20",
+//       totalProg: "60",
+//       remarks: 'Transfer from store to cnstruction Site'),
+//   ItemInfo(
+//       slNo: '2',
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       createdBy: "Vasanth (Manager)",
+//       block: "8th",
+//       category: 'Iron/Steel',
+//       subCategory: 'TMT rod',
+//       uom: 'Tons',
+//       yesterdayProg: "20",
+//       totalProg: "60",
+//       remarks: 'Transfer from store to cnstruction Site'),
+//   ItemInfo(
+//       slNo: '3',
+//       date: '29/Oct/2020',
+//       createdBy: "Vasanth (Manager)",
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       category: 'Iron/Steel',
+//       subCategory: 'TMT rod',
+//       uom: 'Tons',
+//       yesterdayProg: "20",
+//       totalProg: "60",
+//       remarks: 'Transfer from store to cnstruction Site'),
+//   ItemInfo(
+//       slNo: '3',
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       createdBy: "Vasanth (Manager)",
+//       block: "8th",
+//       category: 'Iron/Steel',
+//       subCategory: 'TMT rod',
+//       uom: 'Tons',
+//       yesterdayProg: "20",
+//       totalProg: "60",
+//       remarks: 'Transfer from store to cnstruction Site'),
+//   ItemInfo(
+//       slNo: '4',
+//       createdBy: "Vasanth (Manager)",
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       category: 'Iron/Steel',
+//       subCategory: 'TMT rod',
+//       uom: 'Tons',
+//       yesterdayProg: "20",
+//       totalProg: "60",
+//       remarks: 'Transfer from store to cnstruction Site'),
+// ];
 
 Widget SiteActivity(
     Size size,

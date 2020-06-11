@@ -1,51 +1,27 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
-import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// class NotificationPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: F_NotificationPage(),
-//     );
-//   }
-// }
+class NotificationPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: F_NotificationPage(),
+    );
+  }
+}
 
-class NotificationPage extends StatefulWidget {
-  final String currentUserId;
-
-  const NotificationPage({Key key, this.currentUserId}) : super(key: key);
+class F_NotificationPage extends StatefulWidget {
   @override
   _F_NotificationPageState createState() => _F_NotificationPageState();
 }
 
-class _F_NotificationPageState extends State<NotificationPage> {
-  // DateTime endFilterDate = DateTimeUtils.currentDayDateTimeNow;
-  // DateTime startFilterDate =
-  //     DateTimeUtils.currentDayDateTimeNow.add(Duration(days: -1));
-  DateTime startFilterDate =
-      DateTimeUtils.currentDayDateTimeNow.subtract(Duration(days: 10));
-  DateTime endFilterDate =
-      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
-
-  @override
-  void initState() {
-    super.initState();
-    Firestore.instance
-        .collection("pendingRequests")
-        .where("added_on", isGreaterThan: startFilterDate)
-        .where("added_on", isLessThan: endFilterDate)
-        .orderBy('added_on', descending: true)
-        .getDocuments();
-  }
-
+class _F_NotificationPageState extends State<F_NotificationPage> {
   int _n = 0;
   @override
   Widget build(BuildContext context) {
@@ -91,140 +67,50 @@ class _F_NotificationPageState extends State<NotificationPage> {
             topRight: Radius.circular(40.0), topLeft: Radius.circular(40.0)),
         child: Container(
           color: Colors.white,
-          height: double.infinity,
-          // child: ListView(
-          //   children: <Widget>[
-          //     NotificationCard(
-          //         size,
-          //         context,
-          //         "Approved",
-          //         "29/Oct/2020",
-          //         "10.30am",
-          //         "Bhavani Vivan",
-          //         "images/s3.png",
-          //         "Vehicle Entry",
-          //         "TN66V6571 - Goods Truck",
-          //         "Sand load 2 tons for 2nd block"),
-          //     NotificationCard(
-          //         size,
-          //         context,
-          //         "Pending",
-          //         "30/Oct/2020",
-          //         "12.22pm",
-          //         "Bhavani Aravindam",
-          //         "images/s3.png",
-          //         "Goods Approval",
-          //         "Iron/Steel - Goods",
-          //         "8 Layers SuperStrong Tmt rods"),
-          //     NotificationCard(
-          //         size,
-          //         context,
-          //         "Declined",
-          //         "31/Oct/2020",
-          //         "04.42pm",
-          //         "Bhavani Vivan",
-          //         "images/s3.png",
-          //         "Vehicle Entry",
-          //         "AP66Y7263 - Road Roller",
-          //         "2 units of trip counts"),
-          //   ],
-          // ),
-          child: StreamBuilder(
-              stream: Firestore.instance
-                  .collection("pendingRequests")
-                  // .where("permission_by", arrayContains: widget.currentUserId)
-                  .where("added_on", isGreaterThan: startFilterDate)
-                  .where("added_on", isLessThan: endFilterDate)
-                  .orderBy('added_on', descending: true)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  var result = snapshot.data.documents;
-                  return ListView.builder(
-                    itemCount: result.length,
-                    itemBuilder: (context, index) {
-                      if (result[index]['collectionName'] != null) {
-                        print(result[index]['collectionName']);
-                        return StreamBuilder(
-                            stream: Firestore.instance
-                                .collection(result[index]['collectionName'])
-                                .document(result[index]['collectionDocId'])
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<DocumentSnapshot>
-                                    snapshotSecond) {
-                              if (!snapshotSecond.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                var resultData = snapshotSecond.data.data;
-                                // print(resultData[index]['construction_site']
-                                //     ['constructionId']);
-                                var res = resultData;
-                                print(index);
-
-                                return NotificationCard(
-                                  size,
-                                  context,
-                                  res['status'],
-                                  DateTimeUtils.slashDateFormat(
-                                      (res['added_on'] as Timestamp).toDate()),
-                                  DateTimeUtils.hourMinuteFormat(
-                                      (res['added_on'] as Timestamp).toDate()),
-                                  res['construction_site']['constructionSite'],
-                                  "images/s3.png",
-                                  result[index]['collectionName'] ==
-                                          "vehicleEntries"
-                                      ? "Vehicle Entry"
-                                      : "Goods Approval",
-                                  result[index]['collectionName'] ==
-                                          "vehicleEntries"
-                                      ? "${res['vehicleNumber']} - Goods Truck"
-                                      : "${res['concrete_type']['concreteTypeName']} - Goods",
-                                  "Sand load 2 tons for 2nd block",
-                                );
-                                // return result[index]['collectionName'] ==
-                                //         "vehicleEntries"
-                                //     ? Text(
-                                //         resultData[index]['vehicleNumber'])
-                                //     : Text(resultData[index]
-                                //             ['concrete_type']
-                                //         ['concreteTypeName']);
-                              }
-                            });
-                      }
-                      return Container();
-
-                      // return VehicleDetails(
-                      //   size,
-                      //   context,
-                      //   DateTimeUtils.dayMonthYearTimeFormat(
-                      //       (result[index]['added_on'] as Timestamp)
-                      //           .toDate()),
-                      //   // "12.30 am",
-                      //   result[index]['construction_site']
-                      //       ['constructionSite'],
-                      //   result[index]['dealer']['dealerName'],
-                      //   result[index]['vehicleNumber'],
-                      //   "${result[index]['created_by']['name']} (${result[index]['created_by']['role']})",
-                      //   "${result[index]['created_by']['name']} (${result[index]['created_by']['role']})",
-                      //   result[index]['status'] != null
-                      //       ? result[index]['status']
-                      //       : "Pending",
-
-                      //   AddVehicleDetails(
-                      //     currentUserId: widget.currentUserId,
-                      //     documentId: result[index]['documentId'],
-                      //   ),
-                      //   //AddVehicleDetails
-                      //   //AddVehicleCountDetails
-                      // );
-                    },
-                  );
-                }
-              }),
+          child: SingleChildScrollView(
+              child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              NotificationCard(
+                  size,
+                  context,
+                  "Approved",
+                  "29/Oct/2020",
+                  "10.30am",
+                  "Bhavani Vivan",
+                  "images/s3.png",
+                  "Vehicle Entry",
+                  "TN66V6571 - Goods Truck",
+                  "Sand load 2 tons for 2nd block"),
+              NotificationCard(
+                  size,
+                  context,
+                  "Pending",
+                  "30/Oct/2020",
+                  "12.22pm",
+                  "Bhavani Aravindam",
+                  "images/s3.png",
+                  "Goods Approval",
+                  "Iron/Steel - Goods",
+                  "8 Layers SuperStrong Tmt rods"),
+              NotificationCard(
+                  size,
+                  context,
+                  "Declined",
+                  "31/Oct/2020",
+                  "04.42pm",
+                  "Bhavani Vivan",
+                  "images/s3.png",
+                  "Vehicle Entry",
+                  "AP66Y7263 - Road Roller",
+                  "2 units of trip counts"),
+              SizedBox(
+                height: 700,
+              )
+            ],
+          )),
         ),
       ),
     );

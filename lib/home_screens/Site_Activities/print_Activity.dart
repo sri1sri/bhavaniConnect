@@ -20,8 +20,8 @@ class PrintActivity extends StatefulWidget {
 }
 
 class _PrintActivity extends State<PrintActivity> {
-  DateTime selectedDateFrom = DateTime.now();
-  DateTime selectedDateTo = DateTime.now();
+  DateTime selectedDateFrom = DateTime(2010);
+  DateTime selectedDateTo = DateTime(2010);
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -43,8 +43,8 @@ class _PrintActivity extends State<PrintActivity> {
   void initState() {
     super.initState();
 
-    selectedDateFrom = widget.startDate;
-    selectedDateTo = widget.endDate;
+    // selectedDateFrom = widget.startDate;
+    // selectedDateTo = widget.endDate;
   }
 
   Future<Null> showPickerFrom(BuildContext context) async {
@@ -52,7 +52,7 @@ class _PrintActivity extends State<PrintActivity> {
       context: context,
       initialDate: selectedDateFrom,
       firstDate: DateTime(1930),
-      lastDate: widget.startDate,
+      lastDate: selectedDateFrom,
     );
     if (pickedFrom != null) {
       setState(() {
@@ -67,7 +67,7 @@ class _PrintActivity extends State<PrintActivity> {
       context: context,
       initialDate: selectedDateTo,
       firstDate: DateTime(1930),
-      lastDate: widget.endDate,
+      lastDate: selectedDateTo,
     );
     if (pickedTo != null) {
       setState(() {

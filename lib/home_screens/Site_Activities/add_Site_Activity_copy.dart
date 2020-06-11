@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -10,18 +11,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AddLabourReport extends StatefulWidget {
+class AddSiteActivity extends StatefulWidget {
   final String currentUserId;
 
-  const AddLabourReport({Key key, this.currentUserId}) : super(key: key);
-
+  const AddSiteActivity({Key key, this.currentUserId}) : super(key: key);
   @override
-  _AddLabourReport createState() => _AddLabourReport();
+  _AddSiteActivity createState() => _AddSiteActivity();
 }
 
-class _AddLabourReport extends State<AddLabourReport> {
-  DateTime selectedDate = DateTime(2010);
-  DateTime selectedDateInvoice = DateTime(2010);
+class _AddSiteActivity extends State<AddSiteActivity> {
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -30,13 +30,17 @@ class _AddLabourReport extends State<AddLabourReport> {
   String selectedConstructionSite;
   String selectedConstructionId;
 
+  String selectedUnits;
+  String selectedUnitsId;
+
   String selectedBlock;
   String selectedBlockId;
 
-  String selectedDealer;
-  String selectedDealerId;
+  String selectedCategory;
+  String selectedCategoryId;
 
-  String labourType;
+  String selectedSubCategory;
+  String selectedSubCategoryId;
 
   UserRoles userRole;
   String userRoleValue;
@@ -65,7 +69,7 @@ class _AddLabourReport extends State<AddLabourReport> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -80,7 +84,7 @@ class _AddLabourReport extends State<AddLabourReport> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {
@@ -92,10 +96,8 @@ class _AddLabourReport extends State<AddLabourReport> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _noofPeopleController = TextEditingController();
-  final FocusNode _noofPeopleFocusNode = FocusNode();
-  final TextEditingController _purposeController = TextEditingController();
-  final FocusNode _purposeFocusNode = FocusNode();
+  final TextEditingController _remarkController = TextEditingController();
+  final FocusNode _remarkFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -132,7 +134,7 @@ class _AddLabourReport extends State<AddLabourReport> {
           rightAction: () {
             print('right action bar is pressed in appbar');
           },
-          primaryText: 'Add Labour Report',
+          primaryText: 'Add Activity',
           tabBarWidget: null,
         ),
       ),
@@ -183,39 +185,6 @@ class _AddLabourReport extends State<AddLabourReport> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Labour Type",
-                            style: titleStyle,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          DropdownSearch(
-                              showSelectedItem: true,
-                              maxHeight: 400,
-                              mode: Mode.MENU,
-                              items: [
-                                "Self Employees",
-                                "Out Sourcing Employees"
-                              ],
-                              label: "Labour Type",
-                              onChanged: (value) {
-                                setState(() {
-                                  labourType = value;
-                                });
-                              },
-                              selectedItem: labourType ?? "Choose Labour Type",
-                              validate: (value) {
-                                if (validated && labourType == null) {
-                                  return "Labour Type cannot be empty";
-                                } else {
-                                  return null;
-                                }
-                              },
-                              showSearchBox: true),
                           SizedBox(
                             height: 20,
                           ),
@@ -358,7 +327,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                             height: 20,
                           ),
                           Text(
-                            "Dealer Name",
+                            "Category",
                             style: titleStyle,
                           ),
                           SizedBox(
@@ -366,7 +335,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("dealer")
+                                .collection("category")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -393,28 +362,28 @@ class _AddLabourReport extends State<AddLabourReport> {
                                       selected: isTrue,
                                       onTap: () {
                                         setState(() {
-                                          selectedDealer = snapshot
+                                          selectedCategory = snapshot
                                               .data.documents
                                               .firstWhere((element) =>
                                                   element.documentID ==
                                                   value)['name']
                                               .toString();
-                                          selectedDealerId = value;
+                                          selectedCategoryId = value;
                                         });
                                         Navigator.of(context).pop();
                                       },
                                     );
                                   },
-                                  label: "Dealer Name",
+                                  label: "Category",
                                   onChanged: (value) {},
                                   selectedItem:
-                                      selectedDealer ?? "Choose Dealer Name",
+                                      selectedCategory ?? "Choose Category",
                                   showSearchBox: true,
                                   validate: (value) {
                                     if (validated &&
-                                        (selectedDealer == null ||
-                                            selectedDealer.isEmpty)) {
-                                      return "Dealer Name cannot be empty";
+                                        (selectedCategory == null ||
+                                            selectedCategory.isEmpty)) {
+                                      return "Category cannot be empty";
                                     } else {
                                       return null;
                                     }
@@ -427,66 +396,165 @@ class _AddLabourReport extends State<AddLabourReport> {
                             height: 20,
                           ),
                           Text(
-                            "No. of People",
+                            "Sub Category",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("subCategory")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedSubCategory = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedSubCategoryId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "Sub Category",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedSubCategory ??
+                                      "Choose Sub Category",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedSubCategory == null ||
+                                            selectedSubCategory.isEmpty)) {
+                                      return "Sub Category cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "UOM",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          StreamBuilder(
+                            stream: Firestore.instance
+                                .collection("units")
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                List<String> items = snapshot.data.documents
+                                    .map((e) => (e.documentID.toString()))
+                                    .toList();
+                                return DropdownSearch(
+                                  showSelectedItem: true,
+                                  maxHeight: 400,
+                                  mode: Mode.MENU,
+                                  items: items,
+                                  dropdownItemBuilder:
+                                      (context, value, isTrue) {
+                                    return ListTile(
+                                      title: Text(snapshot.data.documents
+                                          .firstWhere((element) =>
+                                              element.documentID ==
+                                              value)['name']
+                                          .toString()),
+                                      selected: isTrue,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedUnits = snapshot
+                                              .data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString();
+                                          selectedUnitsId = value;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                  label: "UOM",
+                                  onChanged: (value) {},
+                                  selectedItem: selectedUnits ?? "Choose UOM",
+                                  showSearchBox: true,
+                                  validate: (value) {
+                                    if (validated &&
+                                        (selectedUnits == null ||
+                                            selectedUnits.isEmpty)) {
+                                      return "UOM cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Remarks",
                             style: titleStyle,
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           TextFormField(
-                            controller: _noofPeopleController,
+                            controller: _remarkController,
                             //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
-                                : 'No. of People cant\'t be empty.',
-                            focusNode: _noofPeopleFocusNode,
+                                : 'Remarks cant\'t be empty.',
+                            focusNode: _remarkFocusNode,
                             //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.list,
                                 color: backgroundColor,
                               ),
-                              labelText: 'Enter Count for People',
-                              //fillColor: Colors.redAccent,
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(5.0),
-                                borderSide: new BorderSide(),
-                              ),
-                            ),
-
-                            keyboardType: TextInputType.number,
-                            style: new TextStyle(
-                              fontFamily: "Poppins",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Purpose",
-                            style: titleStyle,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            controller: _purposeController,
-                            //initialValue: _name,
-                            textInputAction: TextInputAction.done,
-                            obscureText: false,
-                            validator: (value) => value.isNotEmpty
-                                ? null
-                                : 'Purpose cant\'t be empty.',
-                            focusNode: _purposeFocusNode,
-                            //onSaved: (value) => _name = value,
-                            decoration: new InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.public,
-                                color: backgroundColor,
-                              ),
-                              labelText: 'Enter Purpose',
+                              labelText: 'Enter Remarks',
                               //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
@@ -515,18 +583,25 @@ class _AddLabourReport extends State<AddLabourReport> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () async {
+                            onTap: () {
                               if (_formKey.currentState.validate() &&
-                                  selectedDealer != null &&
+                                  selectedSubCategory != null &&
                                   selectedConstructionSite != null &&
                                   selectedBlock != null &&
-                                  labourType != null) {
+                                  selectedCategory != null &&
+                                  selectedUnits != null) {
                                 _formKey.currentState.save();
                                 String documentId =
                                     "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+
+                                String currentDayTime = DateTimeUtils
+                                    .currentDayDateTimeNow
+                                    .millisecondsSinceEpoch
+                                    .toString();
+
                                 try {
-                                  await Firestore.instance
-                                      .collection('labourReport')
+                                  Firestore.instance
+                                      .collection('siteActivities')
                                       .document(documentId)
                                       .setData({
                                     'created_by': {
@@ -544,17 +619,25 @@ class _AddLabourReport extends State<AddLabourReport> {
                                       "blockId": selectedBlockId,
                                       "blockName": selectedBlock,
                                     },
-                                    'dealer': {
-                                      "dealerId": selectedDealerId,
-                                      "dealerName": selectedDealer,
+                                    'category': {
+                                      "categoryId": selectedCategoryId,
+                                      "categoryName": selectedCategory,
                                     },
-                                    'labour_type': labourType,
-                                    'no_of_people': _noofPeopleController.text,
-                                    'purpose': _purposeController.text,
+                                    'sub_category': {
+                                      "subCategoryId": selectedSubCategoryId,
+                                      "subCategoryName": selectedSubCategory,
+                                    },
+                                    'unit': {
+                                      "unitId": selectedUnitsId,
+                                      "unitName": selectedUnits,
+                                    },
+                                    'total_progress': "0",
+                                    'remark': _remarkController.text,
                                     "added_on": FieldValue.serverTimestamp(),
                                     "selected_date": selectedDate,
+                                  }).then((value) {
+                                    Navigator.pop(context);
                                   });
-                                  Navigator.pop(context);
                                 } catch (err) {
                                   setState(() {
                                     // isProcessing = false;

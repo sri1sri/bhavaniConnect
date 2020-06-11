@@ -20,8 +20,8 @@ class AddInvoice extends StatefulWidget {
 }
 
 class _AddInvoiceState extends State<AddInvoice> {
-  DateTime selectedDate = DateTime(2010);
-  DateTime selectedDateInvoice = DateTime(2010);
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -69,7 +69,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -84,7 +84,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {
@@ -558,23 +558,27 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           TextFormField(
                             controller: _invoiceDateController,
+                            //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
                                 : 'Invoice No. Quantity cant\'t be empty.',
                             focusNode: _invoiceDateFocusNode,
+                            // onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.blur_linear,
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Invoice No.',
+                              //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
                                 borderSide: new BorderSide(),
                               ),
                             ),
+
                             keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
@@ -592,23 +596,27 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           TextFormField(
                             controller: _receivedQuantityController,
+                            //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
                                 : 'Received Quantity cant\'t be empty.',
                             focusNode: _receivedQuantityFocusNode,
+                            // onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.add_shopping_cart,
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Received Quantity',
+                              //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
                                 borderSide: new BorderSide(),
                               ),
                             ),
+
                             keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
@@ -626,23 +634,27 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           TextFormField(
                             controller: _issuedQuantityController,
+                            //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
                                 : 'Issued Quantity cant\'t be empty.',
                             focusNode: _issuedQuantityFocusNode,
+                            //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.shopping_cart,
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Issued Quantity',
+                              //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
                                 borderSide: new BorderSide(),
                               ),
                             ),
+
                             keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
@@ -660,23 +672,27 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           TextFormField(
                             controller: _balanceQuantityController,
+                            //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
                                 : 'Balance Quantity cant\'t be empty.',
                             focusNode: _balanceQuantityFocusNode,
+                            // onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.shopping_basket,
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Balance Quantity',
+                              //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
                                 borderSide: new BorderSide(),
                               ),
                             ),
+
                             keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
@@ -694,23 +710,27 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           TextFormField(
                             controller: _rateController,
+                            //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
                                 : 'Rate cant\'t be empty.',
                             focusNode: _rateFocusNode,
+                            //onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.monetization_on,
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Item Rate',
+                              //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
                                 borderSide: new BorderSide(),
                               ),
                             ),
+
                             keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
@@ -728,23 +748,27 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           TextFormField(
                             controller: _subTotalController,
+                            //initialValue: _name,
                             textInputAction: TextInputAction.done,
                             obscureText: false,
                             validator: (value) => value.isNotEmpty
                                 ? null
                                 : 'Sub Total cant\'t be empty.',
                             focusNode: _subTotalFocusNode,
+                            // onSaved: (value) => _name = value,
                             decoration: new InputDecoration(
                               prefixIcon: Icon(
                                 Icons.attach_money,
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Sub Total',
+                              //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),
                                 borderSide: new BorderSide(),
                               ),
                             ),
+
                             keyboardType: TextInputType.number,
                             style: new TextStyle(
                               fontFamily: "Poppins",
@@ -956,6 +980,10 @@ class _AddInvoiceState extends State<AddInvoice> {
                                   validated = true;
                                 });
                               }
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(builder: (context) => LoginPage(),),
+//                      );
                             },
                             child: Container(
                               decoration: BoxDecoration(

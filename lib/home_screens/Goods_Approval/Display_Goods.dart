@@ -1,10 +1,15 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Add_Goods.dart';
 
@@ -18,6 +23,54 @@ class GoodsScreen extends StatefulWidget {
 }
 
 class _GoodsScreen extends State<GoodsScreen> {
+  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
+  DateTime endFilterDate =
+      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
+  UserRoles userRole;
+  String userRoleValue;
+  String userName;
+
+  DateTime selectedDateFrom = DateTime.now();
+  var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
+  var customFormat2 = DateFormat("dd MMM yyyy");
+  Future<Null> showPickerFrom(BuildContext context) async {
+    final DateTime pickedFrom = await showDatePicker(
+      context: context,
+      initialDate: selectedDateFrom,
+      firstDate: DateTime(1930),
+      lastDate: DateTime.now(),
+    );
+    if (pickedFrom != null) {
+      setState(() {
+        print(customFormat.format(pickedFrom));
+        selectedDateFrom = pickedFrom;
+        startFilterDate =
+            DateTime(pickedFrom.year, pickedFrom.month, pickedFrom.day);
+        endFilterDate =
+            DateTime(pickedFrom.year, pickedFrom.month, pickedFrom.day + 1);
+        print(startFilterDate);
+        print('startFilterDate--------');
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -49,6 +102,27 @@ class _GoodsScreen extends State<GoodsScreen> {
           leftAction: () {
             Navigator.pop(context, true);
           },
+          rightActionBar: (userRole == UserRoles.Manager ||
+                  userRole == UserRoles.StoreManager ||
+                  userRole == UserRoles.Securtiy ||
+                  userRole == UserRoles.Supervisor ||
+                  userRole == UserRoles.Admin)
+              ? Icon(
+                  Icons.calendar_today,
+                  size: 25,
+                  color: Colors.white,
+                )
+              : null,
+          rightAction: (userRole == UserRoles.Manager ||
+                  userRole == UserRoles.StoreManager ||
+                  userRole == UserRoles.Securtiy ||
+                  userRole == UserRoles.Supervisor ||
+                  userRole == UserRoles.Admin)
+              ? () {
+                  showPickerFrom(context);
+                  // GoToPage(context, VehicleFilter());
+                }
+              : null,
           primaryText: 'Goods Details',
           tabBarWidget: null,
         ),
@@ -59,61 +133,57 @@ class _GoodsScreen extends State<GoodsScreen> {
         child: Container(
           color: Colors.white,
           height: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                goodsDetails(
-                    size,
-                    context,
-                    "29 Oct 2020",
-                    "12.30 am",
-                    "Bhavani Vivan",
-                    "Vasanth Agencies",
-                    "Iron/Steel",
-                    "Vasanthakumar (Security)",
-                    "Srivatsav (Manager)",
-                    "Approved"),
-                goodsDetails(
-                    size,
-                    context,
-                    "02 Nov 2020",
-                    "04.20 pm",
-                    "Bhavani Aravindam",
-                    "Sri Agencies",
-                    "Sand",
-                    "Vamsi (Security)",
-                    "Vatsav (Manager)",
-                    "Pending"),
-                goodsDetails(
-                    size,
-                    context,
-                    "14 Nov 2020",
-                    "02.54 am",
-                    "Bhavani Vivan",
-                    "Vamsi Agencies",
-                    "Plastics",
-                    "Vimal (Security)",
-                    "Rockstar (Manager)",
-                    "Declined"),
-                SizedBox(
-                  height: 100,
-                ),
-              ],
-            ),
-          ),
+          child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection("goodsApproval")
+                  .where("added_on", isGreaterThan: startFilterDate)
+                  .where("added_on", isLessThan: endFilterDate)
+                  .orderBy('added_on', descending: true)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  var result = snapshot.data.documents;
+                  return ListView.builder(
+                    itemCount: result.length,
+                    itemBuilder: (context, index) {
+                      return goodsDetails(
+                        size,
+                        context,
+                        DateTimeUtils.dayMonthYearTimeFormat(
+                            (result[index]['added_on'] as Timestamp).toDate()),
+                        result[index]['construction_site']['constructionSite'],
+                        result[index]['dealer']['dealerName'],
+                        result[index]['concrete_type']['concreteTypeName'],
+                        "$userName ($userRoleValue)",
+                        "$userName ($userRoleValue)",
+                        result[index]['status'] != null
+                            ? result[index]['status']
+                            : "Pending",
+                        topPadding: index == 0 ? 40.0 : 20.0,
+                      );
+                    },
+                  );
+                }
+              }),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          GoToPage(context, AddGoods());
-        },
-        child: Icon(Icons.add),
-        backgroundColor: backgroundColor,
-      ),
+      floatingActionButton: (userRole == UserRoles.Manager ||
+              userRole == UserRoles.Securtiy ||
+              userRole == UserRoles.Admin)
+          ? FloatingActionButton(
+              onPressed: () {
+                GoToPage(
+                    context,
+                    AddGoods(
+                      currentUserId: widget.currentUserId,
+                    ));
+              },
+              child: Icon(Icons.add),
+              backgroundColor: backgroundColor,
+            )
+          : null,
     );
   }
 }
@@ -122,15 +192,16 @@ Widget goodsDetails(
     Size size,
     BuildContext context,
     String date,
-    String time,
+    // String time,
     String site,
     String dealer,
     String category,
     String requestedBy,
     String approvedBy,
-    String approvalStatus) {
+    String approvalStatus,
+    {double topPadding = 20.0}) {
   return Padding(
-    padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
+    padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
     child: Container(
       width: double.infinity,
       height: 240,
@@ -139,7 +210,7 @@ Widget goodsDetails(
           Positioned(
             right: 15,
             top: 0,
-            child: Text("$date - $time", style: descriptionStyleDarkBlur3),
+            child: Text("$date", style: descriptionStyleDarkBlur3),
           ),
           Positioned(
             bottom: 0,

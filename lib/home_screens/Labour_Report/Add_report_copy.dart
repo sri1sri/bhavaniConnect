@@ -20,8 +20,8 @@ class AddLabourReport extends StatefulWidget {
 }
 
 class _AddLabourReport extends State<AddLabourReport> {
-  DateTime selectedDate = DateTime(2010);
-  DateTime selectedDateInvoice = DateTime(2010);
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -65,7 +65,7 @@ class _AddLabourReport extends State<AddLabourReport> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -80,7 +80,7 @@ class _AddLabourReport extends State<AddLabourReport> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {

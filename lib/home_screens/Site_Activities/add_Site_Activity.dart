@@ -20,7 +20,7 @@ class AddSiteActivity extends StatefulWidget {
 }
 
 class _AddSiteActivity extends State<AddSiteActivity> {
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime(2010);
   DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
@@ -69,7 +69,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2010),
     );
     if (pickedFrom != null) {
       setState(() {
