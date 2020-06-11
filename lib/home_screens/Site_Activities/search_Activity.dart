@@ -10,8 +10,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchActivity extends StatefulWidget {
   final String currentUserId;
+  final Function(String, String, String, String) onSearch;
 
-  const SearchActivity({Key key, this.currentUserId}) : super(key: key);
+  const SearchActivity({Key key, this.currentUserId, this.onSearch})
+      : super(key: key);
   @override
   _SearchActivity createState() => _SearchActivity();
 }
@@ -386,25 +388,31 @@ class _SearchActivity extends State<SearchActivity> {
                           width: 180,
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SearchResultActivities(
-                                    currentUserId: widget.currentUserId,
-                                    selectedConstructionId:
-                                        selectedConstructionId,
-                                    selectedConstructionSite:
-                                        selectedConstructionSite,
-                                    selectedBlock: selectedBlock,
-                                    selectedBlockId: selectedBlockId,
-                                    selectedCategory: selectedCategory,
-                                    selectedCategoryId: selectedCategoryId,
-                                    selectedSubCategory: selectedSubCategory,
-                                    selectedSubCategoryId:
-                                        selectedSubCategoryId,
-                                  ),
-                                ),
-                              );
+                              widget.onSearch(
+                                  selectedConstructionId,
+                                  selectedBlockId,
+                                  selectedConstructionId,
+                                  selectedSubCategoryId);
+                              Navigator.of(context).pop();
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => SearchResultActivities(
+                              //       currentUserId: widget.currentUserId,
+                              //       selectedConstructionId:
+                              //           selectedConstructionId,
+                              //       selectedConstructionSite:
+                              //           selectedConstructionSite,
+                              //       selectedBlock: selectedBlock,
+                              //       selectedBlockId: selectedBlockId,
+                              //       selectedCategory: selectedCategory,
+                              //       selectedCategoryId: selectedCategoryId,
+                              //       selectedSubCategory: selectedSubCategory,
+                              //       selectedSubCategoryId:
+                              //           selectedSubCategoryId,
+                              //     ),
+                              //   ),
+                              // );
                             },
                             child: Container(
                               decoration: BoxDecoration(

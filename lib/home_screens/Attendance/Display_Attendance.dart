@@ -454,7 +454,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
             .collection('attendance')
             .document(documentId)
             .snapshots(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (!snapshot.hasData) {
             return CircularProgressIndicator();
           } else {
@@ -462,10 +462,14 @@ class _DisplayAttendance extends State<DisplayAttendance> {
             month = DateTimeUtils.formatAbbrMonth(datetime);
             year = DateTimeUtils.yearFormat(datetime);
             if (snapshot.data != null && snapshot.data.data != null) {
-              inTime = DateTimeUtils.hourMinuteFormat(
-                  (snapshot.data.data['punch_in'] as Timestamp).toDate());
-              outTime = DateTimeUtils.hourMinuteFormat(
-                  (snapshot.data.data['punch_out'] as Timestamp).toDate());
+              inTime = snapshot.data.data['punch_in'] != null
+                  ? DateTimeUtils.hourMinuteFormat(
+                      (snapshot.data.data['punch_in'] as Timestamp).toDate())
+                  : "-";
+              outTime = snapshot.data.data['punch_out'] != null
+                  ? DateTimeUtils.hourMinuteFormat(
+                      (snapshot.data.data['punch_out'] as Timestamp).toDate())
+                  : "-";
             }
 
             return Row(
@@ -498,95 +502,108 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                 SizedBox(
                   width: 10,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: backgroundColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15)),
-                  alignment: Alignment.center,
-                  height: 90,
-                  width: 300,
-                  child: inTime == null
-                      ? Text(
-                          DateTimeUtils.weekDayFormat(datetime) == "Sunday"
-                              ? "Holiday"
-                              : "Not Updated",
-                          style: subTitleStyleDark1,
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.call_received,
-                                  size: 30,
-                                  color: Colors.green,
-                                ),
-                                SizedBox(
-                                  width: 7,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Punch In",
-                                      style: descriptionStyleDark,
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      inTime,
-                                      style: subTitleStyleDark1,
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: 2,
-                                height: double.maxFinite,
-                                color: Colors.grey,
+                GestureDetector(
+                  onTap: () {
+                    if (inTime != null) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => AddAttendance(
+                                currentUserId: widget.currentUserId,
+                                documentId: snapshot.data.documentID,
+                              )));
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: backgroundColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(15)),
+                    alignment: Alignment.center,
+                    height: 90,
+                    width: 300,
+                    child: inTime == null
+                        ? Text(
+                            DateTimeUtils.weekDayFormat(datetime) == "Sunday"
+                                ? "Holiday"
+                                : DateTimeUtils.isSameDay(datetime, now)
+                                    ? "Not Updated"
+                                    : "Absent",
+                            style: subTitleStyleDark1,
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.call_received,
+                                    size: 30,
+                                    color: Colors.green,
+                                  ),
+                                  SizedBox(
+                                    width: 7,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Punch In",
+                                        style: descriptionStyleDark,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        inTime,
+                                        style: subTitleStyleDark1,
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.call_made,
-                                  size: 30,
-                                  color: Colors.red,
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 2,
+                                  height: double.maxFinite,
+                                  color: Colors.grey,
                                 ),
-                                SizedBox(
-                                  width: 7,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Punch Out",
-                                      style: descriptionStyleDark,
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      outTime,
-                                      style: subTitleStyleDark1,
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.call_made,
+                                    size: 30,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    width: 7,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Punch Out",
+                                        style: descriptionStyleDark,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        outTime,
+                                        style: subTitleStyleDark1,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                  ),
                 )
               ],
             );

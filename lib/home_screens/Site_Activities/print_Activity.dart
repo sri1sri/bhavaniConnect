@@ -43,8 +43,8 @@ class _PrintActivity extends State<PrintActivity> {
   void initState() {
     super.initState();
 
-    // selectedDateFrom = widget.startDate;
-    // selectedDateTo = widget.endDate;
+    selectedDateFrom = widget.startDate;
+    selectedDateTo = widget.endDate;
   }
 
   Future<Null> showPickerFrom(BuildContext context) async {

@@ -31,6 +31,14 @@ class _SiteActivities extends State<SiteActivities> {
 
   UserRoles userRole;
 
+  String selectedConstructionId;
+
+  String selectedBlockId;
+
+  String selectedCategoryId;
+
+  String selectedSubCategoryId;
+
   @override
   void initState() {
     super.initState();
@@ -131,8 +139,41 @@ class _SiteActivities extends State<SiteActivities> {
                                   GoToPage(
                                       context,
                                       SearchActivity(
-                                        currentUserId: widget.currentUserId,
-                                      ));
+                                          currentUserId: widget.currentUserId,
+                                          onSearch: (constructionId, blockId,
+                                              categoryId, subCategoryId) {
+                                            print(constructionId);
+                                            print(blockId);
+                                            print(categoryId);
+                                            setState(() {
+                                              selectedConstructionId =
+                                                  constructionId;
+                                              selectedBlockId = blockId;
+                                              selectedCategoryId = categoryId;
+                                              selectedSubCategoryId =
+                                                  subCategoryId;
+                                            });
+                                            print('construction');
+                                            print(selectedConstructionId);
+                                            Firestore.instance
+                                                .collection("siteActivities")
+                                                .where(
+                                                    "construction_site.constructionId",
+                                                    isEqualTo:
+                                                        selectedConstructionId)
+                                                .where('block.blockId',
+                                                    isEqualTo: selectedBlockId)
+                                                .where("category.categoryId",
+                                                    isEqualTo:
+                                                        selectedCategoryId)
+                                                .where(
+                                                    'sub_category.subCategoryId',
+                                                    isEqualTo:
+                                                        selectedSubCategoryId)
+                                                .orderBy('added_on',
+                                                    descending: true)
+                                                .getDocuments();
+                                          }));
                                 },
                               ),
                               userRole != null &&
@@ -174,8 +215,13 @@ class _SiteActivities extends State<SiteActivities> {
                 child: StreamBuilder(
                     stream: Firestore.instance
                         .collection("siteActivities")
-                        .where("added_on", isGreaterThan: startFilterDate)
-                        .where("added_on", isLessThan: endFilterDate)
+                        .where("construction_site.constructionId",
+                            isEqualTo: selectedConstructionId)
+                        .where('block.blockId', isEqualTo: selectedBlockId)
+                        .where("category.categoryId",
+                            isEqualTo: selectedCategoryId)
+                        .where('sub_category.subCategoryId',
+                            isEqualTo: selectedSubCategoryId)
                         .orderBy('added_on', descending: true)
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -183,6 +229,7 @@ class _SiteActivities extends State<SiteActivities> {
                         return Center(child: CircularProgressIndicator());
                       } else {
                         var result = snapshot.data.documents;
+                        print(result.length);
                         return ListView.builder(
                           itemCount: result.length,
                           itemBuilder: (context, index) {
@@ -196,7 +243,7 @@ class _SiteActivities extends State<SiteActivities> {
                                       .toDate()),
                               result[index]['construction_site']
                                   ['constructionSite'],
-                              "${result[index]['category']['categoryName']} with ${result[index]['sub_category']['subCategoryName']}",
+                              "${result[index]['category']['categoryName']}",
                               result[index]['category']['categoryName'],
                               result[index]['sub_category']['subCategoryName'],
                               result[index]['block']['blockName'],
@@ -397,7 +444,7 @@ Widget SiteActivity(
                           overflow: TextOverflow.ellipsis,
                           style: subTitleStyleDark1),
                     ),
-                    Text('$category - $subCat', style: subTitleStyle),
+                    Text('$subCat', style: subTitleStyle),
                     SizedBox(height: 10),
                   ],
                 ),

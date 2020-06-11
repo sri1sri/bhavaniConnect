@@ -208,9 +208,8 @@ class _EntryDescription extends State<EntryDescription> {
                                                           .toString(),
                                                   totalprog:
                                                       totalProgress.toString(),
-                                                  addedBy: row['created_by']
-                                                          ['role']
-                                                      .toString(),
+                                                  addedBy:
+                                                      "${row['created_by']['name']}  (${row['created_by']['role']})",
                                                   remarks:
                                                       row['remark'].toString(),
                                                 );
