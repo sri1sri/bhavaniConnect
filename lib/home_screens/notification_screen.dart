@@ -1,6 +1,7 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
+import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -8,15 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-// class NotificationPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: F_NotificationPage(),
-//     );
-//   }
-// }
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationPage extends StatefulWidget {
   final String currentUserId;
@@ -35,15 +28,28 @@ class _F_NotificationPageState extends State<NotificationPage> {
   DateTime endFilterDate =
       DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
 
+  UserRoles userRole;
+  String userRoleValue;
+  String userName;
+
   @override
   void initState() {
     super.initState();
-    Firestore.instance
-        .collection("pendingRequests")
-        .where("added_on", isGreaterThan: startFilterDate)
-        .where("added_on", isLessThan: endFilterDate)
-        .orderBy('added_on', descending: true)
-        .getDocuments();
+
+    getUserParams();
+  }
+
+  getUserParams() async {
+    var prefs = await SharedPreferences.getInstance();
+    String role = prefs.getString("userRole");
+    String name = prefs.getString("userName");
+    // userConstructionSiteId = prefs.getString("userConstSiteId");
+    // userConstructionSite = prefs.getString("userConstSite");
+    setState(() {
+      userRole = userRoleValues[role];
+      userRoleValue = role;
+      userName = name;
+    });
   }
 
   int _n = 0;
@@ -165,7 +171,7 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                 var res = resultData;
                                 print(index);
 
-                                return NotificationCard(
+                                return notificationCard(
                                   size,
                                   context,
                                   res['status'],
@@ -184,6 +190,9 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                       ? "${res['vehicleNumber']} - Goods Truck"
                                       : "${res['concrete_type']['concreteTypeName']} - Goods",
                                   "Sand load 2 tons for 2nd block",
+                                  result[index]['collectionName'],
+                                  result[index]['collectionDocId'],
+                                  topPadding: index == 0 ? 40.0 : 20.0,
                                 );
                                 // return result[index]['collectionName'] ==
                                 //         "vehicleEntries"
@@ -229,42 +238,44 @@ class _F_NotificationPageState extends State<NotificationPage> {
       ),
     );
   }
-}
 
-Widget NotificationCard(
-    Size size,
-    BuildContext context,
-    String approvalStatus,
-    String date,
-    String time,
-    String site,
-    String imgPath,
-    String title,
-    String content,
-    String description) {
-  return GestureDetector(
-    onTap: () {},
-    child: Padding(
-      padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
-      child: Container(
-        width: double.infinity,
-        height: 225,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-                left: 35,
-                top: 0,
-                child: Container(
-                  height: 8,
-                  width: 40,
-                  decoration: BoxDecoration(
-                      color: approvalStatus == 'Approved'
-                          ? Colors.green.withOpacity(0.8)
-                          : (approvalStatus == 'Pending'
-                              ? Colors.orange.withOpacity(0.8)
-                              : Colors.red.withOpacity(0.8)),
-                      borderRadius: BorderRadius.circular(3)),
-                )),
+  Widget notificationCard(
+      Size size,
+      BuildContext context,
+      String approvalStatus,
+      String date,
+      String time,
+      String site,
+      String imgPath,
+      String title,
+      String content,
+      String description,
+      String collectionName,
+      String documentId,
+      {double topPadding = 20.0}) {
+    return GestureDetector(
+      onTap: () {},
+      child: Padding(
+        padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
+        child: Container(
+          width: double.infinity,
+          height: 225,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                  left: 35,
+                  top: 0,
+                  child: Container(
+                    height: 8,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: approvalStatus == 'Approved'
+                            ? Colors.green.withOpacity(0.8)
+                            : (approvalStatus == 'Pending'
+                                ? Colors.orange.withOpacity(0.8)
+                                : Colors.red.withOpacity(0.8)),
+                        borderRadius: BorderRadius.circular(3)),
+                  )),
 //            Positioned(
 //              right:15,
 //              top: 0,
@@ -274,163 +285,193 @@ Widget NotificationCard(
 //              ),
 //            ),
 
-            Positioned(
-              top: 10,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                  top: 15,
-                  //right: size.width * .35,
-                ),
-                height: 190,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      new BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6.0,
-                          spreadRadius: 7),
-                    ]),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          approvalStatus,
-                          style: TextStyle(
-                              color: approvalStatus == 'Approved'
-                                  ? Colors.green.withOpacity(0.8)
-                                  : (approvalStatus == 'Pending'
-                                      ? Colors.orange.withOpacity(0.8)
-                                      : Colors.red.withOpacity(0.8)),
-                              fontFamily: 'Quicksand',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18.0),
-                        ),
-                        Text("$date - $time", style: descriptionStyleDarkBlur3)
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text(site, style: subTitleStyle1),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(imgPath),
-                          radius: 30,
-                        ),
-                        //SizedBox(width: 30,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              style: descriptionStyleDarkBlur,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              content,
-                              style: descriptionStyleDark1,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              description,
-                              style: descriptionStyleDarkBlur3,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
-            approvalStatus == 'Pending'
-                ? Positioned(
+              Positioned(
+                top: 10,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: 15,
                     right: 15,
-                    bottom: 0,
-                    child: Container(
-                      height: 50,
-                      width: 180,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            new BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 6.0,
-                                spreadRadius: 7),
-                          ]),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    top: 15,
+                    //right: size.width * .35,
+                  ),
+                  height: 190,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        new BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6.0,
+                            spreadRadius: 7),
+                      ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
+                          Text(
+                            approvalStatus,
+                            style: TextStyle(
+                                color: approvalStatus == 'Approved'
+                                    ? Colors.green.withOpacity(0.8)
+                                    : (approvalStatus == 'Pending'
+                                        ? Colors.orange.withOpacity(0.8)
+                                        : Colors.red.withOpacity(0.8)),
+                                fontFamily: 'Quicksand',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18.0),
+                          ),
+                          Text("$date - $time",
+                              style: descriptionStyleDarkBlur3)
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Text(site, style: subTitleStyle1),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(imgPath),
+                            radius: 30,
+                          ),
+                          //SizedBox(width: 30,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.green.withOpacity(0.8),
-                                  ),
-                                  height: 35,
-                                  width: 75,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Accept",
-                                        style: descriptionStyleLite1,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              Text(
+                                title,
+                                style: descriptionStyleDarkBlur,
                               ),
                               SizedBox(
-                                width: 10,
+                                height: 5,
                               ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.red.withOpacity(0.8),
-                                  ),
-                                  height: 35,
-                                  width: 75,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Decline",
-                                        style: descriptionStyleLite1,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              Text(
+                                content,
+                                style: descriptionStyleDark1,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                description,
+                                style: descriptionStyleDarkBlur3,
                               ),
                             ],
                           )
                         ],
                       ),
-                    ))
-                : Container()
-          ],
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+              approvalStatus == 'Pending'
+                  ? Positioned(
+                      right: 15,
+                      bottom: 0,
+                      child: Container(
+                        height: 50,
+                        width: 180,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              new BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 6.0,
+                                  spreadRadius: 7),
+                            ]),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Firestore.instance
+                                        .collection(collectionName)
+                                        .document(documentId)
+                                        .updateData({
+                                      'approved_by': {
+                                        "id": widget.currentUserId,
+                                        "name": userName,
+                                        "role": userRoleValue,
+                                        'at': FieldValue.serverTimestamp(),
+                                      },
+                                      "status": "Approved",
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.green.withOpacity(0.8),
+                                    ),
+                                    height: 35,
+                                    width: 75,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Accept",
+                                          style: descriptionStyleLite1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Firestore.instance
+                                        .collection(collectionName)
+                                        .document(documentId)
+                                        .updateData({
+                                      'approved_by': {
+                                        "id": widget.currentUserId,
+                                        "name": userName,
+                                        "role": userRoleValue,
+                                        'at': FieldValue.serverTimestamp(),
+                                      },
+                                      "status": "Declined",
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.red.withOpacity(0.8),
+                                    ),
+                                    height: 35,
+                                    width: 75,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Decline",
+                                          style: descriptionStyleLite1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ))
+                  : Container()
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

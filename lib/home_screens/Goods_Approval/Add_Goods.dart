@@ -442,12 +442,13 @@ class _AddGoods extends State<AddGoods> {
                                         : "Approved",
                                   });
 
-                                  userRole == UserRoles.Securtiy ??
-                                      permissionSetData(
-                                        documentId,
-                                        selectedConstructionSite,
-                                        selectedConstructionId,
-                                      );
+                                  if (userRole == UserRoles.Securtiy) {
+                                    permissionSetData(
+                                      documentId,
+                                      selectedConstructionSite,
+                                      selectedConstructionId,
+                                    );
+                                  }
 
                                   Navigator.pop(context);
                                 } catch (err) {
