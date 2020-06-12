@@ -69,6 +69,7 @@ class _OTPPageState extends State<OTPPage> {
   @override
   void dispose() {
     _otpController.dispose();
+    _otpFocusNode.dispose();
     super.dispose();
   }
 
@@ -228,12 +229,13 @@ class _OTPPageState extends State<OTPPage> {
           "phoneNumber": '+91${this.phoneNo}',
           "status": 0,
           "joinedDate": DateTime.now().toUtc(),
+        }).then((value) {
+          Navigator.of(context).popUntil((r) => !r.navigator.canPop());
         });
+      } else {
+        Navigator.of(context).popUntil((r) => !r.navigator.canPop());
       }
-      Navigator.of(context).popUntil((r) => !r.navigator.canPop());
     });
-
-    Navigator.of(context).popUntil((r) => !r.navigator.canPop());
   }
 
   signIn() async {
