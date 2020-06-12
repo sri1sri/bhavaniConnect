@@ -3,6 +3,7 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
+import 'package:bhavaniconnect/common_widgets/image_widget/avatar_selector.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -102,10 +103,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(result['avatar']),
-                              radius: 80,
-                            ),
+                            result['avatar'] != null
+                                ? CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(result['avatar']),
+                                    radius: 80,
+                                  )
+                                : AvatarSelector(widget.currentUserId, true),
                           ],
                         ),
                         SizedBox(

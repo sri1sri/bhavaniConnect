@@ -72,15 +72,6 @@ class _MyAppState extends State<MyApp> {
           return;
         }
 
-        if (profile['date_of_birth'] == null ||
-            profile['date_of_birth'] == "") {
-          setState(() {
-            authenticationState =
-                AuthenticationState(SignupState.needsSignUp, fireuser);
-          });
-          return;
-        }
-
         if (profile['construction_site'] == null) {
           setState(() {
             authenticationState =

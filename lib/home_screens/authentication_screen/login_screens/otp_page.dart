@@ -230,8 +230,10 @@ class _OTPPageState extends State<OTPPage> {
           "joinedDate": DateTime.now().toUtc(),
         });
       }
-      Navigator.of(context).pop();
+      Navigator.of(context).popUntil((r) => !r.navigator.canPop());
     });
+
+    Navigator.of(context).popUntil((r) => !r.navigator.canPop());
   }
 
   signIn() async {
