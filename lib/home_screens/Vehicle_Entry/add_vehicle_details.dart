@@ -117,9 +117,7 @@ class _AddVehicle extends State<AddVehicle> {
 
   permissionSetData(
       String vehicleDocumentId, constructionSite, constructionId) async {
-    permissionDocId = [];
-    permissionDocUserName = [];
-    permissionDocUserRole = [];
+    List permissionBy = [];
     QuerySnapshot querySnapshot = await Firestore.instance
         .collection("userData")
         .where("construction_site.constructionId", isEqualTo: constructionId)
@@ -128,9 +126,13 @@ class _AddVehicle extends State<AddVehicle> {
     var list = querySnapshot.documents;
 
     for (int i = 0; i < list.length; i++) {
-      permissionDocId.add(list[i].documentID);
-      permissionDocUserName.add(list[i].data['name']);
-      permissionDocUserRole.add(list[i].data['role']);
+      print('asd');
+      permissionBy.add({
+        "userId": list[i].documentID,
+        'userName': list[i].data['name'],
+        "role": list[i].data['role'],
+        "token": list[i].data['token'],
+      });
     }
 
     // print(permissionDocId.length);
@@ -148,14 +150,11 @@ class _AddVehicle extends State<AddVehicle> {
         "name": userName,
         "role": userRoleValue,
       },
-      'permission_by': {
-        "id": permissionDocId,
-        "name": permissionDocUserName,
-        "role": permissionDocUserRole,
-      },
+      'permission_by': permissionBy,
       "added_on": FieldValue.serverTimestamp(),
       'collectionName': "vehicleEntries"
     });
+    Navigator.of(context).pop();
   }
 
   var category = [
@@ -459,7 +458,7 @@ class _AddVehicle extends State<AddVehicle> {
                                 },
                                 label: "Construction Site",
                                 onChanged: (value) {},
-                                selectedItem: selectedConstructionId ??
+                                selectedItem: selectedConstructionSite ??
                                     "Choose Construction Site",
                                 showSearchBox: true,
                                 validate: (value) {
@@ -786,14 +785,15 @@ class _AddVehicle extends State<AddVehicle> {
                                       : "Approved",
                                 });
 
-                                if (userRole == UserRoles.Securtiy)
+                                if (userRole == UserRoles.Securtiy) {
                                   permissionSetData(
                                     documentId,
                                     selectedConstructionSite,
                                     selectedConstructionId,
                                   );
-
-                                Navigator.pop(context);
+                                } else {
+                                  Navigator.pop(context);
+                                }
                               } catch (err) {
                                 setState(() {
                                   // isProcessing = false;

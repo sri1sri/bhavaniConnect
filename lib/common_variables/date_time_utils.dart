@@ -210,10 +210,15 @@ class DateTimeUtils {
       var seconds = diff / 1000;
       var hours = 0;
       var minutes = 0;
-
+      var newMinutes = '';
       hours = (seconds / 3600).floor();
       minutes = ((seconds % 3600) / 60).floor();
-      return "$hours:$minutes";
+      if (minutes < 10) {
+        newMinutes = minutes.toString().padLeft(2, '0');
+      } else {
+        newMinutes = minutes.toString();
+      }
+      return "$hours:$newMinutes";
     } else {
       return "-";
     }

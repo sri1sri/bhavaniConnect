@@ -388,31 +388,31 @@ class _SearchActivity extends State<SearchActivity> {
                           width: 180,
                           child: GestureDetector(
                             onTap: () {
-                              widget.onSearch(
-                                  selectedConstructionId,
-                                  selectedBlockId,
-                                  selectedConstructionId,
-                                  selectedSubCategoryId);
-                              Navigator.of(context).pop();
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => SearchResultActivities(
-                              //       currentUserId: widget.currentUserId,
-                              //       selectedConstructionId:
-                              //           selectedConstructionId,
-                              //       selectedConstructionSite:
-                              //           selectedConstructionSite,
-                              //       selectedBlock: selectedBlock,
-                              //       selectedBlockId: selectedBlockId,
-                              //       selectedCategory: selectedCategory,
-                              //       selectedCategoryId: selectedCategoryId,
-                              //       selectedSubCategory: selectedSubCategory,
-                              //       selectedSubCategoryId:
-                              //           selectedSubCategoryId,
-                              //     ),
-                              //   ),
-                              // );
+                              // widget.onSearch(
+                              //     selectedConstructionId,
+                              //     selectedBlockId,
+                              //     selectedConstructionId,
+                              //     selectedSubCategoryId);
+                              // Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchResultActivities(
+                                    currentUserId: widget.currentUserId,
+                                    selectedConstructionId:
+                                        selectedConstructionId,
+                                    selectedConstructionSite:
+                                        selectedConstructionSite,
+                                    selectedBlock: selectedBlock,
+                                    selectedBlockId: selectedBlockId,
+                                    selectedCategory: selectedCategory,
+                                    selectedCategoryId: selectedCategoryId,
+                                    selectedSubCategory: selectedSubCategory,
+                                    selectedSubCategoryId:
+                                        selectedSubCategoryId,
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
                               decoration: BoxDecoration(

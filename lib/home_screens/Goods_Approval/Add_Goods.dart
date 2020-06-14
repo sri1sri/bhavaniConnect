@@ -54,9 +54,7 @@ class _AddGoods extends State<AddGoods> {
 
   permissionSetData(
       String vehicleDocumentId, constructionSite, constructionId) async {
-    permissionDocId = [];
-    permissionDocUserName = [];
-    permissionDocUserRole = [];
+    List permissionBy = [];
     QuerySnapshot querySnapshot = await Firestore.instance
         .collection("userData")
         .where("construction_site.constructionId", isEqualTo: constructionId)
@@ -64,14 +62,13 @@ class _AddGoods extends State<AddGoods> {
             whereIn: ["Supervisor", "Store Manager", "Manager"]).getDocuments();
     var list = querySnapshot.documents;
     for (int i = 0; i < list.length; i++) {
-      permissionDocId.add(list[i].documentID);
-      permissionDocUserName.add(list[i].data['name']);
-      permissionDocUserRole.add(list[i].data['role']);
+      permissionBy.add({
+        "userId": list[i].documentID,
+        'userName': list[i].data['name'],
+        "role": list[i].data['role'],
+        "token": list[i].data['token'],
+      });
     }
-    // print(permissionDocId.length);
-    // print("-------------$permissionDocId---------------");
-    // print("-------------$permissionDocUserName---------------");
-    // print("-------------$permissionDocUserRole---------------");
 
     await Firestore.instance
         .collection('pendingRequests')
@@ -83,14 +80,11 @@ class _AddGoods extends State<AddGoods> {
         "name": userName,
         "role": userRoleValue,
       },
-      'permission_by': {
-        "id": permissionDocId,
-        "name": permissionDocUserName,
-        "role": permissionDocUserRole,
-      },
+      'permission_by': permissionBy,
       "added_on": FieldValue.serverTimestamp(),
       'collectionName': "goodsApproval"
     });
+    Navigator.of(context).pop();
   }
 
   @override
@@ -448,9 +442,9 @@ class _AddGoods extends State<AddGoods> {
                                       selectedConstructionSite,
                                       selectedConstructionId,
                                     );
+                                  } else {
+                                    Navigator.pop(context);
                                   }
-
-                                  Navigator.pop(context);
                                 } catch (err) {
                                   setState(() {
                                     // isProcessing = false;

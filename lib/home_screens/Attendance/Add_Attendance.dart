@@ -411,11 +411,7 @@ class _AddAttendance extends State<AddAttendance> {
                                                                   'punch_in'] ==
                                                               null
                                                       ? Colors.green
-                                                      : snapshot.data.data[
-                                                                  'punch_in'] ==
-                                                              null
-                                                          ? Colors.red
-                                                          : Colors.grey,
+                                                      : Colors.red,
                                               foregroundColor: Colors.white,
                                               onConfirmation: () async {
                                                 if (snapshot.data == null ||
