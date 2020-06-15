@@ -165,7 +165,7 @@ class _OTPPageState extends State<OTPPage> {
             ),
             SizedBox(height: 20.0),
             ToDoButton(
-              assetName: 'images/googe-logo.png',
+              assetName: 'images/1.jpg',
               text: 'Verify',
               isEnabled: smsOTP != null && smsOTP.length == 6,
               textColor: Colors.white,
@@ -178,7 +178,7 @@ class _OTPPageState extends State<OTPPage> {
             ),
             SizedBox(height: 10.0),
             ToDoButton(
-              assetName: 'images/googe-logo.png',
+              assetName: 'images/1.jpg',
               text: 'Edit phone number',
               textColor: Colors.black,
               backgroundColor: Colors.white,
