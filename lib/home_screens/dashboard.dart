@@ -71,7 +71,7 @@ class _Dashboard extends State<Dashboard> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
+        preferredSize: Size.fromHeight(71),
         child: CustomAppBarDark(
           primaryText: 'Home',
           tabBarWidget: null,
@@ -88,7 +88,7 @@ class _Dashboard extends State<Dashboard> {
           rightAction: () {
             GoToPage(
               context,
-              NotificationPage(),
+              NotificationPage(currentUserId: widget.currentUserId),
             );
           },
         ),

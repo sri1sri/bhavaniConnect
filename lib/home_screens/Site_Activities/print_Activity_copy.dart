@@ -98,7 +98,7 @@ class _PrintActivity extends State<PrintActivity> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
+        preferredSize: Size.fromHeight(72),
         child: CustomAppBarDark(
           leftActionBar: Icon(
             Icons.arrow_back_ios,

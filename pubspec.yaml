@@ -64,10 +64,10 @@ dependencies:
   slide_to_confirm: 0.0.6
   toast:
   path_provider: ^1.6.9
-  firebase_messaging: ^6.0.15
+  firebase_messaging: ^6.0.16
   device_info: ^0.4.2+4
-  cached_network_image:
-  shared_preferences:
+  cached_network_image: ^2.2.0+1
+  shared_preferences: ^0.5.7+3
   latlong: ^0.6.1
   # excel: ^1.0.8
   csv: ^4.0.3

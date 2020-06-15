@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/geo/geo_util.dart';
 import 'package:bhavaniconnect/home_page.dart';
+import 'package:bhavaniconnect/home_screens/Goods_Approval/Display_Goods.dart';
+import 'package:bhavaniconnect/home_screens/Vehicle_Entry/vehicle_list_details.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/login_screens/phone_number_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/registrtion_screens/sign_up_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/splash_screens/onboarding_screen.dart';
+import 'package:bhavaniconnect/home_screens/notification_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,6 +17,8 @@ import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'geo/point.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,23 +51,25 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('onMessage: $message');
-        _setMessage(message);
+        _setMessage(context, message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print('onLaunch: $message');
-        _setMessage(message);
+        _setMessage(context, message);
       },
       onResume: (Map<String, dynamic> message) async {
         print('onResume: $message');
-        _setMessage(message);
+        _setMessage(context, message);
       },
+      onBackgroundMessage: Fcm.myBackgroundMessageHandler,
     );
+
     _firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(sound: true, badge: true, alert: true),
     );
   }
 
-  _setMessage(Map<String, dynamic> message) {
+  _setMessage(BuildContext context, Map<String, dynamic> message) {
     final notification = message['notification'];
     final data = message['data'];
     final String title = notification['title'];
@@ -70,8 +78,59 @@ class _MyAppState extends State<MyApp> {
     print("Title: $title, body: $body, message: $mMessage");
     setState(() {
       Message msg = Message(title, body, mMessage);
-      // messagesList.add(msg);
     });
+    showNotificaitonDialog(context, title, mMessage);
+  }
+
+  showNotificaitonDialog(context, String title, mMessage) {
+    showDialog(
+        context: navigatorKey.currentState.overlay.context,
+        builder: (ctx) => AlertDialog(
+              content: Column(
+                children: <Widget>[
+                  Text(
+                    title,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(mMessage == "goods"
+                      ? "Navigate to Vehicle Entries"
+                      : mMessage == "vehicle"
+                          ? "Navigate to Goods Approval"
+                          : "Navigate to Notifications")
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('Yes Sure'),
+                  onPressed: () async {
+                    if (mMessage == "goods") {
+                      GoToPage(
+                          context,
+                          GoodsScreen(
+                            currentUserId: authenticationState.user.uid,
+                          ));
+                    } else if (mMessage == "vehicle") {
+                      GoToPage(
+                          context,
+                          DaySelection(
+                              currentUserId: authenticationState.user.uid));
+                    } else {
+                      GoToPage(
+                        context,
+                        NotificationPage(
+                            currentUserId: authenticationState.user.uid),
+                      );
+                    }
+                  },
+                ),
+                FlatButton(
+                  child: const Text("No Don't"),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+              ],
+            ));
   }
 
   @override
@@ -169,13 +228,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Know It',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: _handleCurrentScreen(),
-    );
+        title: 'Know It',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        home: _handleCurrentScreen(),
+        navigatorKey: navigatorKey);
   }
 
   Widget _handleCurrentScreen() {
@@ -229,5 +288,25 @@ class Message {
     this.title = title;
     this.body = body;
     this.message = message;
+  }
+}
+
+class Fcm {
+  static Future<dynamic> myBackgroundMessageHandler(
+      Map<String, dynamic> message) {
+    print('messsage');
+    print(message);
+    print(message);
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+    }
+
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      final dynamic notification = message['notification'];
+    }
+
+    // Or do other work.
   }
 }

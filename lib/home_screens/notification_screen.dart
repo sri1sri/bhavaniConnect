@@ -2,7 +2,6 @@ import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
-import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -74,7 +73,7 @@ class _F_NotificationPageState extends State<NotificationPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
+        preferredSize: Size.fromHeight(72),
         child: CustomAppBarDark(
           leftActionBar: Icon(
             Icons.arrow_back_ios,
@@ -136,13 +135,22 @@ class _F_NotificationPageState extends State<NotificationPage> {
           //   ],
           // ),
           child: StreamBuilder(
-              stream: Firestore.instance
-                  .collection("pendingRequests")
-                  // .where("permission_by", arrayContains: widget.currentUserId)
-                  .where("added_on", isGreaterThan: startFilterDate)
-                  .where("added_on", isLessThan: endFilterDate)
-                  .orderBy('added_on', descending: true)
-                  .snapshots(),
+              stream: userRole == UserRoles.Securtiy
+                  ? Firestore.instance
+                      .collection("pendingRequests")
+                      .where("createdby.id", isEqualTo: widget.currentUserId)
+                      .where("added_on", isGreaterThan: startFilterDate)
+                      .where("added_on", isLessThan: endFilterDate)
+                      .orderBy('added_on', descending: true)
+                      .snapshots()
+                  : Firestore.instance
+                      .collection("pendingRequests")
+                      .where("permission_by",
+                          arrayContains: widget.currentUserId)
+                      .where("added_on", isGreaterThan: startFilterDate)
+                      .where("added_on", isLessThan: endFilterDate)
+                      .orderBy('added_on', descending: true)
+                      .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
@@ -370,7 +378,7 @@ class _F_NotificationPageState extends State<NotificationPage> {
                   ),
                 ),
               ),
-              approvalStatus == 'Pending'
+              approvalStatus == 'Pending' && userRole != UserRoles.Securtiy
                   ? Positioned(
                       right: 15,
                       bottom: 0,

@@ -40,7 +40,7 @@ class _DetailDescription extends State<DetailDescription> {
     return Scaffold(
         backgroundColor: backgroundColor,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70),
+          preferredSize: Size.fromHeight(72),
           child: CustomAppBarDark(
             leftActionBar: Icon(
               Icons.arrow_back_ios,

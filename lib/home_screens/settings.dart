@@ -67,7 +67,7 @@ class _F_SettingsPageState extends State<F_SettingsPage> {
           rightAction: () {
 //            GoToPage(
 //              context,
-//              NotificationPage(),
+//              NotificationPage(currentUserId: widget.currentUserId),
 //            );
           },
         ),

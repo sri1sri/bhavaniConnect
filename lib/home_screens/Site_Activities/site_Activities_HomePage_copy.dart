@@ -66,7 +66,7 @@ class _SiteActivities extends State<SiteActivities> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70),
+          preferredSize: Size.fromHeight(72),
           child: Container(
             decoration: BoxDecoration(
               color: backgroundColor,
