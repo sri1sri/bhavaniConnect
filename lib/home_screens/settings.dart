@@ -46,7 +46,7 @@ class _F_SettingsPageState extends State<F_SettingsPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
+        preferredSize: Size.fromHeight(72),
         child: CustomAppBarDark(
           leftActionBar: Icon(
             Icons.arrow_back_ios,

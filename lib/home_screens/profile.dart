@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
+        preferredSize: Size.fromHeight(72),
         child: CustomAppBarDark(
           primaryText: 'Profile',
           tabBarWidget: null,
