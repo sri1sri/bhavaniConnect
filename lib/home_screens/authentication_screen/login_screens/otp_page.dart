@@ -5,6 +5,7 @@ import 'package:bhavaniconnect/common_variables/firebase_components.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +50,11 @@ class _OTPPageState extends State<OTPPage> {
   // PhoneNumberModel get model => widget.model;
   bool _btnEnabled = false;
 
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   Future<bool> didCheckPhoneNumber;
+
+  String deviceToken;
 
   String phoneNo;
   String smsOTP;
@@ -57,11 +62,19 @@ class _OTPPageState extends State<OTPPage> {
   String errorMessage = '';
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  getDeviceToken() {
+    _firebaseMessaging.getToken().then((token) {
+      deviceToken = token;
+    });
+  }
+
 //  OtpModel get model => widget.model;
 
   @override
   void initState() {
     super.initState();
+
+    getDeviceToken();
     verificationId = widget.verificationId;
     phoneNo = widget.phoneNo;
   }
@@ -228,12 +241,18 @@ class _OTPPageState extends State<OTPPage> {
         documentReference.setData({
           "phoneNumber": '+91${this.phoneNo}',
           "status": 0,
+          "token": deviceToken,
           "joinedDate": DateTime.now().toUtc(),
         }).then((value) {
           Navigator.of(context).popUntil((r) => !r.navigator.canPop());
         });
       } else {
-        Navigator.of(context).popUntil((r) => !r.navigator.canPop());
+        DocumentReference documentReference = usersRef.document(userId);
+        documentReference.updateData({
+          "token": deviceToken,
+        }).then((value) {
+          Navigator.of(context).popUntil((r) => !r.navigator.canPop());
+        });
       }
     });
   }

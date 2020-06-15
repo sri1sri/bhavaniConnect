@@ -35,6 +35,21 @@ class _F_NotificationPageState extends State<NotificationPage> {
   void initState() {
     super.initState();
 
+    Firestore.instance
+        .collection("pendingRequests")
+        .where("created_by.id", isEqualTo: widget.currentUserId)
+        .where("added_on", isGreaterThan: startFilterDate)
+        .where("added_on", isLessThan: endFilterDate)
+        .orderBy('added_on', descending: true)
+        .getDocuments();
+    Firestore.instance
+        .collection("pendingRequests")
+        .where("permissions", arrayContains: widget.currentUserId)
+        .where("added_on", isGreaterThan: startFilterDate)
+        .where("added_on", isLessThan: endFilterDate)
+        .orderBy('added_on', descending: true)
+        .getDocuments();
+
     getUserParams();
   }
 
@@ -138,15 +153,14 @@ class _F_NotificationPageState extends State<NotificationPage> {
               stream: userRole == UserRoles.Securtiy
                   ? Firestore.instance
                       .collection("pendingRequests")
-                      .where("createdby.id", isEqualTo: widget.currentUserId)
+                      .where("created_by.id", isEqualTo: widget.currentUserId)
                       .where("added_on", isGreaterThan: startFilterDate)
                       .where("added_on", isLessThan: endFilterDate)
                       .orderBy('added_on', descending: true)
                       .snapshots()
                   : Firestore.instance
                       .collection("pendingRequests")
-                      .where("permission_by",
-                          arrayContains: widget.currentUserId)
+                      .where("permissions", arrayContains: widget.currentUserId)
                       .where("added_on", isGreaterThan: startFilterDate)
                       .where("added_on", isLessThan: endFilterDate)
                       .orderBy('added_on', descending: true)
@@ -156,6 +170,8 @@ class _F_NotificationPageState extends State<NotificationPage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   var result = snapshot.data.documents;
+                  print("result");
+                  print(result.length);
                   return ListView.builder(
                     itemCount: result.length,
                     itemBuilder: (context, index) {

@@ -39,10 +39,12 @@ class _MyAppState extends State<MyApp> {
 
   // Replace with server token from firebase console settings.
   final String serverToken = '<Server-Token>';
+  String deviceToken;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   _getToken() {
-    _firebaseMessaging.getToken().then((deviceToken) {
+    _firebaseMessaging.getToken().then((token) {
+      deviceToken = token;
       print("Device Token: $deviceToken");
     });
   }
@@ -72,10 +74,24 @@ class _MyAppState extends State<MyApp> {
   _setMessage(BuildContext context, Map<String, dynamic> message) {
     final notification = message['notification'];
     final data = message['data'];
-    final String title = notification['title'];
+    String title = notification['title'];
+
     final String body = notification['body'];
     String mMessage = data['message'];
-    print("Title: $title, body: $body, message: $mMessage");
+    // if (title == null) {
+    //   if (mMessage == "goods") {
+    //     title = "Goods Approval Status Updated";
+    //   } else if (mMessage == "vehicle") {
+    //     title = "Vehicle Entry Status Updated";
+    //   } else if (mMessage == "vehicleEntries") {
+    //     title = "New Vehicle Entry Created";
+    //   } else {
+    //     title = "New Goods Approval Entry";
+    //   }
+    // }
+
+    print(
+        "Title: ${title ?? 'no Title'}, body: ${body ?? 'no body '}, message: ${mMessage ?? 'no message'}");
     setState(() {
       Message msg = Message(title, body, mMessage);
     });
@@ -85,51 +101,57 @@ class _MyAppState extends State<MyApp> {
   showNotificaitonDialog(context, String title, mMessage) {
     showDialog(
         context: navigatorKey.currentState.overlay.context,
-        builder: (ctx) => AlertDialog(
-              content: Column(
-                children: <Widget>[
-                  Text(
-                    title,
+        builder: (ctx) => Center(
+              child: Container(
+                height: 220.0,
+                width: double.infinity,
+                child: AlertDialog(
+                  content: Column(
+                    children: <Widget>[
+                      Text(
+                        title ?? "Notificaiton",
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(mMessage == "goods"
+                          ? "Navigate to Vehicle Entries"
+                          : mMessage == "vehicle"
+                              ? "Navigate to Goods Approval"
+                              : "Navigate to Notifications")
+                    ],
                   ),
-                  SizedBox(height: 10.0),
-                  Text(mMessage == "goods"
-                      ? "Navigate to Vehicle Entries"
-                      : mMessage == "vehicle"
-                          ? "Navigate to Goods Approval"
-                          : "Navigate to Notifications")
-                ],
+                  actions: <Widget>[
+                    FlatButton(
+                      child: const Text('Yes Sure'),
+                      onPressed: () async {
+                        navigatorKey.currentState.pop();
+                        if (mMessage == "goods") {
+                          navigatorKey.currentState.push(MaterialPageRoute(
+                              builder: (BuildContext context) => GoodsScreen(
+                                    currentUserId: authenticationState.user.uid,
+                                  )));
+                        } else if (mMessage == "vehicle") {
+                          navigatorKey.currentState.push(MaterialPageRoute(
+                              builder: (BuildContext context) => DaySelection(
+                                  currentUserId:
+                                      authenticationState.user.uid)));
+                        } else {
+                          navigatorKey.currentState.push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  NotificationPage(
+                                      currentUserId:
+                                          authenticationState.user.uid)));
+                        }
+                      },
+                    ),
+                    FlatButton(
+                      child: const Text("No Don't"),
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                    ),
+                  ],
+                ),
               ),
-              actions: <Widget>[
-                FlatButton(
-                  child: const Text('Yes Sure'),
-                  onPressed: () async {
-                    if (mMessage == "goods") {
-                      GoToPage(
-                          context,
-                          GoodsScreen(
-                            currentUserId: authenticationState.user.uid,
-                          ));
-                    } else if (mMessage == "vehicle") {
-                      GoToPage(
-                          context,
-                          DaySelection(
-                              currentUserId: authenticationState.user.uid));
-                    } else {
-                      GoToPage(
-                        context,
-                        NotificationPage(
-                            currentUserId: authenticationState.user.uid),
-                      );
-                    }
-                  },
-                ),
-                FlatButton(
-                  child: const Text("No Don't"),
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                ),
-              ],
             ));
   }
 
@@ -182,6 +204,7 @@ class _MyAppState extends State<MyApp> {
             authenticationState =
                 AuthenticationState(SignupState.needsFirstname, fireuser);
           });
+
           return;
         }
 

@@ -36,12 +36,12 @@ class _SignUpPageState extends State<SignUpPage> {
   String selectedRole;
   String selectedConstructionSite;
   String selectedConstructionId;
+  double selectedConstructionLat;
+  double selectedConstructionLong;
 
   bool validated = false;
 
   final _formKey = GlobalKey<FormState>();
-
-  String deviceToken;
 
   LatLng currentLocation;
 
@@ -64,14 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getDeviceToken();
     getCurrentLocation();
-  }
-
-  getDeviceToken() {
-    _firebaseMessaging.getToken().then((token) {
-      deviceToken = token;
-    });
   }
 
   getCurrentLocation() async {
@@ -283,6 +276,23 @@ class _SignUpPageState extends State<SignUpPage> {
                                         .firstWhere((element) =>
                                             element.documentID == value)['name']
                                         .toString();
+
+                                    GeoPoint geoPoint = snapshot.data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID ==
+                                            value)['location'];
+                                    if (geoPoint != null) {
+                                      selectedConstructionLat =
+                                          geoPoint.latitude;
+                                      selectedConstructionLong =
+                                          geoPoint.longitude;
+                                    }
+                                    selectedConstructionSite = snapshot
+                                        .data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID == value)['name']
+                                        .toString();
+
                                     selectedConstructionId = value;
                                   });
                                   Navigator.of(context).pop();
@@ -440,10 +450,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               'construction_site': {
                                 "constructionId": selectedConstructionId,
                                 "constructionSite": selectedConstructionSite,
+                                "location": GeoPoint(selectedConstructionLat,
+                                    selectedConstructionLong)
                               },
                               'date_of_birth': selectedDate,
                               "gender": group,
-                              "token": deviceToken,
                               'latitude': currentLocation.latitude,
                               'longitude': currentLocation.longitude,
                             });

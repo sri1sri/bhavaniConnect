@@ -24,6 +24,8 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
   ];
   int _n = 0;
   int index = 0;
+
+  List<Timestamp> timeRecords = [];
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -83,6 +85,18 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                     } else {
                       var result = snapshot.data;
 
+                      if (result != null && result['timeRecords'] != null) {
+                        timeRecords = [];
+                        index = 0;
+                        print(timeRecords);
+                        for (int i = 0; i < result['timeRecords'].length; i++) {
+                          timeRecords
+                              .add(result['timeRecords'][i] as Timestamp);
+                        }
+                        // timeRecords = result['timeRecords'] as List<Timestamp>;
+
+                      }
+
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,39 +123,39 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                               padding: const EdgeInsets.only(
                                   top: 10.0, bottom: 30, left: 20, right: 20),
                               child: DataTable(
-                                  showCheckboxColumn:
-                                      false, // <-- this is important
-                                  columns: [
-                                    DataColumn(
-                                        label: Text(
-                                      'Round',
-                                      style: subTitleStyle,
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      'Time',
-                                      style: subTitleStyle,
-                                    )),
-                                  ],
-                                  rows: result['timeRecords'] == null
-                                      ? []
-                                      : result['timeRecords'].map((record) {
-                                          index++;
-                                          return DataRow(
-                                            cells: [
-                                              DataCell(Text(
-                                                '  $index',
-                                                style: descriptionStyleDark,
-                                              )),
-                                              DataCell(Text(
-                                                DateTimeUtils.hourMinuteFormat(
-                                                    (record as Timestamp)
-                                                        .toDate()),
-                                                style: descriptionStyleDark,
-                                              )),
-                                            ],
-                                          );
-                                        }).toList()),
+                                showCheckboxColumn:
+                                    false, // <-- this is important
+                                columns: [
+                                  DataColumn(
+                                      label: Text(
+                                    'Round',
+                                    style: subTitleStyle,
+                                  )),
+                                  DataColumn(
+                                      label: Text(
+                                    'Time',
+                                    style: subTitleStyle,
+                                  )),
+                                ],
+                                rows: result['timeRecords'] == null
+                                    ? []
+                                    : timeRecords.map((record) {
+                                        index++;
+                                        return DataRow(
+                                          cells: [
+                                            DataCell(Text(
+                                              '  $index',
+                                              style: descriptionStyleDark,
+                                            )),
+                                            DataCell(Text(
+                                              DateTimeUtils.hourMinuteFormat(
+                                                  (record).toDate()),
+                                              style: descriptionStyleDark,
+                                            )),
+                                          ],
+                                        );
+                                      }).toList(),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -302,12 +316,13 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
+                  timeRecords.add(Timestamp.fromDate(DateTime.now()));
+                  print(timeRecords);
                   Firestore.instance
                       .collection("vehicleEntries")
                       .document(widget.documentId)
                       .updateData({
-                    'timeRecords':
-                        FieldValue.arrayUnion([FieldValue.serverTimestamp()]),
+                    'timeRecords': timeRecords,
                   });
                 },
                 child: Container(

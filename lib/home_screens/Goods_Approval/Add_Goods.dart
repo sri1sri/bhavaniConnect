@@ -62,6 +62,7 @@ class _AddGoods extends State<AddGoods> {
             whereIn: ["Supervisor", "Store Manager", "Manager"]).getDocuments();
     var list = querySnapshot.documents;
     for (int i = 0; i < list.length; i++) {
+      permissionDocId.add(list[i].documentID);
       permissionBy.add({
         "userId": list[i].documentID,
         'userName': list[i].data['name'],
@@ -80,6 +81,7 @@ class _AddGoods extends State<AddGoods> {
         "name": userName,
         "role": userRoleValue,
       },
+      'permissions': permissionDocId,
       'permission_by': permissionBy,
       "added_on": FieldValue.serverTimestamp(),
       'collectionName': "goodsApproval"

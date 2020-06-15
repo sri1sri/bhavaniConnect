@@ -127,6 +127,7 @@ class _AddVehicle extends State<AddVehicle> {
 
     for (int i = 0; i < list.length; i++) {
       print('asd');
+      permissionDocId.add(list[i].documentID);
       permissionBy.add({
         "userId": list[i].documentID,
         'userName': list[i].data['name'],
@@ -150,6 +151,7 @@ class _AddVehicle extends State<AddVehicle> {
         "name": userName,
         "role": userRoleValue,
       },
+      'permissions': permissionDocId,
       'permission_by': permissionBy,
       "added_on": FieldValue.serverTimestamp(),
       'collectionName': "vehicleEntries"
