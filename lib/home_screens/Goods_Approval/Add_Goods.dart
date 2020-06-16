@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
@@ -18,6 +20,7 @@ class AddGoods extends StatefulWidget {
 }
 
 class _AddGoods extends State<AddGoods> {
+  bool visible = true;
   final _formKey = GlobalKey<FormState>();
   String selectedConstructionSite;
   String selectedConstructionId;
@@ -386,87 +389,99 @@ class _AddGoods extends State<AddGoods> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () async {
-                              if (_formKey.currentState.validate() &&
-                                  selectedConcreteType != null &&
-                                  selectedConstructionSite != null &&
-                                  selectedDealer != null) {
-                                _formKey.currentState.save();
-                                String documentId =
-                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
-                                try {
-                                  await Firestore.instance
-                                      .collection('goodsApproval')
-                                      .document(documentId)
-                                      .setData({
-                                    'created_by': {
-                                      "id": widget.currentUserId,
-                                      "name": userName,
-                                      "role": userRoleValue,
-                                    },
-                                    'documentId': documentId,
-                                    'approved_by': userRole !=
-                                            UserRoles.Securtiy
-                                        ? {
+                            onTap: visible
+                                ? () async {
+                                    if (_formKey.currentState.validate() &&
+                                        selectedConcreteType != null &&
+                                        selectedConstructionSite != null &&
+                                        selectedDealer != null) {
+                                      _formKey.currentState.save();
+                                      setState(() {
+                                        visible = false;
+                                      });
+                                      String documentId =
+                                          "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                                      try {
+                                        await Firestore.instance
+                                            .collection('goodsApproval')
+                                            .document(documentId)
+                                            .setData({
+                                          'created_by': {
                                             "id": widget.currentUserId,
                                             "name": userName,
                                             "role": userRoleValue,
-                                            'at': FieldValue.serverTimestamp(),
-                                          }
-                                        : {
-                                            "id": '',
-                                            "name": '',
-                                            "role": '',
-                                            'at': FieldValue.serverTimestamp(),
                                           },
-                                    'construction_site': {
-                                      "constructionId": selectedConstructionId,
-                                      "constructionSite":
-                                          selectedConstructionSite,
-                                    },
-                                    'concrete_type': {
-                                      "concreteTypeId": selectedConcreteTypeId,
-                                      "concreteTypeName": selectedConcreteType,
-                                    },
-                                    'dealer': {
-                                      "dealerId": selectedDealerId,
-                                      "dealerName": selectedDealer,
-                                    },
-                                    "added_on": FieldValue.serverTimestamp(),
-                                    "status": userRole == UserRoles.Securtiy
-                                        ? "Pending"
-                                        : "Approved",
-                                  });
+                                          'documentId': documentId,
+                                          'approved_by': userRole !=
+                                                  UserRoles.Securtiy
+                                              ? {
+                                                  "id": widget.currentUserId,
+                                                  "name": userName,
+                                                  "role": userRoleValue,
+                                                  'at': FieldValue
+                                                      .serverTimestamp(),
+                                                }
+                                              : {
+                                                  "id": '',
+                                                  "name": '',
+                                                  "role": '',
+                                                  'at': FieldValue
+                                                      .serverTimestamp(),
+                                                },
+                                          'construction_site': {
+                                            "constructionId":
+                                                selectedConstructionId,
+                                            "constructionSite":
+                                                selectedConstructionSite,
+                                          },
+                                          'concrete_type': {
+                                            "concreteTypeId":
+                                                selectedConcreteTypeId,
+                                            "concreteTypeName":
+                                                selectedConcreteType,
+                                          },
+                                          'dealer': {
+                                            "dealerId": selectedDealerId,
+                                            "dealerName": selectedDealer,
+                                          },
+                                          "added_on":
+                                              FieldValue.serverTimestamp(),
+                                          "status":
+                                              userRole == UserRoles.Securtiy
+                                                  ? "Pending"
+                                                  : "Approved",
+                                        });
 
-                                  if (userRole == UserRoles.Securtiy) {
-                                    permissionSetData(
-                                      documentId,
-                                      selectedConstructionSite,
-                                      selectedConstructionId,
-                                    );
-                                  } else {
-                                    Navigator.pop(context);
+                                        if (userRole == UserRoles.Securtiy) {
+                                          permissionSetData(
+                                            documentId,
+                                            selectedConstructionSite,
+                                            selectedConstructionId,
+                                          );
+                                        } else {
+                                          Navigator.pop(context);
+                                        }
+                                      } catch (err) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                          // error = err;
+                                        });
+                                      } finally {
+                                        if (mounted) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                          });
+                                        }
+                                      }
+                                    } else {
+                                      setState(() {
+                                        validated = true;
+                                      });
+                                    }
                                   }
-                                } catch (err) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                    // error = err;
-                                  });
-                                } finally {
-                                  if (mounted) {
-                                    setState(() {
-                                      // isProcessing = false;
-                                    });
-                                  }
-                                }
-                              } else {
-                                setState(() {
-                                  validated = true;
-                                });
-                              }
-                            },
-                            //GoToPage(context, GoodsScreen());
-
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -476,10 +491,16 @@ class _AddGoods extends State<AddGoods> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Create",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Create",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

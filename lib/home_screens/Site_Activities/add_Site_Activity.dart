@@ -95,6 +95,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
 
   final TextEditingController _remarkController = TextEditingController();
   final FocusNode _remarkFocusNode = FocusNode();
@@ -583,79 +584,91 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () {
-                              if (_formKey.currentState.validate() &&
-                                  selectedSubCategory != null &&
-                                  selectedConstructionSite != null &&
-                                  selectedBlock != null &&
-                                  selectedCategory != null &&
-                                  selectedUnits != null) {
-                                _formKey.currentState.save();
-                                String documentId =
-                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                            onTap: visible
+                                ? () {
+                                    if (_formKey.currentState.validate() &&
+                                        selectedSubCategory != null &&
+                                        selectedConstructionSite != null &&
+                                        selectedBlock != null &&
+                                        selectedCategory != null &&
+                                        selectedUnits != null) {
+                                      _formKey.currentState.save();
+                                      setState(() {
+                                        visible = false;
+                                      });
 
-                                String currentDayTime = DateTimeUtils
-                                    .currentDayDateTimeNow
-                                    .millisecondsSinceEpoch
-                                    .toString();
+                                      String documentId =
+                                          "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
 
-                                try {
-                                  Firestore.instance
-                                      .collection('siteActivities')
-                                      .document(documentId)
-                                      .setData({
-                                    'created_by': {
-                                      "id": widget.currentUserId,
-                                      "name": userName,
-                                      "role": userRoleValue,
-                                    },
-                                    'documentId': documentId,
-                                    'construction_site': {
-                                      "constructionId": selectedConstructionId,
-                                      "constructionSite":
-                                          selectedConstructionSite,
-                                    },
-                                    'block': {
-                                      "blockId": selectedBlockId,
-                                      "blockName": selectedBlock,
-                                    },
-                                    'category': {
-                                      "categoryId": selectedCategoryId,
-                                      "categoryName": selectedCategory,
-                                    },
-                                    'sub_category': {
-                                      "subCategoryId": selectedSubCategoryId,
-                                      "subCategoryName": selectedSubCategory,
-                                    },
-                                    'unit': {
-                                      "unitId": selectedUnitsId,
-                                      "unitName": selectedUnits,
-                                    },
-                                    'total_progress': "0",
-                                    'remark': _remarkController.text,
-                                    "added_on": FieldValue.serverTimestamp(),
-                                    "selected_date": selectedDate,
-                                  }).then((value) {
-                                    Navigator.pop(context);
-                                  });
-                                } catch (err) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                    // error = err;
-                                  });
-                                } finally {
-                                  if (mounted) {
-                                    setState(() {
-                                      // isProcessing = false;
-                                    });
+                                      String currentDayTime = DateTimeUtils
+                                          .currentDayDateTimeNow
+                                          .millisecondsSinceEpoch
+                                          .toString();
+
+                                      try {
+                                        Firestore.instance
+                                            .collection('siteActivities')
+                                            .document(documentId)
+                                            .setData({
+                                          'created_by': {
+                                            "id": widget.currentUserId,
+                                            "name": userName,
+                                            "role": userRoleValue,
+                                          },
+                                          'documentId': documentId,
+                                          'construction_site': {
+                                            "constructionId":
+                                                selectedConstructionId,
+                                            "constructionSite":
+                                                selectedConstructionSite,
+                                          },
+                                          'block': {
+                                            "blockId": selectedBlockId,
+                                            "blockName": selectedBlock,
+                                          },
+                                          'category': {
+                                            "categoryId": selectedCategoryId,
+                                            "categoryName": selectedCategory,
+                                          },
+                                          'sub_category': {
+                                            "subCategoryId":
+                                                selectedSubCategoryId,
+                                            "subCategoryName":
+                                                selectedSubCategory,
+                                          },
+                                          'unit': {
+                                            "unitId": selectedUnitsId,
+                                            "unitName": selectedUnits,
+                                          },
+                                          'total_progress': "0",
+                                          'remark': _remarkController.text,
+                                          "added_on":
+                                              FieldValue.serverTimestamp(),
+                                          "selected_date": selectedDate,
+                                        }).then((value) {
+                                          Navigator.pop(context);
+                                        });
+                                      } catch (err) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                          // error = err;
+                                        });
+                                      } finally {
+                                        if (mounted) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                          });
+                                        }
+                                      }
+                                    } else {
+                                      setState(() {
+                                        validated = true;
+                                      });
+                                    }
                                   }
-                                }
-                              } else {
-                                setState(() {
-                                  validated = true;
-                                });
-                              }
-                            },
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -665,10 +678,16 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Create",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Create",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

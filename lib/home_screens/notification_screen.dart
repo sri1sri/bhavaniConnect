@@ -213,7 +213,15 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                           "vehicleEntries"
                                       ? "${res['vehicleNumber']} - Goods Truck"
                                       : "${res['concrete_type']['concreteTypeName']} - Goods",
-                                  "Sand load 2 tons for 2nd block",
+                                  res['dealer']['dealerName'],
+                                  res['created_by']['name'] != null &&
+                                          res['created_by']['role'] != null
+                                      ? " ${res['created_by']['name']} (${res['created_by']['role']})"
+                                      : "-",
+                                  res['approved_by']['name'] != null &&
+                                          res['approved_by']['role'] != null
+                                      ? " ${res['approved_by']['name']} (${res['approved_by']['role']})"
+                                      : "-",
                                   result[index]['collectionName'],
                                   result[index]['collectionDocId'],
                                   topPadding: index == 0 ? 40.0 : 20.0,
@@ -274,6 +282,8 @@ class _F_NotificationPageState extends State<NotificationPage> {
       String title,
       String content,
       String description,
+      String requestedBy,
+      String approvedBy,
       String collectionName,
       String documentId,
       {double topPadding = 20.0}) {
@@ -320,7 +330,7 @@ class _F_NotificationPageState extends State<NotificationPage> {
                     top: 15,
                     //right: size.width * .35,
                   ),
-                  height: 190,
+                  height: 215,
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -383,6 +393,20 @@ class _F_NotificationPageState extends State<NotificationPage> {
                               ),
                               Text(
                                 description,
+                                style: descriptionStyleDarkBlur3,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                requestedBy,
+                                style: descriptionStyleDarkBlur3,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                approvedBy,
                                 style: descriptionStyleDarkBlur3,
                               ),
                             ],

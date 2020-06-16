@@ -24,6 +24,7 @@ class AddProgressRemarks extends StatefulWidget {
 
 class _AddProgressRemarks extends State<AddProgressRemarks> {
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
 
   final TextEditingController _yesterdayProgressController =
       TextEditingController();
@@ -206,71 +207,79 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () {
-                              if (_formKey.currentState.validate()) {
-                                _formKey.currentState.save();
-                                String documentId = DateTimeUtils
-                                    .currentDayDateTimeNow
-                                    .millisecondsSinceEpoch
-                                    .toString();
-                                int totalProgress = 0;
-                                try {
-                                  Firestore.instance
-                                      .collection(
-                                          'activityProgress/${widget.documentId}/${widget.documentId}')
-                                      .document(documentId)
-                                      .setData({
-                                    'created_by': {
-                                      "id": widget.currentUserId,
-                                      "name": userName,
-                                      "role": userRoleValue,
-                                    },
-                                    'documentId': documentId,
-                                    'yesterday_progress':
-                                        _yesterdayProgressController.text,
-                                    'remark': _remarkController.text,
-                                    "added_on": FieldValue.serverTimestamp(),
-                                  }).then((value) async {
-                                    QuerySnapshot result = await Firestore
-                                        .instance
-                                        .collection(
-                                            'activityProgress/${widget.documentId}/${widget.documentId}')
-                                        .getDocuments();
-
-                                    if (result != null &&
-                                        result.documents != null) {
-                                      for (int i = 0;
-                                          i < result.documents.length;
-                                          i++) {
-                                        totalProgress = totalProgress +
-                                            int.parse(result.documents[i]
-                                                ['yesterday_progress']);
-                                      }
-
-                                      Firestore.instance
-                                          .collection(widget.tableName)
-                                          .document(widget.documentId)
-                                          .updateData({
-                                        'total_progress':
-                                            totalProgress.toString()
+                            onTap: visible
+                                ? () {
+                                    if (_formKey.currentState.validate()) {
+                                      _formKey.currentState.save();
+                                      setState(() {
+                                        visible = false;
                                       });
-                                      Navigator.pop(context);
+                                      String documentId = DateTimeUtils
+                                          .currentDayDateTimeNow
+                                          .millisecondsSinceEpoch
+                                          .toString();
+                                      int totalProgress = 0;
+                                      try {
+                                        Firestore.instance
+                                            .collection(
+                                                'activityProgress/${widget.documentId}/${widget.documentId}')
+                                            .document(documentId)
+                                            .setData({
+                                          'created_by': {
+                                            "id": widget.currentUserId,
+                                            "name": userName,
+                                            "role": userRoleValue,
+                                          },
+                                          'documentId': documentId,
+                                          'yesterday_progress':
+                                              _yesterdayProgressController.text,
+                                          'remark': _remarkController.text,
+                                          "added_on":
+                                              FieldValue.serverTimestamp(),
+                                        }).then((value) async {
+                                          QuerySnapshot result = await Firestore
+                                              .instance
+                                              .collection(
+                                                  'activityProgress/${widget.documentId}/${widget.documentId}')
+                                              .getDocuments();
+
+                                          if (result != null &&
+                                              result.documents != null) {
+                                            for (int i = 0;
+                                                i < result.documents.length;
+                                                i++) {
+                                              totalProgress = totalProgress +
+                                                  int.parse(result.documents[i]
+                                                      ['yesterday_progress']);
+                                            }
+
+                                            Firestore.instance
+                                                .collection(widget.tableName)
+                                                .document(widget.documentId)
+                                                .updateData({
+                                              'total_progress':
+                                                  totalProgress.toString()
+                                            });
+                                            Navigator.pop(context);
+                                          }
+                                        });
+                                      } catch (err) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                          // error = err;
+                                        });
+                                      } finally {
+                                        if (mounted) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                          });
+                                        }
+                                      }
                                     }
-                                  });
-                                } catch (err) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                    // error = err;
-                                  });
-                                } finally {
-                                  if (mounted) {
-                                    setState(() {
-                                      // isProcessing = false;
-                                    });
                                   }
-                                }
-                              }
-                            },
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -280,10 +289,16 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Add Progress",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Add Progress",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

@@ -73,6 +73,7 @@ class _VehicleFilter extends State<VehicleFilter> {
   String _SiteName;
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
   int _n = 0;
   @override
   Widget build(BuildContext context) {
@@ -186,7 +187,7 @@ class _VehicleFilter extends State<VehicleFilter> {
                                       label: "Dealer Name",
                                       onChanged: (value) {},
                                       selectedItem: selectedDealer ??
-                                          "Choose Dealer Name",
+                                          "All dealer Selected",
                                       showSearchBox: true,
                                       validate: (value) {
                                         if (validated &&
@@ -255,7 +256,7 @@ class _VehicleFilter extends State<VehicleFilter> {
                                       label: "Construction Site",
                                       onChanged: (value) {},
                                       selectedItem: selectedConstructionSite ??
-                                          "Choose Construction Site",
+                                          "All construction sites selected",
                                       showSearchBox: true,
                                       validate: (value) {
                                         if (validated &&
@@ -369,39 +370,36 @@ class _VehicleFilter extends State<VehicleFilter> {
                               height: 55,
                               width: 180,
                               child: GestureDetector(
-                                onTap: () {
-                                  if (_formKey.currentState.validate()) {
-                                    print(selectedDealerId.runtimeType);
-                                    print(selectedConstructionSite);
-                                    print(selectedConstructionSite.runtimeType);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => VehicleDataList(
-                                          selectedDateFrom,
-                                          selectedDateTo,
-                                          selectedConstructionId,
-                                          selectedConstructionSite,
-                                          selectedDealerId,
-                                          selectedDealer,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    setState(() {
-                                      validated = true;
-                                    });
-                                  }
+                                onTap: visible
+                                    ? () {
+                                        if (_formKey.currentState.validate()) {
+                                          setState(() {
+                                            visible = false;
+                                          });
 
-                                  // Navigator.of(context).pop();
-
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => VehicleDataList(),
-                                  //   ),
-                                  // );
-                                },
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VehicleDataList(
+                                                selectedDateFrom,
+                                                selectedDateTo,
+                                                selectedConstructionId,
+                                                selectedConstructionSite,
+                                                selectedDealerId,
+                                                selectedDealer,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          setState(() {
+                                            validated = true;
+                                          });
+                                        }
+                                      }
+                                    : () {
+                                        print('In Process');
+                                      },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: backgroundColor,
@@ -411,10 +409,16 @@ class _VehicleFilter extends State<VehicleFilter> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
-                                        child: Text(
-                                          "Search",
-                                          style: activeSubTitleStyle,
-                                        ),
+                                        child: visible
+                                            ? Text(
+                                                "Search",
+                                                style: activeSubTitleStyle,
+                                              )
+                                            : CircularProgressIndicator(
+                                                valueColor:
+                                                    new AlwaysStoppedAnimation<
+                                                        Color>(Colors.white),
+                                              ),
                                       )
                                     ],
                                   ),

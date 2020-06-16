@@ -69,6 +69,8 @@ class _PrintReport extends State<PrintReport> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -429,33 +431,38 @@ class _PrintReport extends State<PrintReport> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () {
-                              if (_formKey.currentState.validate()) {
-                                print(constructionId.runtimeType);
-                                print(selectedConstructionSite);
-                                print(selectedConstructionSite.runtimeType);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PrintPreviewLabour(
-                                      selectedDateFrom,
-                                      selectedDateTo,
-                                      constructionId,
-                                      selectedConstructionSite,
-                                      selectedDealerId,
-                                      selectedDealer,
-                                      selectedBlockId,
-                                      selectedBlock,
-                                      labourType,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                setState(() {
-                                  validated = true;
-                                });
-                              }
-                            },
+                            onTap: visible
+                                ? () {
+                                    if (_formKey.currentState.validate()) {
+                                      setState(() {
+                                        visible = false;
+                                      });
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PrintPreviewLabour(
+                                            selectedDateFrom,
+                                            selectedDateTo,
+                                            constructionId,
+                                            selectedConstructionSite,
+                                            selectedDealerId,
+                                            selectedDealer,
+                                            selectedBlockId,
+                                            selectedBlock,
+                                            labourType,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      setState(() {
+                                        validated = true;
+                                      });
+                                    }
+                                  }
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -465,10 +472,16 @@ class _PrintReport extends State<PrintReport> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Preview",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Preview",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

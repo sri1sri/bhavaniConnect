@@ -19,6 +19,7 @@ class AddVehicle extends StatefulWidget {
 
 class _AddVehicle extends State<AddVehicle> {
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
   String _myActivity;
   String _myActivityResult;
   FocusNode focusNode = FocusNode();
@@ -730,90 +731,102 @@ class _AddVehicle extends State<AddVehicle> {
                         height: 55,
                         width: 180,
                         child: GestureDetector(
-                          onTap: () async {
-                            if (_formKey.currentState.validate() &&
-                                selectedConstructionSite != null &&
-                                vehicleCategory != null &&
-                                selectedDealer != null) {
-                              _formKey.currentState.save();
+                          onTap: visible
+                              ? () async {
+                                  if (_formKey.currentState.validate() &&
+                                      selectedConstructionSite != null &&
+                                      vehicleCategory != null &&
+                                      selectedDealer != null) {
+                                    _formKey.currentState.save();
+                                    setState(() {
+                                      visible = false;
+                                    });
 
-                              String documentId =
-                                  "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
-                              try {
-                                await Firestore.instance
-                                    .collection('vehicleEntries')
-                                    .document(documentId)
-                                    .setData({
-                                  'created_by': {
-                                    "id": widget.currentUserId,
-                                    "name": userName,
-                                    "role": userRoleValue,
-                                    'at': FieldValue.serverTimestamp(),
-                                  },
-                                  'approved_by': userRole != UserRoles.Securtiy
-                                      ? {
+                                    String documentId =
+                                        "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                                    try {
+                                      await Firestore.instance
+                                          .collection('vehicleEntries')
+                                          .document(documentId)
+                                          .setData({
+                                        'created_by': {
                                           "id": widget.currentUserId,
                                           "name": userName,
                                           "role": userRoleValue,
                                           'at': FieldValue.serverTimestamp(),
-                                        }
-                                      : {
-                                          "id": '',
-                                          "name": '',
-                                          "role": '',
-                                          'at': FieldValue.serverTimestamp(),
                                         },
-                                  'documentId': documentId,
-                                  'construction_site': {
-                                    "constructionId": selectedConstructionId,
-                                    "constructionSite":
-                                        selectedConstructionSite,
-                                  },
-                                  'dealer': {
-                                    "dealerId": selectedDealerId,
-                                    "dealerName": selectedDealer,
-                                  },
-                                  "vehicleNumber":
-                                      _vehicleNumberController.text,
-                                  "unitsPerTrip": _unitController.text,
-                                  "units": {
-                                    "unitId": _selectedUnitId,
-                                    "unitName": _selectedUnit,
-                                  },
-                                  "vehicleType": _selectedVehicleType,
-                                  "added_on": FieldValue.serverTimestamp(),
-                                  "status": userRole == UserRoles.Securtiy
-                                      ? "Pending"
-                                      : "Approved",
-                                });
+                                        'approved_by':
+                                            userRole != UserRoles.Securtiy
+                                                ? {
+                                                    "id": widget.currentUserId,
+                                                    "name": userName,
+                                                    "role": userRoleValue,
+                                                    'at': FieldValue
+                                                        .serverTimestamp(),
+                                                  }
+                                                : {
+                                                    "id": '',
+                                                    "name": '',
+                                                    "role": '',
+                                                    'at': FieldValue
+                                                        .serverTimestamp(),
+                                                  },
+                                        'documentId': documentId,
+                                        'construction_site': {
+                                          "constructionId":
+                                              selectedConstructionId,
+                                          "constructionSite":
+                                              selectedConstructionSite,
+                                        },
+                                        'dealer': {
+                                          "dealerId": selectedDealerId,
+                                          "dealerName": selectedDealer,
+                                        },
+                                        "vehicleNumber":
+                                            _vehicleNumberController.text,
+                                        "unitsPerTrip": _unitController.text,
+                                        "units": {
+                                          "unitId": _selectedUnitId,
+                                          "unitName": _selectedUnit,
+                                        },
+                                        "vehicleType": _selectedVehicleType,
+                                        "added_on":
+                                            FieldValue.serverTimestamp(),
+                                        "status": userRole == UserRoles.Securtiy
+                                            ? "Pending"
+                                            : "Approved",
+                                      });
 
-                                if (userRole == UserRoles.Securtiy) {
-                                  permissionSetData(
-                                    documentId,
-                                    selectedConstructionSite,
-                                    selectedConstructionId,
-                                  );
-                                } else {
-                                  Navigator.pop(context);
+                                      if (userRole == UserRoles.Securtiy) {
+                                        permissionSetData(
+                                          documentId,
+                                          selectedConstructionSite,
+                                          selectedConstructionId,
+                                        );
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
+                                    } catch (err) {
+                                      setState(() {
+                                        // isProcessing = false;
+                                        // error = err;
+                                      });
+                                    } finally {
+                                      if (mounted) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                        });
+                                      }
+                                    }
+                                  } else {
+                                    setState(() {
+                                      validated = true;
+                                    });
+                                  }
                                 }
-                              } catch (err) {
-                                setState(() {
-                                  // isProcessing = false;
-                                  // error = err;
-                                });
-                              } finally {
-                                if (mounted) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                  });
-                                }
-                              }
-                            } else {
-                              setState(() {
-                                validated = true;
-                              });
-                            }
-                          },
+                              : () {
+                                  print('In Process');
+                                },
                           child: Container(
                             decoration: BoxDecoration(
                               color: backgroundColor,
@@ -823,10 +836,16 @@ class _AddVehicle extends State<AddVehicle> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Center(
-                                  child: Text(
-                                    "Create",
-                                    style: activeSubTitleStyle,
-                                  ),
+                                  child: visible
+                                      ? Text(
+                                          "Create",
+                                          style: activeSubTitleStyle,
+                                        )
+                                      : CircularProgressIndicator(
+                                          valueColor:
+                                              new AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
+                                        ),
                                 )
                               ],
                             ),

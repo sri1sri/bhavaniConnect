@@ -95,6 +95,8 @@ class _AddInvoiceState extends State<AddInvoice> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
+
   final TextEditingController _invoiceDateController = TextEditingController();
   final FocusNode _invoiceDateFocusNode = FocusNode();
   final TextEditingController _receivedQuantityController =
@@ -880,83 +882,95 @@ class _AddInvoiceState extends State<AddInvoice> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () async {
-                              if (_formKey.currentState.validate() &&
-                                  selectedDealer != null &&
-                                  selectedCategory != null &&
-                                  selectedConstructionSite != null &&
-                                  selectedUnits != null &&
-                                  selectedItem != null) {
-                                _formKey.currentState.save();
-                                String documentId =
-                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
-                                try {
-                                  await Firestore.instance
-                                      .collection('stockRegister')
-                                      .document(documentId)
-                                      .setData({
-                                    'created_by': {
-                                      "id": widget.currentUserId,
-                                      "name": userName,
-                                      "role": userRoleValue,
-                                    },
-                                    'documentId': documentId,
-                                    'construction_site': {
-                                      "constructionId": selectedConstructionId,
-                                      "constructionSite":
-                                          selectedConstructionSite,
-                                    },
-                                    'item': {
-                                      "itemId": selectedItemId,
-                                      "itemName": selectedItem,
-                                    },
-                                    'category': {
-                                      "categoryId": selectedCategoryId,
-                                      "categoryName": selectedCategory,
-                                    },
-                                    'unit': {
-                                      "unitId": selectedUnitsId,
-                                      "unitName": selectedUnits,
-                                    },
-                                    'dealer': {
-                                      "dealerId": selectedDealerId,
-                                      "dealerName": selectedDealer,
-                                    },
-                                    'invoice_no': _invoiceDateController.text,
-                                    "received_quantity":
-                                        _receivedQuantityController.text,
-                                    "issued_quantity":
-                                        _issuedQuantityController.text,
-                                    'balance_quantity':
-                                        _balanceQuantityController.text,
-                                    'rate': _rateController.text,
-                                    'sub_total': _subTotalController.text,
-                                    'gst_amount': _gstAmountController.text,
-                                    'total_amount_gst':
-                                        _totalPriceController.text,
-                                    'remarks': _remarkController.text,
-                                    "added_on": FieldValue.serverTimestamp(),
-                                    "purchase_date": selectedDate,
-                                  });
-                                  Navigator.pop(context);
-                                } catch (err) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                    // error = err;
-                                  });
-                                } finally {
-                                  if (mounted) {
-                                    setState(() {
-                                      // isProcessing = false;
-                                    });
+                            onTap: visible
+                                ? () async {
+                                    if (_formKey.currentState.validate() &&
+                                        selectedDealer != null &&
+                                        selectedCategory != null &&
+                                        selectedConstructionSite != null &&
+                                        selectedUnits != null &&
+                                        selectedItem != null) {
+                                      _formKey.currentState.save();
+                                      setState(() {
+                                        visible = false;
+                                      });
+
+                                      String documentId =
+                                          "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                                      try {
+                                        await Firestore.instance
+                                            .collection('stockRegister')
+                                            .document(documentId)
+                                            .setData({
+                                          'created_by': {
+                                            "id": widget.currentUserId,
+                                            "name": userName,
+                                            "role": userRoleValue,
+                                          },
+                                          'documentId': documentId,
+                                          'construction_site': {
+                                            "constructionId":
+                                                selectedConstructionId,
+                                            "constructionSite":
+                                                selectedConstructionSite,
+                                          },
+                                          'item': {
+                                            "itemId": selectedItemId,
+                                            "itemName": selectedItem,
+                                          },
+                                          'category': {
+                                            "categoryId": selectedCategoryId,
+                                            "categoryName": selectedCategory,
+                                          },
+                                          'unit': {
+                                            "unitId": selectedUnitsId,
+                                            "unitName": selectedUnits,
+                                          },
+                                          'dealer': {
+                                            "dealerId": selectedDealerId,
+                                            "dealerName": selectedDealer,
+                                          },
+                                          'invoice_no':
+                                              _invoiceDateController.text,
+                                          "received_quantity":
+                                              _receivedQuantityController.text,
+                                          "issued_quantity":
+                                              _issuedQuantityController.text,
+                                          'balance_quantity':
+                                              _balanceQuantityController.text,
+                                          'rate': _rateController.text,
+                                          'sub_total': _subTotalController.text,
+                                          'gst_amount':
+                                              _gstAmountController.text,
+                                          'total_amount_gst':
+                                              _totalPriceController.text,
+                                          'remarks': _remarkController.text,
+                                          "added_on":
+                                              FieldValue.serverTimestamp(),
+                                          "purchase_date": selectedDate,
+                                        });
+                                        Navigator.pop(context);
+                                      } catch (err) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                          // error = err;
+                                        });
+                                      } finally {
+                                        if (mounted) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                          });
+                                        }
+                                      }
+                                    } else {
+                                      setState(() {
+                                        validated = true;
+                                      });
+                                    }
                                   }
-                                }
-                              } else {
-                                setState(() {
-                                  validated = true;
-                                });
-                              }
-                            },
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -966,10 +980,16 @@ class _AddInvoiceState extends State<AddInvoice> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Create",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Create",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

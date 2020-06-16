@@ -25,6 +25,12 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
+  final _formKey = GlobalKey<FormState>();
+  bool visible = true;
+
+  final TextEditingController _remarkController = TextEditingController();
+  final FocusNode _remarkFocusNode = FocusNode();
+
   bool validated = false;
 
   String selectedConstructionSite;
@@ -88,10 +94,6 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
     }
   }
 
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _remarkController = TextEditingController();
-  final FocusNode _remarkFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -441,62 +443,74 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () async {
-                              if (_formKey.currentState.validate() &&
-                                  selectedConcreteType != null &&
-                                  selectedConstructionSite != null &&
-                                  selectedBlock != null) {
-                                _formKey.currentState.save();
-                                String documentId =
-                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
-                                try {
-                                  await Firestore.instance
-                                      .collection('concreteEntries')
-                                      .document(documentId)
-                                      .setData({
-                                    'created_by': {
-                                      "id": widget.currentUserId,
-                                      "name": userName,
-                                      "role": userRoleValue,
-                                    },
-                                    'documentId': documentId,
-                                    'construction_site': {
-                                      "constructionId": selectedConstructionId,
-                                      "constructionSite":
-                                          selectedConstructionSite,
-                                    },
-                                    'block': {
-                                      "blockId": selectedBlockId,
-                                      "blockName": selectedBlock,
-                                    },
-                                    'concrete_type': {
-                                      "concreteTypeId": selectedConcreteTypeId,
-                                      "concreteTypeName": selectedConcreteType,
-                                    },
-                                    'total_progress': "0",
-                                    'remark': _remarkController.text,
-                                    "added_on": FieldValue.serverTimestamp(),
-                                    "selected_date": selectedDate,
-                                  });
-                                  Navigator.pop(context);
-                                } catch (err) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                    // error = err;
-                                  });
-                                } finally {
-                                  if (mounted) {
-                                    setState(() {
-                                      // isProcessing = false;
-                                    });
+                            onTap: visible
+                                ? () async {
+                                    if (_formKey.currentState.validate() &&
+                                        selectedConcreteType != null &&
+                                        selectedConstructionSite != null &&
+                                        selectedBlock != null) {
+                                      _formKey.currentState.save();
+                                      setState(() {
+                                        visible = false;
+                                      });
+
+                                      String documentId =
+                                          "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                                      try {
+                                        await Firestore.instance
+                                            .collection('concreteEntries')
+                                            .document(documentId)
+                                            .setData({
+                                          'created_by': {
+                                            "id": widget.currentUserId,
+                                            "name": userName,
+                                            "role": userRoleValue,
+                                          },
+                                          'documentId': documentId,
+                                          'construction_site': {
+                                            "constructionId":
+                                                selectedConstructionId,
+                                            "constructionSite":
+                                                selectedConstructionSite,
+                                          },
+                                          'block': {
+                                            "blockId": selectedBlockId,
+                                            "blockName": selectedBlock,
+                                          },
+                                          'concrete_type': {
+                                            "concreteTypeId":
+                                                selectedConcreteTypeId,
+                                            "concreteTypeName":
+                                                selectedConcreteType,
+                                          },
+                                          'total_progress': "0",
+                                          'remark': _remarkController.text,
+                                          "added_on":
+                                              FieldValue.serverTimestamp(),
+                                          "selected_date": selectedDate,
+                                        });
+                                        Navigator.pop(context);
+                                      } catch (err) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                          // error = err;
+                                        });
+                                      } finally {
+                                        if (mounted) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                          });
+                                        }
+                                      }
+                                    } else {
+                                      setState(() {
+                                        validated = true;
+                                      });
+                                    }
                                   }
-                                }
-                              } else {
-                                setState(() {
-                                  validated = true;
-                                });
-                              }
-                            },
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -506,10 +520,16 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Create",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Create",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

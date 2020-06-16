@@ -42,6 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool validated = false;
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
 
   LatLng currentLocation;
 
@@ -430,55 +431,72 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Register',
                       textColor: Colors.white,
                       backgroundColor: activeButtonBackgroundColor,
-                      onPressed: () async {
-                        if (_formKey.currentState.validate() &&
-                            selectedRole != null &&
-                            selectedConstructionId != null &&
-                            selectedDate != null) {
-                          _formKey.currentState.save();
+                      onPressed: visible
+                          ? () async {
+                              if (_formKey.currentState.validate() &&
+                                  selectedRole != null &&
+                                  selectedConstructionId != null &&
+                                  selectedDate != null) {
+                                _formKey.currentState.save();
+                                setState(() {
+                                  visible = false;
+                                });
 
-                          var prefs = await SharedPreferences.getInstance();
-                          prefs.setString("userRole", selectedRole);
+                                var prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setString("userRole", selectedRole);
 
-                          try {
-                            await Firestore.instance
-                                .collection('userData')
-                                .document(widget.user.uid)
-                                .updateData({
-                              'name': _usernameController.text,
-                              'role': selectedRole,
-                              'construction_site': {
-                                "constructionId": selectedConstructionId,
-                                "constructionSite": selectedConstructionSite,
-                                "location": GeoPoint(selectedConstructionLat,
-                                    selectedConstructionLong)
-                              },
-                              'date_of_birth': selectedDate,
-                              "gender": group,
-                              'latitude': currentLocation.latitude,
-                              'longitude': currentLocation.longitude,
-                            });
-                            Navigator.pop(context);
-                          } catch (err) {
-                            setState(() {
-                              // isProcessing = false;
-                              // error = err;
-                            });
-                          } finally {
-                            if (mounted) {
-                              setState(() {
-                                // isProcessing = false;
-                              });
+                                try {
+                                  await Firestore.instance
+                                      .collection('userData')
+                                      .document(widget.user.uid)
+                                      .updateData({
+                                    'name': _usernameController.text,
+                                    'role': selectedRole,
+                                    'construction_site': {
+                                      "constructionId": selectedConstructionId,
+                                      "constructionSite":
+                                          selectedConstructionSite,
+                                      "location": GeoPoint(
+                                          selectedConstructionLat,
+                                          selectedConstructionLong)
+                                    },
+                                    'date_of_birth': selectedDate,
+                                    "gender": group,
+                                    'latitude': currentLocation.latitude,
+                                    'longitude': currentLocation.longitude,
+                                  });
+                                  Navigator.pop(context);
+                                } catch (err) {
+                                  setState(() {
+                                    // isProcessing = false;
+                                    // error = err;
+                                  });
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      // isProcessing = false;
+                                    });
+                                  }
+                                }
+                              } else {
+                                setState(() {
+                                  validated = true;
+                                });
+                              }
                             }
-                          }
-                        } else {
-                          setState(() {
-                            validated = true;
-                          });
-                        }
-                      },
+                          : () {
+                              print('In Process');
+                            },
                       //onPressed: model.canSubmit ? () => _imageUpload() : null,
                     ),
+                    SizedBox(height: 10.0),
+                    visible
+                        ? Container()
+                        : CircularProgressIndicator(
+                            valueColor:
+                                new AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
                     SizedBox(height: 50.0),
                   ],
                 ),

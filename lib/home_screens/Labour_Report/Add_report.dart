@@ -91,6 +91,7 @@ class _AddLabourReport extends State<AddLabourReport> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
 
   final TextEditingController _noofPeopleController = TextEditingController();
   final FocusNode _noofPeopleFocusNode = FocusNode();
@@ -515,64 +516,75 @@ class _AddLabourReport extends State<AddLabourReport> {
                           height: 55,
                           width: 180,
                           child: GestureDetector(
-                            onTap: () async {
-                              if (_formKey.currentState.validate() &&
-                                  selectedDealer != null &&
-                                  selectedConstructionSite != null &&
-                                  selectedBlock != null &&
-                                  labourType != null) {
-                                _formKey.currentState.save();
-                                String documentId =
-                                    "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
-                                try {
-                                  await Firestore.instance
-                                      .collection('labourReport')
-                                      .document(documentId)
-                                      .setData({
-                                    'created_by': {
-                                      "id": widget.currentUserId,
-                                      "name": userName,
-                                      "role": userRoleValue,
-                                    },
-                                    'documentId': documentId,
-                                    'construction_site': {
-                                      "constructionId": selectedConstructionId,
-                                      "constructionSite":
-                                          selectedConstructionSite,
-                                    },
-                                    'block': {
-                                      "blockId": selectedBlockId,
-                                      "blockName": selectedBlock,
-                                    },
-                                    'dealer': {
-                                      "dealerId": selectedDealerId,
-                                      "dealerName": selectedDealer,
-                                    },
-                                    'labour_type': labourType,
-                                    'no_of_people': _noofPeopleController.text,
-                                    'purpose': _purposeController.text,
-                                    "added_on": FieldValue.serverTimestamp(),
-                                    "selected_date": selectedDate,
-                                  });
-                                  Navigator.pop(context);
-                                } catch (err) {
-                                  setState(() {
-                                    // isProcessing = false;
-                                    // error = err;
-                                  });
-                                } finally {
-                                  if (mounted) {
-                                    setState(() {
-                                      // isProcessing = false;
-                                    });
+                            onTap: visible
+                                ? () async {
+                                    if (_formKey.currentState.validate() &&
+                                        selectedDealer != null &&
+                                        selectedConstructionSite != null &&
+                                        selectedBlock != null &&
+                                        labourType != null) {
+                                      _formKey.currentState.save();
+                                      setState(() {
+                                        visible = false;
+                                      });
+
+                                      String documentId =
+                                          "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
+                                      try {
+                                        await Firestore.instance
+                                            .collection('labourReport')
+                                            .document(documentId)
+                                            .setData({
+                                          'created_by': {
+                                            "id": widget.currentUserId,
+                                            "name": userName,
+                                            "role": userRoleValue,
+                                          },
+                                          'documentId': documentId,
+                                          'construction_site': {
+                                            "constructionId":
+                                                selectedConstructionId,
+                                            "constructionSite":
+                                                selectedConstructionSite,
+                                          },
+                                          'block': {
+                                            "blockId": selectedBlockId,
+                                            "blockName": selectedBlock,
+                                          },
+                                          'dealer': {
+                                            "dealerId": selectedDealerId,
+                                            "dealerName": selectedDealer,
+                                          },
+                                          'labour_type': labourType,
+                                          'no_of_people':
+                                              _noofPeopleController.text,
+                                          'purpose': _purposeController.text,
+                                          "added_on":
+                                              FieldValue.serverTimestamp(),
+                                          "selected_date": selectedDate,
+                                        });
+                                        Navigator.pop(context);
+                                      } catch (err) {
+                                        setState(() {
+                                          // isProcessing = false;
+                                          // error = err;
+                                        });
+                                      } finally {
+                                        if (mounted) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                          });
+                                        }
+                                      }
+                                    } else {
+                                      setState(() {
+                                        validated = true;
+                                      });
+                                    }
                                   }
-                                }
-                              } else {
-                                setState(() {
-                                  validated = true;
-                                });
-                              }
-                            },
+                                : () {
+                                    print('In Process');
+                                  },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -582,10 +594,16 @@ class _AddLabourReport extends State<AddLabourReport> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: Text(
-                                      "Create",
-                                      style: activeSubTitleStyle,
-                                    ),
+                                    child: visible
+                                        ? Text(
+                                            "Create",
+                                            style: activeSubTitleStyle,
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(Colors.white),
+                                          ),
                                   )
                                 ],
                               ),

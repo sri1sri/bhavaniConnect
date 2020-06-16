@@ -98,6 +98,7 @@ class _StockFilter extends State<StockFilter> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  bool visible = true;
   int _n = 0;
   @override
   Widget build(BuildContext context) {
@@ -512,43 +513,40 @@ class _StockFilter extends State<StockFilter> {
                               height: 55,
                               width: 180,
                               child: GestureDetector(
-                                onTap: () {
-                                  // widget.returnFunction(
-                                  //     selectedDateFrom,
-                                  //     selectedDateTo,
-                                  //     selectedConstructionId,
-                                  //     selectedDealerId,
-                                  //     selectedCategoryId,
-                                  //     selectedItemId);
-                                  if (_formKey.currentState.validate()) {
-                                    print(constructionId.runtimeType);
-                                    print(selectedConstructionSite);
-                                    print(selectedConstructionSite.runtimeType);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => StockDataList(
-                                          selectedDateFrom,
-                                          selectedDateTo,
-                                          constructionId,
-                                          selectedConstructionSite,
-                                          selectedDealerId,
-                                          selectedCategoryId,
-                                          selectedItemId,
-                                          selectedDealer,
-                                          selectedCategory,
-                                          selectedItem,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    setState(() {
-                                      validated = true;
-                                    });
-                                  }
+                                onTap: visible
+                                    ? () {
+                                        if (_formKey.currentState.validate()) {
+                                          setState(() {
+                                            visible = false;
+                                          });
 
-                                  // Navigator.of(context).pop();
-                                },
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  StockDataList(
+                                                selectedDateFrom,
+                                                selectedDateTo,
+                                                constructionId,
+                                                selectedConstructionSite,
+                                                selectedDealerId,
+                                                selectedCategoryId,
+                                                selectedItemId,
+                                                selectedDealer,
+                                                selectedCategory,
+                                                selectedItem,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          setState(() {
+                                            validated = true;
+                                          });
+                                        }
+                                      }
+                                    : () {
+                                        print('In Process');
+                                      },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: backgroundColor,
@@ -558,10 +556,16 @@ class _StockFilter extends State<StockFilter> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
-                                        child: Text(
-                                          "Search",
-                                          style: activeSubTitleStyle,
-                                        ),
+                                        child: visible
+                                            ? Text(
+                                                "Search",
+                                                style: activeSubTitleStyle,
+                                              )
+                                            : CircularProgressIndicator(
+                                                valueColor:
+                                                    new AlwaysStoppedAnimation<
+                                                        Color>(Colors.white),
+                                              ),
                                       )
                                     ],
                                   ),

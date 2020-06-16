@@ -437,6 +437,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
     BuildContext context,
   ) {
     final _formKey = GlobalKey<FormState>();
+    bool startVisible = true;
     String _updatedGangName;
 
     showGeneralDialog(
@@ -536,39 +537,52 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     height: 55,
                                     width: 180,
                                     child: GestureDetector(
-                                      onTap: () async {
-                                        if (_formKey.currentState.validate() &&
-                                            _startReadController.text != null) {
-                                          _formKey.currentState.save();
-                                          try {
-                                            await Firestore.instance
-                                                .collection("vehicleEntries")
-                                                .document(widget.documentId)
-                                                .updateData({
-                                              'startRead':
-                                                  _startReadController.text,
-                                              'startTime':
-                                                  DateTime.now().toUtc(),
-                                            });
-                                            Navigator.pop(context);
-                                          } catch (err) {
-                                            setState(() {
-                                              // isProcessing = false;
-                                              // error = err;
-                                            });
-                                          } finally {
-                                            if (mounted) {
-                                              setState(() {
-                                                // isProcessing = false;
-                                              });
+                                      onTap: startVisible
+                                          ? () async {
+                                              if (_formKey.currentState
+                                                      .validate() &&
+                                                  _startReadController.text !=
+                                                      null) {
+                                                _formKey.currentState.save();
+                                                setState(() {
+                                                  startVisible = false;
+                                                });
+
+                                                try {
+                                                  await Firestore.instance
+                                                      .collection(
+                                                          "vehicleEntries")
+                                                      .document(
+                                                          widget.documentId)
+                                                      .updateData({
+                                                    'startRead':
+                                                        _startReadController
+                                                            .text,
+                                                    'startTime':
+                                                        DateTime.now().toUtc(),
+                                                  });
+                                                  Navigator.pop(context);
+                                                } catch (err) {
+                                                  setState(() {
+                                                    // isProcessing = false;
+                                                    // error = err;
+                                                  });
+                                                } finally {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      // isProcessing = false;
+                                                    });
+                                                  }
+                                                }
+                                              } else {
+                                                setState(() {
+                                                  //validated = true;
+                                                });
+                                              }
                                             }
-                                          }
-                                        } else {
-                                          setState(() {
-                                            //validated = true;
-                                          });
-                                        }
-                                      },
+                                          : () {
+                                              print('In Process');
+                                            },
                                       child: Container(
                                         decoration: BoxDecoration(
                                           color: Colors.green.withOpacity(0.6),
@@ -580,16 +594,25 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                               MainAxisAlignment.center,
                                           children: <Widget>[
                                             Center(
-                                              child: Text(
-                                                "Start",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    //fontFamily: mainFontFamily,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 22,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              ),
+                                              child: startVisible
+                                                  ? Text(
+                                                      "Start",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          //fontFamily: mainFontFamily,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 22,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none),
+                                                    )
+                                                  : CircularProgressIndicator(
+                                                      valueColor:
+                                                          new AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              Colors.white),
+                                                    ),
                                             )
                                           ],
                                         ),
@@ -635,6 +658,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
     BuildContext context,
   ) {
     final _formKey = GlobalKey<FormState>();
+    bool stopVisible = true;
     String _updatedGangName;
 
     showGeneralDialog(
@@ -734,38 +758,51 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     height: 55,
                                     width: 180,
                                     child: GestureDetector(
-                                      onTap: () async {
-                                        if (_formKey.currentState.validate() &&
-                                            _endReadController.text != null) {
-                                          _formKey.currentState.save();
-                                          try {
-                                            await Firestore.instance
-                                                .collection("vehicleEntries")
-                                                .document(widget.documentId)
-                                                .updateData({
-                                              'endRead':
-                                                  _endReadController.text,
-                                              'endTime': DateTime.now().toUtc(),
-                                            });
-                                            Navigator.pop(context);
-                                          } catch (err) {
-                                            setState(() {
-                                              // isProcessing = false;
-                                              // error = err;
-                                            });
-                                          } finally {
-                                            if (mounted) {
-                                              setState(() {
-                                                // isProcessing = false;
-                                              });
+                                      onTap: stopVisible
+                                          ? () async {
+                                              if (_formKey.currentState
+                                                      .validate() &&
+                                                  _endReadController.text !=
+                                                      null) {
+                                                _formKey.currentState.save();
+                                                setState(() {
+                                                  stopVisible = false;
+                                                });
+
+                                                try {
+                                                  await Firestore.instance
+                                                      .collection(
+                                                          "vehicleEntries")
+                                                      .document(
+                                                          widget.documentId)
+                                                      .updateData({
+                                                    'endRead':
+                                                        _endReadController.text,
+                                                    'endTime':
+                                                        DateTime.now().toUtc(),
+                                                  });
+                                                  Navigator.pop(context);
+                                                } catch (err) {
+                                                  setState(() {
+                                                    // isProcessing = false;
+                                                    // error = err;
+                                                  });
+                                                } finally {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      // isProcessing = false;
+                                                    });
+                                                  }
+                                                }
+                                              } else {
+                                                setState(() {
+                                                  //validated = true;
+                                                });
+                                              }
                                             }
-                                          }
-                                        } else {
-                                          setState(() {
-                                            //validated = true;
-                                          });
-                                        }
-                                      },
+                                          : () {
+                                              print('In Process');
+                                            },
                                       child: Container(
                                         decoration: BoxDecoration(
                                           color: Colors.red.withOpacity(0.6),
@@ -777,16 +814,25 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                               MainAxisAlignment.center,
                                           children: <Widget>[
                                             Center(
-                                              child: Text(
-                                                "Stop",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    //fontFamily: mainFontFamily,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 22,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              ),
+                                              child: stopVisible
+                                                  ? Text(
+                                                      "Stop",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          //fontFamily: mainFontFamily,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 22,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none),
+                                                    )
+                                                  : CircularProgressIndicator(
+                                                      valueColor:
+                                                          new AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              Colors.white),
+                                                    ),
                                             )
                                           ],
                                         ),

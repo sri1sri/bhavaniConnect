@@ -156,8 +156,8 @@ class _GoodsScreen extends State<GoodsScreen> {
                         result[index]['construction_site']['constructionSite'],
                         result[index]['dealer']['dealerName'],
                         result[index]['concrete_type']['concreteTypeName'],
-                        "$userName ($userRoleValue)",
-                        "$userName ($userRoleValue)",
+                        result[index]['created_by']['name'] ?? "-",
+                        result[index]['approved_by']['name'] ?? "-",
                         result[index]['status'] != null
                             ? result[index]['status']
                             : "Pending",
