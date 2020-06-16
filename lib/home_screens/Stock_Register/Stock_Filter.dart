@@ -516,9 +516,9 @@ class _StockFilter extends State<StockFilter> {
                                 onTap: visible
                                     ? () {
                                         if (_formKey.currentState.validate()) {
-                                          setState(() {
-                                            visible = false;
-                                          });
+                                          // setState(() {
+                                          //   visible = false;
+                                          // });
 
                                           Navigator.push(
                                             context,

@@ -24,14 +24,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget offlineWidget(BuildContext context) {
-    return CustomOfflineWidget(
-      onlineChild: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Scaffold(
-          body: _buildContent(context),
-        ),
-      ),
-    );
+    return _buildContent(context);
   }
 
   Widget _buildContent(BuildContext context) {

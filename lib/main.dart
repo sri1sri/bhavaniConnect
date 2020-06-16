@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/geo/geo_util.dart';
@@ -63,7 +64,8 @@ class _MyAppState extends State<MyApp> {
         print('onResume: $message');
         _setMessage(context, message);
       },
-      onBackgroundMessage: Fcm.myBackgroundMessageHandler,
+      onBackgroundMessage:
+          Platform.isAndroid ? Fcm.myBackgroundMessageHandler : null,
     );
 
     _firebaseMessaging.requestNotificationPermissions(

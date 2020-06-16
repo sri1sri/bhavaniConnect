@@ -22,8 +22,7 @@ class _F_NotificationPageState extends State<NotificationPage> {
   // DateTime endFilterDate = DateTimeUtils.currentDayDateTimeNow;
   // DateTime startFilterDate =
   //     DateTimeUtils.currentDayDateTimeNow.add(Duration(days: -1));
-  DateTime startFilterDate =
-      DateTimeUtils.currentDayDateTimeNow.subtract(Duration(days: 10));
+  DateTime startFilterDate = DateTimeUtils.currentDayDateTimeNow;
   DateTime endFilterDate =
       DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
 
@@ -195,6 +194,10 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                 var res = resultData;
                                 print(index);
 
+                                if (res == null) {
+                                  return Container();
+                                }
+
                                 return notificationCard(
                                   size,
                                   context,
@@ -211,8 +214,13 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                       : "Goods Approval",
                                   result[index]['collectionName'] ==
                                           "vehicleEntries"
-                                      ? "${res['vehicleNumber']} - Goods Truck"
-                                      : "${res['concrete_type']['concreteTypeName']} - Goods",
+                                      ? "${res['vehicleNumber']} (${res['unitsPerTrip'] ?? ''} ${res['units']['unitName'] ?? ''}) - Goods Truck"
+                                      : res['concrete_type'] != null &&
+                                              res['concrete_type']
+                                                      ['concreteTypeName'] !=
+                                                  null
+                                          ? "${res['concrete_type']['concreteTypeName']} - Goods"
+                                          : "Goods",
                                   res['dealer']['dealerName'],
                                   res['created_by']['name'] != null &&
                                           res['created_by']['role'] != null

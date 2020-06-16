@@ -53,7 +53,7 @@ class _Dashboard extends State<Dashboard> {
   ];
   @override
   Widget build(BuildContext context) {
-    return offlineWidget(context);
+    return _buildContent(context);
   }
 
   Widget offlineWidget(BuildContext context) {
