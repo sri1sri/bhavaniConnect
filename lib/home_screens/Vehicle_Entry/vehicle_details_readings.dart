@@ -282,7 +282,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     style: descriptionStyleDark,
                                   )),
                                   DataCell(Text(
-                                    requestDateTime.substring(12, 20),
+                                    vehicleData['created_by']['at'] != null &&
+                                            vehicleData['created_by']['at']
+                                                .isNotEmpty
+                                        ? DateTimeUtils.hourMinuteFormat(
+                                            (vehicleData['created_by']['at']
+                                                    as Timestamp)
+                                                .toDate())
+                                        : '-',
                                     style: descriptionStyleDark,
                                   )),
                                 ],
@@ -294,11 +301,23 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     style: descriptionStyleDark,
                                   )),
                                   DataCell(Text(
-                                    '${vehicleData['created_by']['name']} (${vehicleData['created_by']['role']})',
+                                    vehicleData['approved_by']['name'] !=
+                                                null &&
+                                            vehicleData['approved_by']['name']
+                                                .isNotEmpty
+                                        ? '${vehicleData['approved_by']['name']} (${vehicleData['approved_by']['role']})'
+                                        : "-",
                                     style: descriptionStyleDark,
                                   )),
                                   DataCell(Text(
-                                    '05.23pm',
+                                    vehicleData['approved_by']['at'] != null &&
+                                            vehicleData['approved_by']['at']
+                                                .isNotEmpty
+                                        ? DateTimeUtils.hourMinuteFormat(
+                                            (vehicleData['approved_by']['at']
+                                                    as Timestamp)
+                                                .toDate())
+                                        : '-',
                                     style: descriptionStyleDark,
                                   )),
                                 ],
@@ -352,7 +371,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                               height: 5,
                             ),
                             Text(
-                              vehicleData['vehicleNumber'],
+                              "${vehicleData['vehicleNumber']} (${vehicleData['unitsPerTrip'] ?? ''} ${vehicleData['units']['unitName'] ?? ''})",
                               style: descriptionStyleDark,
                             ),
                           ],

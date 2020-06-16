@@ -133,11 +133,13 @@ class _DaySelection extends State<DaySelection> {
                         // "12.30 am",
                         result[index]['construction_site']['constructionSite'],
                         result[index]['dealer']['dealerName'],
-                        result[index]['vehicleNumber'],
+                        "${result[index]['vehicleNumber']} (${result[index]['unitsPerTrip'] ?? ''} ${result[index]['units']['unitName'] ?? ''})",
                         "${result[index]['created_by']['name']} (${result[index]['created_by']['role']})",
-                        result[index]['approved_by'] != null
+                        result[index]['approved_by'] != null &&
+                                result[index]['approved_by']['name'] != null &&
+                                result[index]['approved_by']['name'].isNotEmpty
                             ? "${result[index]['approved_by']['name']} (${result[index]['approved_by']['role']})"
-                            : "",
+                            : "-",
                         result[index]['status'] != null
                             ? result[index]['status']
                             : "0",

@@ -228,7 +228,12 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                                           style: descriptionStyleDark,
                                         )),
                                         DataCell(Text(
-                                          "${result['approved_by']['name']}  (${result['approved_by']['role']})",
+                                          result['approved_by']['name'] !=
+                                                      null &&
+                                                  result['approved_by']['name']
+                                                      .isNotEmpty
+                                              ? "${result['approved_by']['name']}  (${result['approved_by']['role']})"
+                                              : "-",
                                           style: descriptionStyleDark,
                                         )),
                                         DataCell(Text(
@@ -291,7 +296,7 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                                     height: 5,
                                   ),
                                   Text(
-                                    result['vehicleNumber'],
+                                    "${result['vehicleNumber']} (${result['unitsPerTrip'] ?? ''} ${result['units']['unitName'] ?? ''})",
                                     style: descriptionStyleDark,
                                   ),
                                 ],
