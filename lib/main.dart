@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/geo/geo_util.dart';
 import 'package:bhavaniconnect/home_page.dart';
 import 'package:bhavaniconnect/home_screens/Goods_Approval/Display_Goods.dart';
@@ -16,8 +15,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'geo/point.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -64,7 +61,6 @@ class _MyAppState extends State<MyApp> {
         _setMessage(context, message);
       },
       onResume: (Map<String, dynamic> message) async {
-        print('onResume: $message');
         _setMessage(context, message);
       },
       onBackgroundMessage:
@@ -77,35 +73,22 @@ class _MyAppState extends State<MyApp> {
   }
 
   _setMessage(BuildContext context, Map<String, dynamic> message) {
+    print("brahman");
     final notification = message['notification'];
     final data = message['data'];
     String title = notification['title'];
 
     final String body = notification['body'];
-    String mMessage = data['message'];
+    String mMessage = data != null ? data['message'] : message['message'];
 
     if (title == null) {
       navigateOnNotication = true;
       navigateMessage = mMessage;
     }
-    // if (title == null) {
-    //   if (mMessage == "goods") {
-    //     title = "Goods Approval Status Updated";
-    //   } else if (mMessage == "vehicle") {
-    //     title = "Vehicle Entry Status Updated";
-    //   } else if (mMessage == "vehicleEntries") {
-    //     title = "New Vehicle Entry Created";
-    //   } else {
-    //     title = "New Goods Approval Entry";
-    //   }
-    // }
 
-    print(
-        "Title: ${title ?? 'no Title'}, body: ${body ?? 'no body '}, message: ${mMessage ?? 'no message'}");
-    setState(() {
-      Message msg = Message(title, body, mMessage);
-    });
-    showNotificaitonDialog(context, title, mMessage);
+    if (title != null) {
+      showNotificaitonDialog(context, title, mMessage);
+    }
   }
 
   showNotificaitonDialog(context, String title, mMessage) {
@@ -168,6 +151,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    navigateOnNotication = false;
+    navigateMessage = '';
     _getToken();
     _configureFirebaseListeners();
     FirebaseAuth.instance.onAuthStateChanged.listen((fireuser) {
@@ -229,6 +214,10 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           authenticationState =
               AuthenticationState(SignupState.complete, fireuser);
+          Future.delayed(Duration(seconds: 1)).then((value) {
+            navigateOnNotication = false;
+            navigateMessage = '';
+          });
         });
       });
     });
@@ -279,7 +268,11 @@ class _MyAppState extends State<MyApp> {
 
     switch (state ?? authenticationState.signupState) {
       case SignupState.complete:
-        return HomePage(currentUserId: authenticationState.user.uid);
+        return HomePage(
+          currentUserId: authenticationState.user.uid,
+          goToNavigation: navigateOnNotication,
+          message: navigateMessage,
+        );
 
       case SignupState.needsSignUp:
         return SignUpPage(
