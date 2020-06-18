@@ -52,6 +52,8 @@ class _OTPPageState extends State<OTPPage> {
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  bool isLoading = false;
+
   Future<bool> didCheckPhoneNumber;
 
   String deviceToken;
@@ -169,6 +171,7 @@ class _OTPPageState extends State<OTPPage> {
               text: 'Verify',
               isEnabled: smsOTP != null && smsOTP.length == 6,
               textColor: Colors.white,
+              isLoading: isLoading,
               backgroundColor: activeButtonBackgroundColor,
               onPressed: () {
                 signIn();
@@ -258,6 +261,9 @@ class _OTPPageState extends State<OTPPage> {
   }
 
   signIn() async {
+    setState(() {
+      isLoading = true;
+    });
     print(verificationId);
     print(smsOTP);
     try {
@@ -273,6 +279,9 @@ class _OTPPageState extends State<OTPPage> {
     } catch (e) {
       handleError(e);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   handleError(PlatformException error) {

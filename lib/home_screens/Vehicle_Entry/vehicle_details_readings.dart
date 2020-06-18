@@ -282,9 +282,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     style: descriptionStyleDark,
                                   )),
                                   DataCell(Text(
-                                    vehicleData['created_by']['at'] != null &&
-                                            vehicleData['created_by']['at']
-                                                .isNotEmpty
+                                    vehicleData['created_by']['at'] != null
                                         ? DateTimeUtils.hourMinuteFormat(
                                             (vehicleData['created_by']['at']
                                                     as Timestamp)
@@ -310,9 +308,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     style: descriptionStyleDark,
                                   )),
                                   DataCell(Text(
-                                    vehicleData['approved_by']['at'] != null &&
-                                            vehicleData['approved_by']['at']
-                                                .isNotEmpty
+                                    vehicleData['approved_by']['at'] != null
                                         ? DateTimeUtils.hourMinuteFormat(
                                             (vehicleData['approved_by']['at']
                                                     as Timestamp)

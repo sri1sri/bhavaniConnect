@@ -47,6 +47,8 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
 
   Future<bool> didCheckPhoneNumber;
 
+  bool isLoading = false;
+
   // verifyPhone() {
   //   GoToPage(context, OTPPage());
   // }
@@ -161,6 +163,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
               backgroundColor: activeButtonBackgroundColor,
               // onPressed: _btnEnabled ? verifyPhone : null,
               onPressed: verifyPhone,
+
               // onPressed: () {
               //   GoToPage(context, OTPPage());
               // },
@@ -169,6 +172,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
             ToDoButton(
               assetName: '',
               text: 'back',
+              isLoading: isLoading,
               textColor: Colors.black,
               backgroundColor: Colors.white,
               onPressed: () {
@@ -182,6 +186,10 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
   }
 
   Future<void> verifyPhone() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final PhoneCodeSent smsOTPSent = (String verId, [int forceCodeResend]) {
       this.verificationId = verId;
       // smsOTPDialog(context).then((value) {
@@ -211,6 +219,9 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
     } catch (e) {
       handleError(e);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   signIn() async {

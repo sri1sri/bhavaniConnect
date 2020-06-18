@@ -205,7 +205,8 @@ class DateTimeUtils {
     print(d1.millisecondsSinceEpoch - d2.millisecondsSinceEpoch);
     print(d1.millisecondsSinceEpoch);
     print(d2.millisecondsSinceEpoch);
-    if (diff > 0) {
+    print(diff);
+    if (diff >= 0) {
       var result;
       var seconds = diff / 1000;
       var hours = 0;

@@ -43,6 +43,9 @@ class _MyAppState extends State<MyApp> {
   String deviceToken;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  bool navigateOnNotication = false;
+  String navigateMessage;
+
   _getToken() {
     _firebaseMessaging.getToken().then((token) {
       deviceToken = token;
@@ -80,6 +83,11 @@ class _MyAppState extends State<MyApp> {
 
     final String body = notification['body'];
     String mMessage = data['message'];
+
+    if (title == null) {
+      navigateOnNotication = true;
+      navigateMessage = mMessage;
+    }
     // if (title == null) {
     //   if (mMessage == "goods") {
     //     title = "Goods Approval Status Updated";

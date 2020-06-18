@@ -373,9 +373,9 @@ class _VehicleFilter extends State<VehicleFilter> {
                                 onTap: visible
                                     ? () {
                                         if (_formKey.currentState.validate()) {
-                                          setState(() {
-                                            visible = false;
-                                          });
+                                          // setState(() {
+                                          //   visible = false;
+                                          // });
 
                                           Navigator.push(
                                             context,
@@ -392,9 +392,9 @@ class _VehicleFilter extends State<VehicleFilter> {
                                             ),
                                           );
                                         } else {
-                                          setState(() {
-                                            validated = true;
-                                          });
+                                          // setState(() {
+                                          //   validated = true;
+                                          // });
                                         }
                                       }
                                     : () {

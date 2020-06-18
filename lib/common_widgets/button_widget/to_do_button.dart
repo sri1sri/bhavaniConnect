@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'custom_raised_button.dart';
 
 class ToDoButton extends CustomRaisedButton {
@@ -10,6 +11,7 @@ class ToDoButton extends CustomRaisedButton {
     Color textColor,
     VoidCallback onPressed,
     bool isEnabled = true,
+    bool isLoading = false,
   })  : assert(assetName != null),
         assert(text != null),
         super(
@@ -17,13 +19,18 @@ class ToDoButton extends CustomRaisedButton {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Image.asset(assetName),
-              Text(
-                text,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Quicksand'),
-              ),
+              !isLoading
+                  ? Text(
+                      text,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Quicksand'),
+                    )
+                  : CircularProgressIndicator(
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
               Opacity(
                 opacity: 0.0,
                 child: Image.asset(assetName),

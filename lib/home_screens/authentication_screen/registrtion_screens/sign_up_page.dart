@@ -33,6 +33,8 @@ class _SignUpPageState extends State<SignUpPage> {
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMMM yyyy");
 
+  bool isLoading = false;
+
   String selectedRole;
   String selectedConstructionSite;
   String selectedConstructionId;
@@ -431,6 +433,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Register',
                       textColor: Colors.white,
                       backgroundColor: activeButtonBackgroundColor,
+                      isLoading: isLoading,
                       onPressed: visible
                           ? () async {
                               if (_formKey.currentState.validate() &&
@@ -440,6 +443,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 _formKey.currentState.save();
                                 setState(() {
                                   visible = false;
+                                });
+                                setState(() {
+                                  isLoading = true;
                                 });
 
                                 var prefs =
@@ -474,6 +480,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                   });
                                 } finally {
                                   if (mounted) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     setState(() {
                                       // isProcessing = false;
                                     });

@@ -234,22 +234,31 @@ class _VehicleDataList extends State<VehicleDataList> {
                             delName: item['dealer']['dealerName'],
                             vehicleType: item['vehicleType'],
                             startTime: item['startTime'] != null
-                                ? item['startTime']
-                                : 'null',
+                                ? DateTimeUtils.hourMinuteFormat(
+                                    (item['startTime'] as Timestamp).toDate())
+                                : '-',
                             startRead: item['startRead'] != null
                                 ? item['startRead']
-                                : 'null',
+                                : '-',
                             endTime: item['endTime'] != null
-                                ? item['endTime']
-                                : 'null',
-                            endRead: item['endRead'] != null
-                                ? item['endRead']
-                                : 'null',
-                            totalTime: 'st - et',
-                            totalRead:
-                                '1111', // (item['endRead'] - item['startRead']),
-                            totalTrips: item['totalTrips'] != null
-                                ? item['totalTrips']
+                                ? DateTimeUtils.hourMinuteFormat(
+                                    (item['endTime'] as Timestamp).toDate())
+                                : '-',
+                            endRead:
+                                item['endRead'] != null ? item['endRead'] : '-',
+                            totalTime: item['startTime'] != null &&
+                                    item['endTime'] != null
+                                ? DateTimeUtils.getDifferenceTime(
+                                    (item['startTime'] as Timestamp).toDate(),
+                                    (item['endTime'] as Timestamp).toDate(),
+                                  )
+                                : "-",
+                            totalRead: item['startRead'] != null &&
+                                    item['endRead'] != null
+                                ? "(${item['endRead']} - ${item['startRead']})"
+                                : "-",
+                            totalTrips: item['timeRecords'] != null
+                                ? item['timeRecords'].length.toString()
                                 : '',
                             unitsPerTrip: item['unitsPerTrip'] != null
                                 ? item['unitsPerTrip']

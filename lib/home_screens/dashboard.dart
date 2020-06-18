@@ -11,6 +11,7 @@ import 'package:bhavaniconnect/home_screens/Vehicle_Entry/vehicle_list_details.d
 import 'package:bhavaniconnect/home_screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'Add_Stock/Stock_Screen.dart';
 import 'Concrete_Entries/Concrete_HomePage.dart';
@@ -18,8 +19,10 @@ import 'Labour_Report/Daily_labour_Report.dart';
 
 class Dashboard extends StatefulWidget {
   final String currentUserId;
+  final bool goToNavigation;
 
-  const Dashboard({Key key, this.currentUserId}) : super(key: key);
+  const Dashboard({Key key, this.currentUserId, this.goToNavigation})
+      : super(key: key);
   @override
   _Dashboard createState() => _Dashboard();
 }
@@ -51,9 +54,23 @@ class _Dashboard extends State<Dashboard> {
     "images/Concrete.png",
     "images/LabourReport.png",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.goToNavigation) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        GoToPage(
+          context,
+          NotificationPage(currentUserId: widget.currentUserId),
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _buildContent(context);
+    return offlineWidget(context);
   }
 
   Widget offlineWidget(BuildContext context) {
@@ -107,56 +124,52 @@ class _Dashboard extends State<Dashboard> {
                   padding: const EdgeInsets.all(25.0),
                   child: Container(
                     height: MediaQuery.of(context).size.height / 1.37,
-                    child: Expanded(
-                      child: GridView.builder(
-                        itemCount: features.length,
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.99,
-                          mainAxisSpacing: 2.0,
-                          crossAxisSpacing: 5.0,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return new GestureDetector(
-                            child: new Card(
-                              elevation: 0.0,
-                              child: new Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      new BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 6.0,
-                                          spreadRadius: 5),
-                                    ]),
-                                alignment: Alignment.center,
-                                margin: new EdgeInsets.only(
-                                    top: 5.0,
-                                    bottom: 5.0,
-                                    left: 5.0,
-                                    right: 5.0),
-                                child: new Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Image.asset(
-                                      F_image[index],
-                                      height: 60,
-                                    ),
-                                    new Text(
-                                      features[index],
-                                      style: subTitleStyle,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
+                    child: GridView.builder(
+                      itemCount: features.length,
+                      gridDelegate:
+                          new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.99,
+                        mainAxisSpacing: 2.0,
+                        crossAxisSpacing: 5.0,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return new GestureDetector(
+                          child: new Card(
+                            elevation: 0.0,
+                            child: new Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    new BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 6.0,
+                                        spreadRadius: 5),
+                                  ]),
+                              alignment: Alignment.center,
+                              margin: new EdgeInsets.only(
+                                  top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
+                              child: new Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Image.asset(
+                                    F_image[index],
+                                    height: 60,
+                                  ),
+                                  new Text(
+                                    features[index],
+                                    style: subTitleStyle,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
-                            onTap: () {
-                              switch (features[index]) {
+                          ),
+                          onTap: () {
+                            switch (features[index]) {
 //                        case 'Employees':
 //                          {
 //                            GoToPage(
@@ -168,15 +181,15 @@ class _Dashboard extends State<Dashboard> {
 //                          }
 //                          break;
 //
-                                case 'Approvals':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        GoodsScreen(
-                                          currentUserId: widget.currentUserId,
-                                        ));
-                                  }
-                                  break;
+                              case 'Approvals':
+                                {
+                                  GoToPage(
+                                      context,
+                                      GoodsScreen(
+                                        currentUserId: widget.currentUserId,
+                                      ));
+                                }
+                                break;
 //                        case 'Store':
 //                          {
 //                            GoToPage(
@@ -197,79 +210,77 @@ class _Dashboard extends State<Dashboard> {
 //                          }
 //                          break;
 //
-                                case 'Attendance':
-                                  {
-                                    GoToPage(
+                              case 'Attendance':
+                                {
+                                  GoToPage(
+                                    context,
+                                    DisplayAttendance(
+                                      currentUserId: widget.currentUserId,
+                                    ),
+                                  );
+                                }
+                                break;
+                              case 'Catalog':
+                                {
+                                  GoToPage(
                                       context,
-                                      DisplayAttendance(
+                                      StockScreen(
                                         currentUserId: widget.currentUserId,
-                                      ),
-                                    );
-                                  }
-                                  break;
-                                case 'Catalog':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        StockScreen(
-                                          currentUserId: widget.currentUserId,
-                                        ));
-                                  }
-                                  break;
-                                case 'Vehicle Entries':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        DaySelection(
-                                          currentUserId: widget.currentUserId,
-                                        ));
-                                  }
-                                  break;
-                                case 'Stock Register':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        ShowAllInvoice(
-                                            currentUserId:
-                                                widget.currentUserId));
-                                  }
-                                  break;
-                                case 'Site Activities':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        SiteActivities(
-                                          currentUserId: widget.currentUserId,
-                                        ));
-                                  }
-                                  break;
-                                case 'Concrete Entries':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        ConcreteEntries(
-                                          currentUserId: widget.currentUserId,
-                                        ));
-                                  }
-                                  break;
-                                case 'Labour Report':
-                                  {
-                                    GoToPage(
-                                        context,
-                                        LabourEntries(
-                                          currentUserId: widget.currentUserId,
-                                        ));
-                                  }
-                                  break;
+                                      ));
+                                }
+                                break;
+                              case 'Vehicle Entries':
+                                {
+                                  GoToPage(
+                                      context,
+                                      DaySelection(
+                                        currentUserId: widget.currentUserId,
+                                      ));
+                                }
+                                break;
+                              case 'Stock Register':
+                                {
+                                  GoToPage(
+                                      context,
+                                      ShowAllInvoice(
+                                          currentUserId: widget.currentUserId));
+                                }
+                                break;
+                              case 'Site Activities':
+                                {
+                                  GoToPage(
+                                      context,
+                                      SiteActivities(
+                                        currentUserId: widget.currentUserId,
+                                      ));
+                                }
+                                break;
+                              case 'Concrete Entries':
+                                {
+                                  GoToPage(
+                                      context,
+                                      ConcreteEntries(
+                                        currentUserId: widget.currentUserId,
+                                      ));
+                                }
+                                break;
+                              case 'Labour Report':
+                                {
+                                  GoToPage(
+                                      context,
+                                      LabourEntries(
+                                        currentUserId: widget.currentUserId,
+                                      ));
+                                }
+                                break;
 
-                                default:
-                                  {}
-                                  break;
-                              }
-                            },
-                          );
-                        },
-                      ),
+                              default:
+                                {}
+                                break;
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
                 ),
