@@ -213,7 +213,8 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                       ? "Vehicle Entry"
                                       : "Goods Approval",
                                   result[index]['collectionName'] ==
-                                          "vehicleEntries"
+                                              "vehicleEntries" &&
+                                          res['units'] != null
                                       ? "${res['vehicleNumber']} (${res['unitsPerTrip'] ?? ''} ${res['units']['unitName'] ?? ''}) - Goods Truck"
                                       : res['concrete_type'] != null &&
                                               res['concrete_type']
@@ -221,12 +222,16 @@ class _F_NotificationPageState extends State<NotificationPage> {
                                                   null
                                           ? "${res['concrete_type']['concreteTypeName']} - Goods"
                                           : "Goods",
-                                  res['dealer']['dealerName'],
+                                  res['dealer'] != null
+                                      ? res['dealer']['dealerName'] ?? ''
+                                      : '',
                                   res['created_by']['name'] != null &&
                                           res['created_by']['role'] != null
                                       ? " ${res['created_by']['name']} (${res['created_by']['role']})"
                                       : "-",
                                   res['approved_by']['name'] != null &&
+                                          res['approved_by']['name']
+                                              .isNotEmpty &&
                                           res['approved_by']['role'] != null
                                       ? " ${res['approved_by']['name']} (${res['approved_by']['role']})"
                                       : "-",

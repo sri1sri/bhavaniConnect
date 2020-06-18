@@ -292,11 +292,11 @@ class _OTPPageState extends State<OTPPage> {
         setState(() {
           errorMessage = 'Invalid Code';
         });
-        // _checkForUser(context);
-        Navigator.of(context).pop();
-        smsOTPDialog(context).then((value) {
-          print('sign in');
-        });
+        // // _checkForUser(context);
+        // Navigator.of(context).pop();
+        // smsOTPDialog(context).then((value) {
+        //   print('sign in');
+        // });
         break;
       default:
         setState(() {

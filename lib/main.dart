@@ -81,7 +81,6 @@ class _MyAppState extends State<MyApp> {
 
     if (title == null && mMessage != null) {
       print(mMessage);
-      print('karma');
       navigatorKey.currentState.pushNamed("/" + mMessage);
     } else {
       showNotificaitonDialog(context, title, mMessage);
