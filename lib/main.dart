@@ -40,9 +40,6 @@ class _MyAppState extends State<MyApp> {
   String deviceToken;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  bool navigateOnNotication = false;
-  String navigateMessage;
-
   _getToken() {
     _firebaseMessaging.getToken().then((token) {
       deviceToken = token;
@@ -61,6 +58,7 @@ class _MyAppState extends State<MyApp> {
         _setMessage(context, message);
       },
       onResume: (Map<String, dynamic> message) async {
+        print('onResume: $message');
         _setMessage(context, message);
       },
       onBackgroundMessage:
@@ -73,20 +71,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   _setMessage(BuildContext context, Map<String, dynamic> message) {
-    print("brahman");
     final notification = message['notification'];
     final data = message['data'];
     String title = notification['title'];
 
     final String body = notification['body'];
+
     String mMessage = data != null ? data['message'] : message['message'];
 
-    if (title == null) {
-      navigateOnNotication = true;
-      navigateMessage = mMessage;
-    }
-
-    if (title != null) {
+    if (title == null && mMessage != null) {
+      print(mMessage);
+      print('karma');
+      navigatorKey.currentState.pushNamed("/" + mMessage);
+    } else {
       showNotificaitonDialog(context, title, mMessage);
     }
   }
@@ -151,8 +148,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    navigateOnNotication = false;
-    navigateMessage = '';
     _getToken();
     _configureFirebaseListeners();
     FirebaseAuth.instance.onAuthStateChanged.listen((fireuser) {
@@ -214,10 +209,6 @@ class _MyAppState extends State<MyApp> {
         setState(() {
           authenticationState =
               AuthenticationState(SignupState.complete, fireuser);
-          Future.delayed(Duration(seconds: 1)).then((value) {
-            navigateOnNotication = false;
-            navigateMessage = '';
-          });
         });
       });
     });
@@ -256,6 +247,16 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blueGrey,
         ),
         home: _handleCurrentScreen(),
+        routes: <String, WidgetBuilder>{
+          "/goods": (BuildContext context) =>
+              GoodsScreen(currentUserId: authenticationState.user.uid),
+          "/vehicle": (BuildContext context) =>
+              new DaySelection(currentUserId: authenticationState.user.uid),
+          "/goodsApproval": (BuildContext context) =>
+              new NotificationPage(currentUserId: authenticationState.user.uid),
+          "/vehicleEntries": (BuildContext context) =>
+              new NotificationPage(currentUserId: authenticationState.user.uid),
+        },
         navigatorKey: navigatorKey);
   }
 
@@ -270,8 +271,6 @@ class _MyAppState extends State<MyApp> {
       case SignupState.complete:
         return HomePage(
           currentUserId: authenticationState.user.uid,
-          goToNavigation: navigateOnNotication,
-          message: navigateMessage,
         );
 
       case SignupState.needsSignUp:

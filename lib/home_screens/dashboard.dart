@@ -19,12 +19,11 @@ import 'Labour_Report/Daily_labour_Report.dart';
 
 class Dashboard extends StatefulWidget {
   final String currentUserId;
-  final bool goToNavigation;
-  final String message;
 
-  const Dashboard(
-      {Key key, this.currentUserId, this.goToNavigation = false, this.message})
-      : super(key: key);
+  const Dashboard({
+    Key key,
+    this.currentUserId,
+  }) : super(key: key);
   @override
   _Dashboard createState() => _Dashboard();
 }
@@ -56,76 +55,6 @@ class _Dashboard extends State<Dashboard> {
     "images/Concrete.png",
     "images/LabourReport.png",
   ];
-
-  bool goToNavigation;
-  String notificaitonMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    goToNavigation = widget.goToNavigation;
-    notificaitonMessage = widget.message;
-    if (goToNavigation == true && notificaitonMessage != null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (widget.message == "goods") {
-          GoToPage(
-            context,
-            GoodsScreen(currentUserId: widget.currentUserId),
-          );
-        } else if (widget.message == "vehicle") {
-          GoToPage(
-            context,
-            DaySelection(currentUserId: widget.currentUserId),
-          );
-        } else if (widget.message == "vehicleEntries") {
-          GoToPage(
-            context,
-            NotificationPage(currentUserId: widget.currentUserId),
-          );
-        } else {
-          GoToPage(
-            context,
-            NotificationPage(currentUserId: widget.currentUserId),
-          );
-        }
-      });
-    }
-  }
-
-  @override
-  void didUpdateWidget(Dashboard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.goToNavigation != widget.goToNavigation) {
-      goToNavigation = widget.goToNavigation;
-      notificaitonMessage = widget.message;
-
-      if (goToNavigation == true && notificaitonMessage != null) {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          if (widget.message == "goods") {
-            GoToPage(
-              context,
-              GoodsScreen(currentUserId: widget.currentUserId),
-            );
-          } else if (widget.message == "vehicle") {
-            GoToPage(
-              context,
-              DaySelection(currentUserId: widget.currentUserId),
-            );
-          } else if (widget.message == "vehicleEntries") {
-            GoToPage(
-              context,
-              NotificationPage(currentUserId: widget.currentUserId),
-            );
-          } else {
-            GoToPage(
-              context,
-              NotificationPage(currentUserId: widget.currentUserId),
-            );
-          }
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
