@@ -4,6 +4,7 @@ import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
+import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_page.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Concrete_Entries/Entry_description.dart';
 import 'package:bhavaniconnect/home_screens/Concrete_Entries/Print_entries.dart';
@@ -140,17 +141,7 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                       }
                     }),
               )
-            : Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.white,
-                child: Center(
-                  child: Text(
-                    "No access widget",
-                    style: titleStyle,
-                  ),
-                ),
-              ),
+            : CustomOfflinePage(),
       ),
       floatingActionButton: userRole != null &&
               (userRole == UserRoles.Admin ||

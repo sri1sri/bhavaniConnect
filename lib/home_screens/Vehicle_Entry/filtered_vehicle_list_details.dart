@@ -43,6 +43,7 @@ class _VehicleDataList extends State<VehicleDataList> {
         .where("construction_site.constructionId",
             isEqualTo: widget.selectedConstructionId)
         .where('dealer.dealerId', isEqualTo: widget.selectedDealerId)
+        .where('status', isEqualTo: "Approved")
         .where("added_on", isGreaterThan: widget.startDate)
         .where("added_on", isLessThan: widget.endDate)
         .orderBy('added_on', descending: true)
@@ -238,14 +239,15 @@ class _VehicleDataList extends State<VehicleDataList> {
                                     (item['startTime'] as Timestamp).toDate())
                                 : '-',
                             startRead: item['startRead'] != null
-                                ? item['startRead']
+                                ? item['startRead'].toString()
                                 : '-',
                             endTime: item['endTime'] != null
                                 ? DateTimeUtils.hourMinuteFormat(
                                     (item['endTime'] as Timestamp).toDate())
                                 : '-',
-                            endRead:
-                                item['endRead'] != null ? item['endRead'] : '-',
+                            endRead: item['endRead'] != null
+                                ? item['endRead'].toString()
+                                : '-',
                             totalTime: item['startTime'] != null &&
                                     item['endTime'] != null
                                 ? DateTimeUtils.getDifferenceTime(
@@ -255,7 +257,9 @@ class _VehicleDataList extends State<VehicleDataList> {
                                 : "-",
                             totalRead: item['startRead'] != null &&
                                     item['endRead'] != null
-                                ? "(${item['endRead']} - ${item['startRead']})"
+                                ? (int.parse(item['startRead']) -
+                                        int.parse(item['endRead']))
+                                    .toString()
                                 : "-",
                             totalTrips: item['timeRecords'] != null
                                 ? item['timeRecords'].length.toString()
@@ -620,6 +624,7 @@ class _VehicleDataList extends State<VehicleDataList> {
         .where("construction_site.constructionId",
             isEqualTo: widget.selectedConstructionId)
         .where("dealer.dealerId", isEqualTo: widget.selectedDealerId)
+        .where('status', isEqualTo: "Approved")
         .where("added_on", isGreaterThan: widget.startDate)
         .where("added_on", isLessThan: widget.endDate)
         .orderBy('added_on', descending: true)
@@ -654,12 +659,29 @@ class _VehicleDataList extends State<VehicleDataList> {
           result['vehicleNumber'],
           result['construction_site']['constructionSite'],
           result['dealer']['dealerName'],
-          result['startTime'] != null ? result['startTime'] : 'null',
-          result['startRead'] != null ? result['startRead'] : 'null',
-          result['endTime'] != null ? result['endTime'] : 'null',
-          result['endRead'] != null ? result['endRead'] : 'null',
-          'st - et',
-          result['totalTrips'] != null ? result['totalTrips'] : '',
+          result['startTime'] != null
+              ? DateTimeUtils.hourMinuteFormat(
+                  (result['startTime'] as Timestamp).toDate())
+              : '-',
+          result['startRead'] != null ? result['startRead'].toString() : '-',
+          result['endTime'] != null
+              ? DateTimeUtils.hourMinuteFormat(
+                  (result['endTime'] as Timestamp).toDate())
+              : 'null',
+          result['endRead'] != null ? result['endRead'].toString() : '-',
+          result['startTime'] != null && result['endTime'] != null
+              ? DateTimeUtils.getDifferenceTime(
+                  (result['startTime'] as Timestamp).toDate(),
+                  (result['endTime'] as Timestamp).toDate(),
+                )
+              : "-",
+          result['startRead'] != null && result['endRead'] != null
+              ? (int.parse(result['startRead']) - int.parse(result['endRead']))
+                  .toString()
+              : "-",
+          result['timeRecords'] != null
+              ? result['timeRecords'].length.toString()
+              : '',
           result['unitsPerTrip'] != null ? result['unitsPerTrip'] : '',
         ];
       }),

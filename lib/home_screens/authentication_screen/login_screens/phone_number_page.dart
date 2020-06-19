@@ -22,19 +22,6 @@ class PhoneNumberPage extends StatelessWidget {
 }
 
 class F_PhoneNumberPage extends StatefulWidget {
-//  F_PhoneNumberPage({@required this.model});
-//  final PhoneNumberModel model;
-//
-//  static Widget create(BuildContext context) {
-//    final AuthBase auth = Provider.of<AuthBase>(context);
-//    return ChangeNotifierProvider<PhoneNumberModel>(
-//      create: (context) => PhoneNumberModel(auth: auth),
-//      child: Consumer<PhoneNumberModel>(
-//        builder: (context, model, _) => F_PhoneNumberPage(model: model),
-//      ),
-//    );
-//  }
-
   @override
   _F_PhoneNumberPageState createState() => _F_PhoneNumberPageState();
 }
@@ -162,6 +149,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
               textColor: Colors.white,
               backgroundColor: activeButtonBackgroundColor,
               // onPressed: _btnEnabled ? verifyPhone : null,
+              isLoading: isLoading,
               onPressed: verifyPhone,
 
               // onPressed: () {
@@ -189,6 +177,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
     setState(() {
       isLoading = true;
     });
+    print(isLoading);
 
     final PhoneCodeSent smsOTPSent = (String verId, [int forceCodeResend]) {
       this.verificationId = verId;
@@ -199,6 +188,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
 
       _checkForUser(context, verId);
     };
+    print(isLoading);
     try {
       await _auth.verifyPhoneNumber(
           phoneNumber: '+91${this.phoneNo}', // PHONE NUMBER TO SEND OTP
@@ -219,9 +209,6 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
     } catch (e) {
       handleError(e);
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
   signIn() async {
@@ -269,31 +256,32 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
           .where('phoneNumber',
               isEqualTo: '+91${_phoneNumberController.value.text}')
           .snapshots()
-          .listen((data) => {
-                print('data=$data'),
-                if (data.documents.length == 0)
-                  {
-                    // model.submit(),
-                    GoToPage(
-                        context,
-                        OTPPage(
-                          phoneNo: _phoneNumberController.value.text,
-                          newUser: true,
-                          verificationId: verId,
-                        ))
-                  }
-                else
-                  {
-                    //model.submit(),
-                    GoToPage(
-                        context,
-                        OTPPage(
-                          phoneNo: _phoneNumberController.value.text,
-                          newUser: false,
-                          verificationId: verId,
-                        ))
-                  }
-              });
+          .listen((data) {
+        print('data=$data');
+        setState(() {
+          isLoading = false;
+        });
+        if (data.documents.length == 0) {
+          // model.submit(),
+
+          GoToPage(
+              context,
+              OTPPage(
+                phoneNo: _phoneNumberController.value.text,
+                newUser: true,
+                verificationId: verId,
+              ));
+        } else {
+          //model.submit(),
+          GoToPage(
+              context,
+              OTPPage(
+                phoneNo: _phoneNumberController.value.text,
+                newUser: false,
+                verificationId: verId,
+              ));
+        }
+      });
     } on PlatformException catch (e) {
       PlatformExceptionAlertDialog(
         title: 'Phone number failed',

@@ -64,13 +64,12 @@ exports.statusChangeTrigger = functions.firestore.document("goodsApproval/{messa
     prevData = snapshot.before.data();
     newData = snapshot.after.data();
 
-    if (newData.status === "Pending" && prevData.status !== "Pending") {
+    if (newData.status === "Pending" || prevData.status !== "Pending") {
         return;
     }
 
     const userData = await admin.firestore().collection('userData').doc(newData.created_by['id']).get();
-    console.log(userData.data());
-    console.log(userData.data().token);
+
     tokens.push(userData.data().token);
 
 
@@ -104,13 +103,12 @@ exports.vehicleEntryStatusChangeTrigger = functions.firestore.document("vehicleE
     prevData = snapshot.before.data();
     newData = snapshot.after.data();
 
-    if (newData.status === "Pending" && prevData.status !== "Pending") {
+    if (newData.status === "Pending" || prevData.status !== "Pending") {
         return;
     }
 
     const userData = await admin.firestore().collection('userData').doc(newData.created_by['id']).get();
-    console.log(userData.data());
-    console.log(userData.data().token);
+
 
     tokens.push(userData.data().token);
 

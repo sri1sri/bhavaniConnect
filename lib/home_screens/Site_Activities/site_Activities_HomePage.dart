@@ -3,6 +3,7 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
+import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_page.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Site_Activities/add_Site_Activity.dart';
 import 'package:bhavaniconnect/home_screens/Site_Activities/detail_description.dart';
@@ -255,17 +256,7 @@ class _SiteActivities extends State<SiteActivities> {
                       }
                     }),
               )
-            : Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.white,
-                child: Center(
-                  child: Text(
-                    "No access widget",
-                    style: titleStyle,
-                  ),
-                ),
-              ),
+            : CustomOfflinePage(),
       ),
       floatingActionButton: userRole != null &&
               (userRole == UserRoles.Admin ||

@@ -20,8 +20,8 @@ class AddInvoice extends StatefulWidget {
 }
 
 class _AddInvoiceState extends State<AddInvoice> {
-  DateTime selectedDate = DateTime(2010);
-  DateTime selectedDateInvoice = DateTime(2010);
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 

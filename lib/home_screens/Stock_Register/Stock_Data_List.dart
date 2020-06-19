@@ -44,6 +44,20 @@ class _StockDataList extends State<StockDataList> {
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Firestore.instance
+        .collection("stockRegister")
+        .where("category.categoryId", isEqualTo: widget.categoryId)
+        .where("item.itemId", isEqualTo: widget.itemId)
+        .where("dealer.dealerId", isEqualTo: widget.dealerId)
+        .where("purchase_date", isGreaterThan: widget.startDate)
+        .where("purchase_date", isLessThan: widget.endDate)
+        .orderBy('purchase_date', descending: true)
+        .getDocuments();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
   }
@@ -152,9 +166,9 @@ class _StockDataList extends State<StockDataList> {
                             isEqualTo: widget.categoryId)
                         .where("item.itemId", isEqualTo: widget.itemId)
                         .where("dealer.dealerId", isEqualTo: widget.dealerId)
-                        .where("added_on", isGreaterThan: widget.startDate)
-                        .where("added_on", isLessThan: widget.endDate)
-                        .orderBy('added_on', descending: true)
+                        .where("purchase_date", isGreaterThan: widget.startDate)
+                        .where("purchase_date", isLessThan: widget.endDate)
+                        .orderBy('purchase_date', descending: true)
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -464,9 +478,9 @@ class _StockDataList extends State<StockDataList> {
         .where("category.categoryId", isEqualTo: widget.categoryId)
         .where("item.itemId", isEqualTo: widget.itemId)
         .where("dealer.dealerId", isEqualTo: widget.dealerId)
-        .where("added_on", isGreaterThan: widget.startDate)
-        .where("added_on", isLessThan: widget.endDate)
-        .orderBy('added_on', descending: true)
+        .where("purchase_date", isGreaterThan: widget.startDate)
+        .where("purchase_date", isLessThan: widget.endDate)
+        .orderBy('purchase_date', descending: true)
         .getDocuments();
     int i = 0;
     List<List<String>> csvData = [

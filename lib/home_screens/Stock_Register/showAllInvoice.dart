@@ -38,6 +38,18 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
   void initState() {
     super.initState();
     getUserRoles();
+
+    Firestore.instance
+        .collection("stockRegister")
+        .where("construction_site.constructionId",
+            isEqualTo: constructionSiteId)
+        .where("category.categoryId", isEqualTo: categoryId)
+        .where("item.itemId", isEqualTo: itemId)
+        .where("dealer.dealerId", isEqualTo: dealerId)
+        .where("purchase_date", isGreaterThan: startFilterDate)
+        .where("purchase_date", isLessThan: endFilterDate)
+        .orderBy('purchase_date', descending: true)
+        .getDocuments();
   }
 
   getUserRoles() async {
@@ -131,9 +143,9 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
                   .where("category.categoryId", isEqualTo: categoryId)
                   .where("item.itemId", isEqualTo: itemId)
                   .where("dealer.dealerId", isEqualTo: dealerId)
-                  .where("added_on", isGreaterThan: startFilterDate)
-                  .where("added_on", isLessThan: endFilterDate)
-                  .orderBy('added_on', descending: true)
+                  .where("purchase_date", isGreaterThan: startFilterDate)
+                  .where("purchase_date", isLessThan: endFilterDate)
+                  .orderBy('purchase_date', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
