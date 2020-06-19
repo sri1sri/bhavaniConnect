@@ -149,7 +149,7 @@ class _SearchActivity extends State<SearchActivity> {
                                   label: "Construction Site",
                                   onChanged: (value) {},
                                   selectedItem: selectedConstructionSite ??
-                                      "Choose Construction Site",
+                                      "All construction site selected",
                                   showSearchBox: true,
                                   validate: (value) {
                                     if (validated &&
@@ -218,7 +218,8 @@ class _SearchActivity extends State<SearchActivity> {
                                   },
                                   label: "Block",
                                   onChanged: (value) {},
-                                  selectedItem: selectedBlock ?? "Choose Block",
+                                  selectedItem:
+                                      selectedBlock ?? "All block selected",
                                   showSearchBox: true,
                                   validate: (value) {
                                     if (validated &&
@@ -286,8 +287,8 @@ class _SearchActivity extends State<SearchActivity> {
                                   },
                                   label: "Category",
                                   onChanged: (value) {},
-                                  selectedItem:
-                                      selectedCategory ?? "Choose Category",
+                                  selectedItem: selectedCategory ??
+                                      "All category selected",
                                   showSearchBox: true,
                                   validate: (value) {
                                     if (validated &&
@@ -356,7 +357,7 @@ class _SearchActivity extends State<SearchActivity> {
                                   label: "Sub Category",
                                   onChanged: (value) {},
                                   selectedItem: selectedSubCategory ??
-                                      "Choose Sub Category",
+                                      "All subcategory selected",
                                   showSearchBox: true,
                                   validate: (value) {
                                     if (validated &&
