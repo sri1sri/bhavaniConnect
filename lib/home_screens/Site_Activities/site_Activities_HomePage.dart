@@ -130,53 +130,53 @@ class _SiteActivities extends State<SiteActivities> {
                           ),
                           child: Row(
                             children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.search,
-                                  size: 25,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  GoToPage(
-                                      context,
-                                      SearchActivity(
-                                          currentUserId: widget.currentUserId,
-                                          onSearch: (constructionId, blockId,
-                                              categoryId, subCategoryId) {
-                                            print(constructionId);
-                                            print(blockId);
-                                            print(categoryId);
-                                            setState(() {
-                                              selectedConstructionId =
-                                                  constructionId;
-                                              selectedBlockId = blockId;
-                                              selectedCategoryId = categoryId;
-                                              selectedSubCategoryId =
-                                                  subCategoryId;
-                                            });
-                                            print('construction');
-                                            print(selectedConstructionId);
-                                            Firestore.instance
-                                                .collection("siteActivities")
-                                                .where(
-                                                    "construction_site.constructionId",
-                                                    isEqualTo:
-                                                        selectedConstructionId)
-                                                .where('block.blockId',
-                                                    isEqualTo: selectedBlockId)
-                                                .where("category.categoryId",
-                                                    isEqualTo:
-                                                        selectedCategoryId)
-                                                .where(
-                                                    'sub_category.subCategoryId',
-                                                    isEqualTo:
-                                                        selectedSubCategoryId)
-                                                .orderBy('added_on',
-                                                    descending: true)
-                                                .getDocuments();
-                                          }));
-                                },
-                              ),
+                              // IconButton(
+                              //   icon: Icon(
+                              //     Icons.search,
+                              //     size: 25,
+                              //     color: Colors.white,
+                              //   ),
+                              //   onPressed: () {
+                              //     GoToPage(
+                              //         context,
+                              //         SearchActivity(
+                              //             currentUserId: widget.currentUserId,
+                              //             onSearch: (constructionId, blockId,
+                              //                 categoryId, subCategoryId) {
+                              //               print(constructionId);
+                              //               print(blockId);
+                              //               print(categoryId);
+                              //               setState(() {
+                              //                 selectedConstructionId =
+                              //                     constructionId;
+                              //                 selectedBlockId = blockId;
+                              //                 selectedCategoryId = categoryId;
+                              //                 selectedSubCategoryId =
+                              //                     subCategoryId;
+                              //               });
+                              //               print('construction');
+                              //               print(selectedConstructionId);
+                              //               Firestore.instance
+                              //                   .collection("siteActivities")
+                              //                   .where(
+                              //                       "construction_site.constructionId",
+                              //                       isEqualTo:
+                              //                           selectedConstructionId)
+                              //                   .where('block.blockId',
+                              //                       isEqualTo: selectedBlockId)
+                              //                   .where("category.categoryId",
+                              //                       isEqualTo:
+                              //                           selectedCategoryId)
+                              //                   .where(
+                              //                       'sub_category.subCategoryId',
+                              //                       isEqualTo:
+                              //                           selectedSubCategoryId)
+                              //                   .orderBy('added_on',
+                              //                       descending: true)
+                              //                   .getDocuments();
+                              //             }));
+                              //   },
+                              // ),
                               userRole != null &&
                                       (userRole == UserRoles.Admin ||
                                           userRole == UserRoles.Manager ||
