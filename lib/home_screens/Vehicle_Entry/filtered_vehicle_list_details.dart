@@ -621,7 +621,7 @@ class _VehicleDataList extends State<VehicleDataList> {
 
   Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
-        .collection("labourReport")
+        .collection("vehicleEntries")
         .where("construction_site.constructionId",
             isEqualTo: widget.selectedConstructionId)
         .where("dealer.dealerId", isEqualTo: widget.selectedDealerId)
