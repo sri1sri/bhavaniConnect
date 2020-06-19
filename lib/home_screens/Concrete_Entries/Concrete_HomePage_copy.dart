@@ -141,7 +141,10 @@ class _ConcreteEntries extends State<ConcreteEntries> {
                       }
                     }),
               )
-            : CustomOfflinePage(),
+            : OfflinePage(
+                text: "you don’t have access\nto this page",
+                color: Colors.white,
+              ),
       ),
       floatingActionButton: userRole != null &&
               (userRole == UserRoles.Admin ||

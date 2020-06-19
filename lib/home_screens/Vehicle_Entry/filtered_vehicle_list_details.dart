@@ -123,6 +123,7 @@ class _VehicleDataList extends State<VehicleDataList> {
                           isEqualTo: widget.selectedConstructionId)
                       .where('dealer.dealerId',
                           isEqualTo: widget.selectedDealerId)
+                      .where('status', isEqualTo: "Approved")
                       .where("added_on", isGreaterThan: widget.startDate)
                       .where("added_on", isLessThan: widget.endDate)
                       .orderBy('added_on', descending: true)
@@ -690,7 +691,7 @@ class _VehicleDataList extends State<VehicleDataList> {
     String csv = const ListToCsvConverter().convert(csvData);
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/stockRegisterDocs.csv';
+    final String path = '$dir/filteredVehicles.csv';
 
     // create file
     final File file = File(path);

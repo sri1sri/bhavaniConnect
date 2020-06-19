@@ -142,7 +142,10 @@ class _LabourEntries extends State<LabourEntries> {
                       }
                     }),
               )
-            : CustomOfflinePage(),
+            : OfflinePage(
+                text: "you don’t have access\nto this page",
+                color: Colors.white,
+              ),
       ),
       floatingActionButton: userRole != null &&
               (userRole == UserRoles.Admin ||
