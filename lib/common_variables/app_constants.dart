@@ -1,5 +1,3 @@
-var prod = "prod_";
-
-class AppConstatns {
+class AppConstants {
   static const prod = "prod_";
 }
