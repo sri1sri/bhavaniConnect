@@ -7,7 +7,6 @@ enum UserRoles {
   Accountant,
   SiteEngineer
 }
-
 Map<String, UserRoles> userRoleValues = {
   "Admin": UserRoles.Admin,
   "Manager": UserRoles.Manager,
