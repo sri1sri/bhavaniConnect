@@ -3,6 +3,7 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
+import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
@@ -169,8 +170,9 @@ class _F_NotificationPageState extends State<NotificationPage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   var result = snapshot.data.documents;
-                  print("result");
-                  print(result.length);
+                  if (snapshot.data.documents.length == 0) {
+                    return NoDataWidget();
+                  }
                   return ListView.builder(
                     itemCount: result.length,
                     itemBuilder: (context, index) {

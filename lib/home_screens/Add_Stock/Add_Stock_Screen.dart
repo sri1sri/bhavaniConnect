@@ -2,6 +2,7 @@ import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
+import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -245,6 +246,9 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)));
         } else {
           // var itemData = snapshot.data.documents;
+          if (snapshot.data.documents.length == 0) {
+            return NoDataWidget();
+          }
           return Column(
               children: snapshot.data.documents.map<Widget>((value) {
             DocumentSnapshot ds = value;

@@ -4,6 +4,7 @@ import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
+import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
@@ -180,6 +181,9 @@ class _StockDataList extends State<StockDataList> {
                         );
                       } else {
                         List<DocumentSnapshot> result = snapshot.data.documents;
+                        if (result.length == 0) {
+                          return NoDataWidget();
+                        }
                         return DataTable(
                           onSelectAll: (b) {},
                           sortAscending: true,

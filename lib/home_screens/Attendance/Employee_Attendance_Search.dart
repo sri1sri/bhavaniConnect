@@ -91,6 +91,7 @@ class _SearchEmployeeAttendance extends State<SearchEmployeeAttendance> {
                         List<String> items = snapshot.data.documents
                             .map((e) => (e.documentID.toString()))
                             .toList();
+
                         return DropdownSearch(
                           showSelectedItem: true,
                           maxHeight: 400,

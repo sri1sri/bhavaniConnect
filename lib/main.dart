@@ -66,24 +66,44 @@ class _MyAppState extends State<MyApp> {
     );
 
     _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge: true, alert: true),
-    );
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 
   _setMessage(BuildContext context, Map<String, dynamic> message) {
-    final notification = message['notification'];
-    final data = message['data'];
-    String title = notification['title'];
+    if (!Platform.isIOS) {
+      final notification = message['notification'];
+      final data = message['data'];
+      String title = notification['title'];
 
-    final String body = notification['body'];
+      final String body = notification['body'];
 
-    String mMessage = data != null ? data['message'] : message['message'];
+      String mMessage = data != null ? data['message'] : message['message'];
 
-    if (title == null && mMessage != null) {
-      print(mMessage);
-      navigatorKey.currentState.pushNamed("/" + mMessage);
+      if (title == null && mMessage != null) {
+        print(mMessage);
+        navigatorKey.currentState.pushNamed("/" + mMessage);
+      } else {
+        showNotificaitonDialog(context, title, mMessage);
+      }
     } else {
-      showNotificaitonDialog(context, title, mMessage);
+      String mMessage = message['message'];
+      var apsAlert = message['aps']['alert'];
+
+      String title = apsAlert['title'];
+
+      final String body = apsAlert['body'];
+
+      if (title == null && mMessage != null) {
+        print(mMessage);
+        navigatorKey.currentState.pushNamed("/" + mMessage);
+      } else {
+        showNotificaitonDialog(context, title, mMessage);
+      }
     }
   }
 

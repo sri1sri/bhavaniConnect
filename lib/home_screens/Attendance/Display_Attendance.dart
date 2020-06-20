@@ -399,7 +399,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                           } else {
                             return Container();
                           }
-                        }),
+                        }).reversed.toList(),
                       ),
                     ),
                   ]))),

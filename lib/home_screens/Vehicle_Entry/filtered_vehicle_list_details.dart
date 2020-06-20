@@ -38,16 +38,6 @@ class _VehicleDataList extends State<VehicleDataList> {
   @override
   void initState() {
     super.initState();
-    Firestore.instance
-        .collection("vehicleEntries")
-        .where("construction_site.constructionId",
-            isEqualTo: widget.selectedConstructionId)
-        .where('dealer.dealerId', isEqualTo: widget.selectedDealerId)
-        .where('status', isEqualTo: "Approved")
-        .where("added_on", isGreaterThan: widget.startDate)
-        .where("added_on", isLessThan: widget.endDate)
-        .orderBy('added_on', descending: true)
-        .getDocuments();
   }
 
   @override

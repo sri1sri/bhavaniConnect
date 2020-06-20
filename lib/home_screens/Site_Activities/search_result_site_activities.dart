@@ -3,6 +3,7 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
+import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_page.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Site_Activities/add_Site_Activity.dart';
@@ -204,6 +205,9 @@ class _SearchResultActivitiesState extends State<SearchResultActivities> {
                         return Center(child: CircularProgressIndicator());
                       } else {
                         var result = snapshot.data.documents;
+                        if (result.length == 0) {
+                          return NoDataWidget();
+                        }
                         return ListView.builder(
                           itemCount: result.length,
                           itemBuilder: (context, index) {
