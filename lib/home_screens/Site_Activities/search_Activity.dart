@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class SearchActivity extends StatefulWidget {
   final String currentUserId;
   final Function(String, String, String, String) onSearch;
@@ -107,7 +109,8 @@ class _SearchActivity extends State<SearchActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -176,7 +179,7 @@ class _SearchActivity extends State<SearchActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("blocks")
+                                .collection(AppConstants.prod + "blocks")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -246,7 +249,7 @@ class _SearchActivity extends State<SearchActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("category")
+                                .collection(AppConstants.prod + "category")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -315,7 +318,7 @@ class _SearchActivity extends State<SearchActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("subCategory")
+                                .collection(AppConstants.prod + "subCategory")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {

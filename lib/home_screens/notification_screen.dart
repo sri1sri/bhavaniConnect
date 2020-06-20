@@ -11,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class NotificationPage extends StatefulWidget {
   final String currentUserId;
 
@@ -36,14 +38,14 @@ class _F_NotificationPageState extends State<NotificationPage> {
     super.initState();
 
     Firestore.instance
-        .collection("pendingRequests")
+        .collection(AppConstants.prod + "pendingRequests")
         .where("created_by.id", isEqualTo: widget.currentUserId)
         .where("added_on", isGreaterThan: startFilterDate)
         .where("added_on", isLessThan: endFilterDate)
         .orderBy('added_on', descending: true)
         .getDocuments();
     Firestore.instance
-        .collection("pendingRequests")
+        .collection(AppConstants.prod + "pendingRequests")
         .where("permissions", arrayContains: widget.currentUserId)
         .where("added_on", isGreaterThan: startFilterDate)
         .where("added_on", isLessThan: endFilterDate)
@@ -152,14 +154,14 @@ class _F_NotificationPageState extends State<NotificationPage> {
           child: StreamBuilder(
               stream: userRole == UserRoles.Securtiy
                   ? Firestore.instance
-                      .collection("pendingRequests")
+                      .collection(AppConstants.prod + "pendingRequests")
                       .where("created_by.id", isEqualTo: widget.currentUserId)
                       .where("added_on", isGreaterThan: startFilterDate)
                       .where("added_on", isLessThan: endFilterDate)
                       .orderBy('added_on', descending: true)
                       .snapshots()
                   : Firestore.instance
-                      .collection("pendingRequests")
+                      .collection(AppConstants.prod + "pendingRequests")
                       .where("permissions", arrayContains: widget.currentUserId)
                       .where("added_on", isGreaterThan: startFilterDate)
                       .where("added_on", isLessThan: endFilterDate)

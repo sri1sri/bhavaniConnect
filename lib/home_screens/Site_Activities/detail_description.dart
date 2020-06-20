@@ -12,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class ActivityDetailDescription extends StatefulWidget {
   final String currentUserId;
   final String documentId;
@@ -85,7 +87,7 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
             color: Colors.white,
             child: StreamBuilder(
                 stream: Firestore.instance
-                    .collection("siteActivities")
+                    .collection(AppConstants.prod + "siteActivities")
                     .orderBy('added_on', descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -144,7 +146,8 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
                                   scrollDirection: Axis.horizontal,
                                   child: StreamBuilder(
                                       stream: Firestore.instance
-                                          .collection("activityProgress")
+                                          .collection(AppConstants.prod +
+                                              "activityProgress")
                                           .document(widget.documentId)
                                           .collection(widget.documentId)
                                           // .orderBy('added_on',

@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 import 'AddNewInvoice.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class DetailDescription extends StatefulWidget {
   final String documentId;
 
@@ -76,7 +78,7 @@ class _DetailDescription extends State<DetailDescription> {
                     ),
                     StreamBuilder(
                         stream: Firestore.instance
-                            .collection("stockRegister")
+                            .collection(AppConstants.prod + "stockRegister")
                             .document(widget.documentId)
                             .snapshots(),
                         builder: (context,

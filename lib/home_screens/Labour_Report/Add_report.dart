@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddLabourReport extends StatefulWidget {
   final String currentUserId;
 
@@ -229,7 +231,8 @@ class _AddLabourReport extends State<AddLabourReport> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -298,7 +301,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("blocks")
+                                .collection(AppConstants.prod + "blocks")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -367,7 +370,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("dealer")
+                                .collection(AppConstants.prod + "dealer")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -532,7 +535,8 @@ class _AddLabourReport extends State<AddLabourReport> {
                                           "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                       try {
                                         await Firestore.instance
-                                            .collection('labourReport')
+                                            .collection(AppConstants.prod +
+                                                'labourReport')
                                             .document(documentId)
                                             .setData({
                                           'created_by': {

@@ -16,6 +16,8 @@ import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class SignUpPage extends StatefulWidget {
   final FirebaseUser user;
 
@@ -210,7 +212,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 30,
                     ),
                     StreamBuilder(
-                      stream: Firestore.instance.collection("role").snapshots(),
+                      stream: Firestore.instance
+                          .collection(AppConstants.prod + "role")
+                          .snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (!snapshot.hasData) {
@@ -250,7 +254,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     StreamBuilder(
                       stream: Firestore.instance
-                          .collection("constructionSite")
+                          .collection(AppConstants.prod + "constructionSite")
                           .snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -454,7 +458,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
                                 try {
                                   await Firestore.instance
-                                      .collection('userData')
+                                      .collection(
+                                          AppConstants.prod + 'userData')
                                       .document(widget.user.uid)
                                       .updateData({
                                     'name': _usernameController.text,

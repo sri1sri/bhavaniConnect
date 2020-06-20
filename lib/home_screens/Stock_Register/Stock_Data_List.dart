@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class StockDataList extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -48,7 +50,7 @@ class _StockDataList extends State<StockDataList> {
   void initState() {
     super.initState();
     Firestore.instance
-        .collection("stockRegister")
+        .collection(AppConstants.prod + "stockRegister")
         .where("category.categoryId", isEqualTo: widget.categoryId)
         .where("item.itemId", isEqualTo: widget.itemId)
         .where("dealer.dealerId", isEqualTo: widget.dealerId)
@@ -160,7 +162,7 @@ class _StockDataList extends State<StockDataList> {
                   scrollDirection: Axis.horizontal,
                   child: StreamBuilder(
                     stream: Firestore.instance
-                        .collection("stockRegister")
+                        .collection(AppConstants.prod + "stockRegister")
                         .where('construction_site.constructionId',
                             isEqualTo: widget.constructionId)
                         .where("category.categoryId",
@@ -478,7 +480,7 @@ class _StockDataList extends State<StockDataList> {
 
   Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
-        .collection("stockRegister")
+        .collection(AppConstants.prod + "stockRegister")
         .where("category.categoryId", isEqualTo: widget.categoryId)
         .where("item.itemId", isEqualTo: widget.itemId)
         .where("dealer.dealerId", isEqualTo: widget.dealerId)

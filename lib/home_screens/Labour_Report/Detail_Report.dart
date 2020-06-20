@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class DetailReport extends StatefulWidget {
   final String currentUserId;
   final String documentId;
@@ -60,7 +62,7 @@ class _DetailReport extends State<DetailReport> {
             color: Colors.white,
             child: StreamBuilder(
               stream: Firestore.instance
-                  .collection("labourReport")
+                  .collection(AppConstants.prod + "labourReport")
                   .orderBy('added_on', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

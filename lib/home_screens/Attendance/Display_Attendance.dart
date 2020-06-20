@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
 import 'Add_Attendance.dart';
 
 class DisplayAttendance extends StatefulWidget {
@@ -451,7 +452,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
       padding: const EdgeInsets.only(top: 10.0, bottom: 10),
       child: StreamBuilder(
         stream: Firestore.instance
-            .collection('attendance')
+            .collection(AppConstants.prod + 'attendance')
             .document(documentId)
             .snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {

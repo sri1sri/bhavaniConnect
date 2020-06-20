@@ -11,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddGoods extends StatefulWidget {
   final String currentUserId;
 
@@ -59,7 +61,7 @@ class _AddGoods extends State<AddGoods> {
       String vehicleDocumentId, constructionSite, constructionId) async {
     List permissionBy = [];
     QuerySnapshot querySnapshot = await Firestore.instance
-        .collection("userData")
+        .collection(AppConstants.prod + "userData")
         .where("construction_site.constructionId", isEqualTo: constructionId)
         .where("role",
             whereIn: ["Supervisor", "Store Manager", "Manager"]).getDocuments();
@@ -75,7 +77,7 @@ class _AddGoods extends State<AddGoods> {
     }
 
     await Firestore.instance
-        .collection('pendingRequests')
+        .collection(AppConstants.prod + 'pendingRequests')
         .document(vehicleDocumentId)
         .setData({
       'collectionDocId': vehicleDocumentId,
@@ -87,7 +89,7 @@ class _AddGoods extends State<AddGoods> {
       'permissions': permissionDocId,
       'permission_by': permissionBy,
       "added_on": FieldValue.serverTimestamp(),
-      'collectionName': "goodsApproval"
+      'collectionName': AppConstants.prod + "goodsApproval"
     });
     Navigator.of(context).pop();
   }
@@ -177,7 +179,8 @@ class _AddGoods extends State<AddGoods> {
                           //     showSearchBox: true),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -246,7 +249,7 @@ class _AddGoods extends State<AddGoods> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("concreteType")
+                                .collection(AppConstants.prod + "concreteType")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -316,7 +319,7 @@ class _AddGoods extends State<AddGoods> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("dealer")
+                                .collection(AppConstants.prod + "dealer")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -403,7 +406,8 @@ class _AddGoods extends State<AddGoods> {
                                           "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                       try {
                                         await Firestore.instance
-                                            .collection('goodsApproval')
+                                            .collection(AppConstants.prod +
+                                                'goodsApproval')
                                             .document(documentId)
                                             .setData({
                                           'created_by': {

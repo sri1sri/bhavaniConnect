@@ -10,6 +10,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class StockFilter extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -172,7 +174,8 @@ class _StockFilter extends State<StockFilter> {
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
-                                    .collection("constructionSite")
+                                    .collection(
+                                        AppConstants.prod + "constructionSite")
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -235,7 +238,7 @@ class _StockFilter extends State<StockFilter> {
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
-                                    .collection("dealer")
+                                    .collection(AppConstants.prod + "dealer")
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -296,7 +299,7 @@ class _StockFilter extends State<StockFilter> {
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
-                                    .collection("category")
+                                    .collection(AppConstants.prod + "category")
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -357,7 +360,7 @@ class _StockFilter extends State<StockFilter> {
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
-                                    .collection("items")
+                                    .collection(AppConstants.prod + "items")
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {

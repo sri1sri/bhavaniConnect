@@ -15,6 +15,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class SearchResultActivities extends StatefulWidget {
   final String currentUserId;
   final String selectedConstructionId;
@@ -187,7 +189,7 @@ class _SearchResultActivitiesState extends State<SearchResultActivities> {
                 color: Colors.white,
                 child: StreamBuilder(
                     stream: Firestore.instance
-                        .collection("siteActivities")
+                        .collection(AppConstants.prod + "siteActivities")
                         .where("construction_site.constructionId",
                             isEqualTo: widget.selectedConstructionId)
                         .where('block.blockId',

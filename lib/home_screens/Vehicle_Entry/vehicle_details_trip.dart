@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddVehicleCountDetails extends StatefulWidget {
   final String currentUserId;
   final String documentId;
@@ -76,7 +78,7 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: StreamBuilder(
                   stream: Firestore.instance
-                      .collection("vehicleEntries")
+                      .collection(AppConstants.prod + "vehicleEntries")
                       .document(widget.documentId)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -324,7 +326,7 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                   timeRecords.add(Timestamp.fromDate(DateTime.now()));
                   print(timeRecords);
                   Firestore.instance
-                      .collection("vehicleEntries")
+                      .collection(AppConstants.prod + "vehicleEntries")
                       .document(widget.documentId)
                       .updateData({
                     'timeRecords': timeRecords,

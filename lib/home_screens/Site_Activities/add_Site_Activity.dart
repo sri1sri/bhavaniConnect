@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddSiteActivity extends StatefulWidget {
   final String currentUserId;
 
@@ -198,7 +200,8 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -267,7 +270,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("blocks")
+                                .collection(AppConstants.prod + "blocks")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -336,7 +339,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("category")
+                                .collection(AppConstants.prod + "category")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -405,7 +408,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("subCategory")
+                                .collection(AppConstants.prod + "subCategory")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -474,7 +477,7 @@ class _AddSiteActivity extends State<AddSiteActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("units")
+                                .collection(AppConstants.prod + "units")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -607,7 +610,8 @@ class _AddSiteActivity extends State<AddSiteActivity> {
 
                                       try {
                                         Firestore.instance
-                                            .collection('siteActivities')
+                                            .collection(AppConstants.prod +
+                                                'siteActivities')
                                             .document(documentId)
                                             .setData({
                                           'created_by': {

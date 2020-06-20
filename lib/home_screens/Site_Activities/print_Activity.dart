@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class PrintActivity extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -148,7 +150,8 @@ class _PrintActivity extends State<PrintActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -208,7 +211,7 @@ class _PrintActivity extends State<PrintActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("blocks")
+                                .collection(AppConstants.prod + "blocks")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -269,7 +272,7 @@ class _PrintActivity extends State<PrintActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("category")
+                                .collection(AppConstants.prod + "category")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -329,7 +332,7 @@ class _PrintActivity extends State<PrintActivity> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("subCategory")
+                                .collection(AppConstants.prod + "subCategory")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {

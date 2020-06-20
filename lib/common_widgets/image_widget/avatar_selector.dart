@@ -10,6 +10,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AvatarSelector extends StatefulWidget {
   final String userId;
   final bool isEditable;
@@ -54,7 +56,7 @@ class AvatarSelectorState extends State<AvatarSelector>
       });
 
     Firestore.instance
-        .collection('userData')
+        .collection(AppConstants.prod + 'userData')
         .document(userId)
         .get()
         .then((doc) {
@@ -256,7 +258,10 @@ class AvatarSelectorState extends State<AvatarSelector>
     var storageReference =
         FirebaseStorage.instance.ref().child('avatars').child(userId);
     var saveUrl = (url) async {
-      Firestore.instance.collection('userData').document(userId).updateData({
+      Firestore.instance
+          .collection(AppConstants.prod + 'userData')
+          .document(userId)
+          .updateData({
         'avatar': url,
       });
       var prefs = await SharedPreferences.getInstance();

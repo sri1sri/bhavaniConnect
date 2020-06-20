@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
@@ -183,7 +185,7 @@ class _MyAppState extends State<MyApp> {
       profileChangesSubscription?.cancel();
 
       profileChangesSubscription = Firestore.instance
-          .collection('userData')
+          .collection(AppConstants.prod + 'userData')
           .document(fireuser.uid)
           .snapshots()
           .listen((snapshot) {
@@ -247,7 +249,7 @@ class _MyAppState extends State<MyApp> {
       prefs.setString(
           "constructionSite", profile['construction_site']['constructionSite']);
       DocumentSnapshot siteDocument = await Firestore.instance
-          .collection('constructionSite')
+          .collection(AppConstants.prod + 'constructionSite')
           .document(profile['construction_site']['constructionId'])
           .get();
       LatLng location = GeoUtil.locationToPoint(siteDocument);
@@ -271,9 +273,9 @@ class _MyAppState extends State<MyApp> {
               GoodsScreen(currentUserId: authenticationState.user.uid),
           "/vehicle": (BuildContext context) =>
               new DaySelection(currentUserId: authenticationState.user.uid),
-          "/goodsApproval": (BuildContext context) =>
+          "/" + AppConstants.prod + "goodsApproval": (BuildContext context) =>
               new NotificationPage(currentUserId: authenticationState.user.uid),
-          "/vehicleEntries": (BuildContext context) =>
+          "/" + AppConstants.prod + "vehicleEntries": (BuildContext context) =>
               new NotificationPage(currentUserId: authenticationState.user.uid),
         },
         navigatorKey: navigatorKey);

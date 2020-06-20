@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'vehicle_details_trip.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class DaySelection extends StatefulWidget {
   final String currentUserId;
 
@@ -112,7 +114,7 @@ class _DaySelection extends State<DaySelection> {
           height: double.infinity,
           child: StreamBuilder(
               stream: Firestore.instance
-                  .collection("vehicleEntries")
+                  .collection(AppConstants.prod + "vehicleEntries")
                   .where("added_on", isGreaterThan: startFilterDate)
                   .where("added_on", isLessThan: endFilterDate)
                   .orderBy('added_on', descending: true)

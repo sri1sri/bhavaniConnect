@@ -12,6 +12,8 @@ import 'package:share_extend/share_extend.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class PrintPreviewLabour extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -46,7 +48,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
     // TODO: implement initState
     super.initState();
     Firestore.instance
-        .collection("labourReport")
+        .collection(AppConstants.prod + "labourReport")
         .where("construction_site.constructionId",
             isEqualTo: widget.constructionId)
         .where('labour_type', isEqualTo: widget.labourType)
@@ -150,7 +152,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                   scrollDirection: Axis.horizontal,
                   child: StreamBuilder(
                     stream: Firestore.instance
-                        .collection("labourReport")
+                        .collection(AppConstants.prod + "labourReport")
                         .where("construction_site.constructionId",
                             isEqualTo: widget.constructionId)
                         .where('labour_type', isEqualTo: widget.labourType)
@@ -337,7 +339,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
 
   Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
-        .collection("labourReport")
+        .collection(AppConstants.prod + "labourReport")
         .where("construction_site.constructionId",
             isEqualTo: widget.constructionId)
         .where("block.blockId", isEqualTo: widget.blockId)

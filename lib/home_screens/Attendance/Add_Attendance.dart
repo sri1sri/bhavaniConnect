@@ -13,6 +13,8 @@ import 'package:latlong/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddAttendance extends StatefulWidget {
   final String currentUserId;
   final String documentId;
@@ -128,7 +130,7 @@ class _AddAttendance extends State<AddAttendance> {
         child: Container(
           child: StreamBuilder(
             stream: Firestore.instance
-                .collection('attendance')
+                .collection(AppConstants.prod + 'attendance')
                 .document(documentId)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -423,7 +425,8 @@ class _AddAttendance extends State<AddAttendance> {
                                                   try {
                                                     await Firestore.instance
                                                         .collection(
-                                                            'attendance')
+                                                            AppConstants.prod +
+                                                                'attendance')
                                                         .document(documentId)
                                                         .setData({
                                                       'created_by': {
@@ -461,7 +464,8 @@ class _AddAttendance extends State<AddAttendance> {
                                                   try {
                                                     await Firestore.instance
                                                         .collection(
-                                                            'attendance')
+                                                            AppConstants.prod +
+                                                                'attendance')
                                                         .document(documentId)
                                                         .updateData({
                                                       'punch_out': FieldValue

@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 // import 'package:spring_button/spring_button.dart';
 import 'package:vector_math/vector_math.dart' as math;
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddVehicleDetails extends StatefulWidget {
   final String currentUserId;
   final String documentId;
@@ -53,7 +55,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
     bool showEndBtn = false;
     return StreamBuilder(
       stream: Firestore.instance
-          .collection('vehicleEntries')
+          .collection(AppConstants.prod + 'vehicleEntries')
           .document(widget.documentId)
           .snapshots(),
       builder: (context, snapshot) {

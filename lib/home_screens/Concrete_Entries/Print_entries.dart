@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class PrintEntries extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -145,7 +147,8 @@ class _PrintEntries extends State<PrintEntries> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -205,7 +208,7 @@ class _PrintEntries extends State<PrintEntries> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("blocks")
+                                .collection(AppConstants.prod + "blocks")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -266,7 +269,7 @@ class _PrintEntries extends State<PrintEntries> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("concreteType")
+                                .collection(AppConstants.prod + "concreteType")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {

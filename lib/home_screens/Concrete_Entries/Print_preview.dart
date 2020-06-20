@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class PrintPreviewConcrete extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -42,7 +44,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
   void initState() {
     super.initState();
     Firestore.instance
-        .collection("concreteEntries")
+        .collection(AppConstants.prod + "concreteEntries")
         .where("construction_site.constructionId",
             isEqualTo: widget.constructionId)
         .where('concrete_type.concreteTypeId', isEqualTo: widget.concreteTypeId)
@@ -99,7 +101,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
           child: SingleChildScrollView(
             child: StreamBuilder(
                 stream: Firestore.instance
-                    .collection("concreteEntries")
+                    .collection(AppConstants.prod + "concreteEntries")
                     .where("construction_site.constructionId",
                         isEqualTo: widget.constructionId)
                     .where('concrete_type.concreteTypeId',
@@ -314,7 +316,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
 
   Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
-        .collection("concreteEntries")
+        .collection(AppConstants.prod + "concreteEntries")
         .where("construction_site.constructionId",
             isEqualTo: widget.constructionId)
         .where('concrete_type.concreteTypeId', isEqualTo: widget.concreteTypeId)

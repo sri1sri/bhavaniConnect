@@ -11,6 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class EntryDescription extends StatefulWidget {
   final String currentUserId;
   final String documentId;
@@ -83,7 +85,7 @@ class _EntryDescription extends State<EntryDescription> {
               color: Colors.white,
               child: StreamBuilder(
                 stream: Firestore.instance
-                    .collection("concreteEntries")
+                    .collection(AppConstants.prod + "concreteEntries")
                     .orderBy('added_on', descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -133,7 +135,8 @@ class _EntryDescription extends State<EntryDescription> {
                                   scrollDirection: Axis.horizontal,
                                   child: StreamBuilder(
                                       stream: Firestore.instance
-                                          .collection("activityProgress")
+                                          .collection(AppConstants.prod +
+                                              "activityProgress")
                                           .document(widget.documentId)
                                           .collection(widget.documentId)
                                           // .orderBy('added_on',
@@ -338,7 +341,7 @@ class _EntryDescription extends State<EntryDescription> {
                             AddProgressRemarks(
                               currentUserId: widget.currentUserId,
                               documentId: widget.documentId,
-                              tableName: "concreteEntries",
+                              tableName: AppConstants.prod + "concreteEntries",
                             ));
                       },
                       child: Container(

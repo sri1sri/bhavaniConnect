@@ -14,6 +14,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class ShowAllInvoice extends StatefulWidget {
   final String currentUserId;
 
@@ -41,7 +43,7 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
     getUserRoles();
 
     Firestore.instance
-        .collection("stockRegister")
+        .collection(AppConstants.prod + "stockRegister")
         .where("construction_site.constructionId",
             isEqualTo: constructionSiteId)
         .where("category.categoryId", isEqualTo: categoryId)
@@ -138,7 +140,7 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
           color: Colors.white,
           child: StreamBuilder(
               stream: Firestore.instance
-                  .collection("stockRegister")
+                  .collection(AppConstants.prod + "stockRegister")
                   .where("construction_site.constructionId",
                       isEqualTo: constructionSiteId)
                   .where("category.categoryId", isEqualTo: categoryId)

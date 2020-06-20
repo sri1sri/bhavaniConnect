@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class VehicleFilter extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -145,7 +147,7 @@ class _VehicleFilter extends State<VehicleFilter> {
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
-                                    .collection("dealer")
+                                    .collection(AppConstants.prod + "dealer")
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -214,7 +216,8 @@ class _VehicleFilter extends State<VehicleFilter> {
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
-                                    .collection("constructionSite")
+                                    .collection(
+                                        AppConstants.prod + "constructionSite")
                                     .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {

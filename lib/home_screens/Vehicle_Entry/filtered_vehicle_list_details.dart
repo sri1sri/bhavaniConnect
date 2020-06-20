@@ -12,6 +12,8 @@ import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class VehicleDataList extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
@@ -108,7 +110,7 @@ class _VehicleDataList extends State<VehicleDataList> {
                 scrollDirection: Axis.horizontal,
                 child: StreamBuilder(
                   stream: Firestore.instance
-                      .collection("vehicleEntries")
+                      .collection(AppConstants.prod + "vehicleEntries")
                       .where("construction_site.constructionId",
                           isEqualTo: widget.selectedConstructionId)
                       .where('dealer.dealerId',
@@ -611,7 +613,7 @@ class _VehicleDataList extends State<VehicleDataList> {
 
   Future<void> _generateCSVAndView(context) async {
     QuerySnapshot data = await Firestore.instance
-        .collection("vehicleEntries")
+        .collection(AppConstants.prod + "vehicleEntries")
         .where("construction_site.constructionId",
             isEqualTo: widget.selectedConstructionId)
         .where("dealer.dealerId", isEqualTo: widget.selectedDealerId)

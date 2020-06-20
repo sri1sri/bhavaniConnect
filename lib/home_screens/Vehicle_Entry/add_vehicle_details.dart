@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddVehicle extends StatefulWidget {
   final String currentUserId;
 
@@ -120,7 +122,7 @@ class _AddVehicle extends State<AddVehicle> {
       String vehicleDocumentId, constructionSite, constructionId) async {
     List permissionBy = [];
     QuerySnapshot querySnapshot = await Firestore.instance
-        .collection("userData")
+        .collection(AppConstants.prod + "userData")
         .where("construction_site.constructionId", isEqualTo: constructionId)
         .where("role",
             whereIn: ["Supervisor", "Store Manager", "Manager"]).getDocuments();
@@ -143,7 +145,7 @@ class _AddVehicle extends State<AddVehicle> {
     // print("-------------$permissionDocUserRole---------------");
 
     await Firestore.instance
-        .collection('pendingRequests')
+        .collection(AppConstants.prod + 'pendingRequests')
         .document(vehicleDocumentId)
         .setData({
       'collectionDocId': vehicleDocumentId,
@@ -155,7 +157,7 @@ class _AddVehicle extends State<AddVehicle> {
       'permissions': permissionDocId,
       'permission_by': permissionBy,
       "added_on": FieldValue.serverTimestamp(),
-      'collectionName': "vehicleEntries"
+      'collectionName': AppConstants.prod + "vehicleEntries"
     });
     Navigator.of(context).pop();
   }
@@ -423,7 +425,8 @@ class _AddVehicle extends State<AddVehicle> {
                         ),
                         StreamBuilder(
                           stream: Firestore.instance
-                              .collection("constructionSite")
+                              .collection(
+                                  AppConstants.prod + "constructionSite")
                               .snapshots(),
                           builder:
                               (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -489,7 +492,7 @@ class _AddVehicle extends State<AddVehicle> {
                         ),
                         StreamBuilder(
                           stream: Firestore.instance
-                              .collection("dealer")
+                              .collection(AppConstants.prod + "dealer")
                               .snapshots(),
                           builder:
                               (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -629,7 +632,7 @@ class _AddVehicle extends State<AddVehicle> {
                         ),
                         StreamBuilder(
                           stream: Firestore.instance
-                              .collection("units")
+                              .collection(AppConstants.prod + "units")
                               .snapshots(),
                           builder:
                               (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -746,7 +749,8 @@ class _AddVehicle extends State<AddVehicle> {
                                         "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                     try {
                                       await Firestore.instance
-                                          .collection('vehicleEntries')
+                                          .collection(AppConstants.prod +
+                                              'vehicleEntries')
                                           .document(documentId)
                                           .setData({
                                         'created_by': {

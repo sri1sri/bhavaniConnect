@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 class AddProgressRemarks extends StatefulWidget {
   final String currentUserId;
@@ -221,7 +222,7 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                       int totalProgress = 0;
                                       try {
                                         Firestore.instance
-                                            .collection(
+                                            .collection(AppConstants.prod +
                                                 'activityProgress/${widget.documentId}/${widget.documentId}')
                                             .document(documentId)
                                             .setData({
@@ -239,7 +240,7 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                         }).then((value) async {
                                           QuerySnapshot result = await Firestore
                                               .instance
-                                              .collection(
+                                              .collection(AppConstants.prod +
                                                   'activityProgress/${widget.documentId}/${widget.documentId}')
                                               .getDocuments();
 

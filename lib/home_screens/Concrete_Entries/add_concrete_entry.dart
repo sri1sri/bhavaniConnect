@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 class AddConcreteEntry extends StatefulWidget {
   final String currentUserId;
@@ -193,7 +194,8 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -262,7 +264,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("blocks")
+                                .collection(AppConstants.prod + "blocks")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -331,7 +333,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("concreteType")
+                                .collection(AppConstants.prod + "concreteType")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -458,7 +460,8 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                                           "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                       try {
                                         await Firestore.instance
-                                            .collection('concreteEntries')
+                                            .collection(AppConstants.prod +
+                                                'concreteEntries')
                                             .document(documentId)
                                             .setData({
                                           'created_by': {

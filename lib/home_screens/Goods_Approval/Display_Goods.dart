@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 import 'Add_Goods.dart';
 
 class GoodsScreen extends StatefulWidget {
@@ -136,7 +138,7 @@ class _GoodsScreen extends State<GoodsScreen> {
           height: double.infinity,
           child: StreamBuilder(
               stream: Firestore.instance
-                  .collection("goodsApproval")
+                  .collection(AppConstants.prod + "goodsApproval")
                   .where("added_on", isGreaterThan: startFilterDate)
                   .where("added_on", isLessThan: endFilterDate)
                   .orderBy('added_on', descending: true)

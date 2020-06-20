@@ -10,6 +10,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class AddInvoice extends StatefulWidget {
   final String currentUserId;
 
@@ -217,7 +219,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("constructionSite")
+                                .collection(
+                                    AppConstants.prod + "constructionSite")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -286,7 +289,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("items")
+                                .collection(AppConstants.prod + "items")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -354,7 +357,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("category")
+                                .collection(AppConstants.prod + "category")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -423,7 +426,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("units")
+                                .collection(AppConstants.prod + "units")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -491,7 +494,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection("dealer")
+                                .collection(AppConstants.prod + "dealer")
                                 .snapshots(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -899,7 +902,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                                           "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                       try {
                                         await Firestore.instance
-                                            .collection('stockRegister')
+                                            .collection(AppConstants.prod +
+                                                'stockRegister')
                                             .document(documentId)
                                             .setData({
                                           'created_by': {

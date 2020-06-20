@@ -1,4 +1,5 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
@@ -35,13 +36,13 @@ class _StockScreen extends State<StockScreen> {
     "images/s7.png",
   ];
   List<String> F_collection = [
-    "items",
-    "category",
-    "subCategory",
-    "dealer",
-    "role",
-    "constructionSite",
-    "units",
+    AppConstants.prod + "items",
+    AppConstants.prod + "category",
+    AppConstants.prod + "subCategory",
+    AppConstants.prod + "dealer",
+    AppConstants.prod + "role",
+    AppConstants.prod + "constructionSite",
+    AppConstants.prod + "units",
   ];
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,8 @@ import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class SearchEmployeeAttendance extends StatefulWidget {
   final Function(String userId, int month) employeeSearch;
 
@@ -82,8 +84,9 @@ class _SearchEmployeeAttendance extends State<SearchEmployeeAttendance> {
                     height: 20,
                   ),
                   StreamBuilder(
-                    stream:
-                        Firestore.instance.collection("userData").snapshots(),
+                    stream: Firestore.instance
+                        .collection(AppConstants.prod + "userData")
+                        .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());

@@ -16,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Print_Reports.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class LabourEntries extends StatefulWidget {
   final String currentUserId;
 
@@ -110,7 +112,7 @@ class _LabourEntries extends State<LabourEntries> {
                 color: Colors.white,
                 child: StreamBuilder(
                     stream: Firestore.instance
-                        .collection("labourReport")
+                        .collection(AppConstants.prod + "labourReport")
                         .where("added_on", isGreaterThan: startFilterDate)
                         .where("added_on", isLessThan: endFilterDate)
                         .orderBy('added_on', descending: true)

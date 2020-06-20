@@ -15,6 +15,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:bhavaniconnect/common_variables/app_constants.dart';
+
 class SiteActivities extends StatefulWidget {
   final String currentUserId;
 
@@ -158,7 +160,7 @@ class _SiteActivities extends State<SiteActivities> {
                               //               print('construction');
                               //               print(selectedConstructionId);
                               //               Firestore.instance
-                              //                   .collection("siteActivities")
+                              //                   .collection(AppConstants.prod + "siteActivities")
                               //                   .where(
                               //                       "construction_site.constructionId",
                               //                       isEqualTo:
@@ -216,7 +218,7 @@ class _SiteActivities extends State<SiteActivities> {
                 color: Colors.white,
                 child: StreamBuilder(
                     stream: Firestore.instance
-                        .collection("siteActivities")
+                        .collection(AppConstants.prod + "siteActivities")
                         .where("construction_site.constructionId",
                             isEqualTo: selectedConstructionId)
                         .where('block.blockId', isEqualTo: selectedBlockId)
