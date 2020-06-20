@@ -15,5 +15,5 @@ Map<String, UserRoles> userRoleValues = {
   "Supervisor": UserRoles.Supervisor,
   "Security": UserRoles.Securtiy,
   "Accountant": UserRoles.Accountant,
-  "SiteEngineer": UserRoles.SiteEngineer
+  "Site Engineer": UserRoles.SiteEngineer
 };
