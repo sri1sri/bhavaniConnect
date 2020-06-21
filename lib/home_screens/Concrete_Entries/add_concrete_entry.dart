@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -126,7 +127,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
             Navigator.pop(context, true);
           },
           rightActionBar: Container(
-            width: 10,
+            width: getDynamicWidth(20),
           ),
           rightAction: () {
             print('right action bar is pressed in appbar');
@@ -149,7 +150,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -161,7 +162,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           GestureDetector(
                             onTap: () => showPickerFrom(context),
@@ -174,7 +175,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                                     color: backgroundColor,
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: getDynamicWidth(10),
                                   ),
                                   Text('${customFormat2.format(selectedDate)}',
                                       style: highlightDescription),
@@ -183,14 +184,14 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Construction Site",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -253,14 +254,14 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Block",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -322,14 +323,14 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Concrete Type",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -392,14 +393,14 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Remarks",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _remarkController,
@@ -430,20 +431,20 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 55,
-                          width: 180,
+                          height: getDynamicHeight(55),
+                          width:getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: visible
                                 ? () async {
@@ -542,7 +543,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: getDynamicHeight(50),
                     ),
                   ],
                 ),

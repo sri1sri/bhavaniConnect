@@ -74,6 +74,7 @@ dependencies:
   share_extend: ^1.1.5
   flutter_svg:
   flutter_local_notifications: ^1.4.4+1
+  flare_flutter: 2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -149,7 +150,7 @@ flutter:
     - images/generic_user.png
     - images/transparent.png
     - images/profile-uploading.png
-
+    - images/no internet.flr
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

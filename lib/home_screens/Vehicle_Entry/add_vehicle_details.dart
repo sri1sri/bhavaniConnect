@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -257,7 +258,7 @@ class _AddVehicle extends State<AddVehicle> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(
-                    height: 30,
+                    height: getDynamicHeight(30),
                   ),
                   // Padding(
                   //   padding: const EdgeInsets.all(10.0),
@@ -421,7 +422,7 @@ class _AddVehicle extends State<AddVehicle> {
                           style: titleStyle,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: getDynamicHeight(10),
                         ),
                         StreamBuilder(
                           stream: Firestore.instance
@@ -481,14 +482,14 @@ class _AddVehicle extends State<AddVehicle> {
                           },
                         ),
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                         Text(
                           "Dealer Name",
                           style: titleStyle,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: getDynamicHeight(10),
                         ),
                         StreamBuilder(
                           stream: Firestore.instance
@@ -546,14 +547,14 @@ class _AddVehicle extends State<AddVehicle> {
                           },
                         ),
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                         Text(
                           "Vehicle Number ",
                           style: titleStyle,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: getDynamicHeight(10),
                         ),
                         TextFormField(
                           controller: _vehicleNumberController,
@@ -584,14 +585,14 @@ class _AddVehicle extends State<AddVehicle> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                         Text(
                           "Units per Trip",
                           style: titleStyle,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: getDynamicHeight(10),
                         ),
                         TextFormField(
                           controller: _unitController,
@@ -621,14 +622,14 @@ class _AddVehicle extends State<AddVehicle> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                         Text(
                           "Units",
                           style: titleStyle,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: getDynamicHeight(10),
                         ),
                         StreamBuilder(
                           stream: Firestore.instance
@@ -685,14 +686,14 @@ class _AddVehicle extends State<AddVehicle> {
                           },
                         ),
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                         Text(
                           "Vehicle Type",
                           style: titleStyle,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: getDynamicHeight(10),
                         ),
                         DropdownSearch(
                           showSelectedItem: true,
@@ -719,20 +720,20 @@ class _AddVehicle extends State<AddVehicle> {
                               : null,
                         ),
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        height: 55,
-                        width: 180,
+                        height: getDynamicHeight(55),
+                        width: getDynamicHeight(180),
                         child: GestureDetector(
                           onTap: visible
                               ? () async {
@@ -859,7 +860,7 @@ class _AddVehicle extends State<AddVehicle> {
                     ],
                   ),
                   SizedBox(
-                    height: 300,
+                    height: 400,
                   ),
                 ],
               ),

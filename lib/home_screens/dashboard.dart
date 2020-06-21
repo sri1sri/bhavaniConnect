@@ -76,7 +76,7 @@ class _Dashboard extends State<Dashboard> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(71),
+        preferredSize: Size.fromHeight(70),
         child: CustomAppBarDark(
           primaryText: 'Home',
           tabBarWidget: null,

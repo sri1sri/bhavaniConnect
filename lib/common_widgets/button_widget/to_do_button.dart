@@ -1,3 +1,4 @@
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'custom_raised_button.dart';
@@ -23,7 +24,7 @@ class ToDoButton extends CustomRaisedButton {
                   ? Text(
                       text,
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: getDynamicTextSize(18),
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Quicksand'),
                     )

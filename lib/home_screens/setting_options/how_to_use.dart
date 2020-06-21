@@ -80,22 +80,7 @@ class _F_HowToUseState extends State<F_HowToUse> {
                     _Notificationcard("STEP 1"," Login to app using your phone number"),
                     SizedBox(height: 10,),
                     _Notificationcard("STEP 2","Open the app Open the app Open the app Open the app Open the app Open the app Open the app Open the app Open the app Open the app Open the app Open the app"),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 3","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 4","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 5","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 6","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 7","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 8","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 9","Open the app "),
-                    SizedBox(height: 10,),
-                    _Notificationcard("STEP 10","Open the app "),
+
 
                   ],
                 ),
@@ -123,7 +108,7 @@ class _F_HowToUseState extends State<F_HowToUse> {
                     style: titleStyle,
 
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: getDynamicHeight(15),),
                   Text(description,
                     style: descriptionStyle,)
                 ],

@@ -100,7 +100,7 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -171,7 +171,7 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
                                               onSelectAll: (b) {},
                                               sortAscending: true,
                                               showCheckboxColumn: false,
-                                              dataRowHeight: 70.0,
+                                              dataRowHeight: getDynamicHeight(70),
                                               columns: <DataColumn>[
                                                 DataColumn(
                                                     label: Text(
@@ -325,7 +325,7 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
                             ),
                           ),
                           SizedBox(
-                            height: 550,
+                            height: getDynamicHeight(550),
                           ),
                         ]));
                   }
@@ -357,8 +357,8 @@ class _ActivityDetailDescription extends State<ActivityDetailDescription> {
                           borderRadius: BorderRadius.circular(5),
                           color: backgroundColor,
                         ),
-                        height: 40,
-                        width: 90,
+                        height: getDynamicHeight(40),
+                        width: getDynamicWidth(90),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

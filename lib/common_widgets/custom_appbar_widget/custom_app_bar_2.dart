@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBarDark extends StatelessWidget {
@@ -31,7 +32,7 @@ class CustomAppBarDark extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 15,
+            height: getDynamicHeight(20),
           ),
           Container(
             child: Row(

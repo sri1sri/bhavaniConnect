@@ -149,7 +149,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 50,
+                    height: getDynamicHeight(50.0)
                   ),
                 ],
               ),
@@ -161,7 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20.0)
                   ),
                   Text(
                     'To create an Account enter your name and date of birth.',
@@ -171,14 +171,14 @@ class _SignUpPageState extends State<SignUpPage> {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: getDynamicHeight(20.0),
               ),
               Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
                     AvatarSelector(widget.user.uid, true),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: getDynamicHeight(20.0)),
                     new TextFormField(
                       controller: _usernameController,
                       textInputAction: TextInputAction.done,
@@ -211,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: getDynamicHeight(30.0),
                     ),
                     StreamBuilder(
                       stream: Firestore.instance
@@ -252,7 +252,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       },
                     ),
                     SizedBox(
-                      height: 30,
+                      height: getDynamicHeight(30.0),
                     ),
                     StreamBuilder(
                       stream: Firestore.instance
@@ -327,7 +327,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       },
                     ),
                     SizedBox(
-                      height: 30,
+                      height: getDynamicHeight(30.0),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 0, bottom: 10),
@@ -335,7 +335,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: RaisedButton(
                           color: Colors.white,
                           child: Container(
-                            height: 60,
+                            height: getDynamicHeight(60.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
@@ -357,7 +357,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             color: backgroundColor,
                                           ),
                                           SizedBox(
-                                            width: 10,
+                                            width: getDynamicWidth(10),
                                           ),
                                           Text(
                                               '${customFormat2.format(selectedDate ?? initialDate)}',
@@ -369,7 +369,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   ],
                                 ),
                                 SizedBox(
-                                  width: 10,
+                                  width: getDynamicWidth(10),
                                 ),
                               ],
                             ),
@@ -393,11 +393,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 5.0),
+                    SizedBox(height: getDynamicHeight(5)),
                     Row(
                       children: <Widget>[
                         SizedBox(
-                          width: 10,
+                          width: getDynamicWidth(10),
                         ),
                         Text(
                           "Gender",
@@ -433,7 +433,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 25.0),
+                    SizedBox(height: getDynamicHeight(25)),
                     ToDoButton(
                       assetName: '',
                       text: 'Register',
@@ -506,14 +506,14 @@ class _SignUpPageState extends State<SignUpPage> {
                             },
                       //onPressed: model.canSubmit ? () => _imageUpload() : null,
                     ),
-                    SizedBox(height: 10.0),
+                    SizedBox(height: getDynamicHeight(10)),
                     visible
                         ? Container()
                         : CircularProgressIndicator(
                             valueColor:
                                 new AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
-                    SizedBox(height: 50.0),
+                    SizedBox(height: getDynamicHeight(50)),
                   ],
                 ),
               ),

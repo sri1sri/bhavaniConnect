@@ -1,3 +1,3 @@
 class AppConstants {
-  static const prod = "prod_";
+  static const prod = "";
 }

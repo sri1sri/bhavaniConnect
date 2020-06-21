@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -149,7 +150,7 @@ class _AddGoods extends State<AddGoods> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -161,7 +162,7 @@ class _AddGoods extends State<AddGoods> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           // DropdownSearch(
                           //     showSelectedItem: true,
@@ -238,14 +239,14 @@ class _AddGoods extends State<AddGoods> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Category",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -308,14 +309,14 @@ class _AddGoods extends State<AddGoods> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Dealer Name",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -377,20 +378,20 @@ class _AddGoods extends State<AddGoods> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 55,
-                          width: 180,
+                          height: getDynamicHeight(55),
+                          width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: visible
                                 ? () async {
@@ -514,7 +515,7 @@ class _AddGoods extends State<AddGoods> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: getDynamicHeight(50),
                     ),
                   ],
                 ),

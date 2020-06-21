@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -174,7 +175,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(15),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -186,7 +187,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           GestureDetector(
                             onTap: () => showPickerFrom(context),
@@ -199,7 +200,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                                     color: backgroundColor,
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: getDynamicWidth(10),
                                   ),
                                   Text('${customFormat2.format(selectedDate)}',
                                       style: highlightDescription),
@@ -208,14 +209,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Construction Site",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -278,14 +279,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Item Description",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -346,14 +347,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Category",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -415,14 +416,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Uom",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -483,14 +484,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Dealer Name",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -552,14 +553,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Invoice No.",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _invoiceDateController,
@@ -586,14 +587,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Received Quantity",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _receivedQuantityController,
@@ -620,14 +621,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Issued Quantity",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _issuedQuantityController,
@@ -654,14 +655,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Balance Quantity",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _balanceQuantityController,
@@ -688,14 +689,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Rate",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _rateController,
@@ -722,14 +723,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Sub Total",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _subTotalController,
@@ -756,14 +757,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "GST Amount",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _gstAmountController,
@@ -794,14 +795,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Total Amount (Including GST)",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _totalPriceController,
@@ -832,14 +833,14 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Remarks",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _remarkController,
@@ -870,20 +871,20 @@ class _AddInvoiceState extends State<AddInvoice> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 55,
-                          width: 180,
+                          height: getDynamicHeight(55),
+                          width: getDynamicHeight(180),
                           child: GestureDetector(
                             onTap: visible
                                 ? () async {
@@ -1003,7 +1004,7 @@ class _AddInvoiceState extends State<AddInvoice> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: getDynamicHeight(50),
                     ),
                   ],
                 ),

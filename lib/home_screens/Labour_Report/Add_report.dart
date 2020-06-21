@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -130,7 +131,7 @@ class _AddLabourReport extends State<AddLabourReport> {
             Navigator.pop(context, true);
           },
           rightActionBar: Container(
-            width: 10,
+            width: getDynamicWidth(10),
           ),
           rightAction: () {
             print('right action bar is pressed in appbar');
@@ -153,7 +154,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(10),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -165,7 +166,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           GestureDetector(
                             onTap: () => showPickerFrom(context),
@@ -178,7 +179,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                                     color: backgroundColor,
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: getDynamicWidth(10),
                                   ),
                                   Text('${customFormat2.format(selectedDate)}',
                                       style: highlightDescription),
@@ -187,14 +188,14 @@ class _AddLabourReport extends State<AddLabourReport> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Labour Type",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           DropdownSearch(
                               showSelectedItem: true,
@@ -220,14 +221,14 @@ class _AddLabourReport extends State<AddLabourReport> {
                               },
                               showSearchBox: true),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Construction Site",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -290,14 +291,14 @@ class _AddLabourReport extends State<AddLabourReport> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Block",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -359,14 +360,14 @@ class _AddLabourReport extends State<AddLabourReport> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Dealer Name",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -428,14 +429,14 @@ class _AddLabourReport extends State<AddLabourReport> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "No. of People",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _noofPeopleController,
@@ -466,14 +467,14 @@ class _AddLabourReport extends State<AddLabourReport> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Purpose",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           TextFormField(
                             controller: _purposeController,
@@ -504,20 +505,20 @@ class _AddLabourReport extends State<AddLabourReport> {
                             ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 55,
-                          width: 180,
+                          height: getDynamicHeight(55),
+                          width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: visible
                                 ? () async {
@@ -617,7 +618,7 @@ class _AddLabourReport extends State<AddLabourReport> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: getDynamicHeight(50),
                     ),
                   ],
                 ),

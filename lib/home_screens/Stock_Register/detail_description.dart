@@ -74,7 +74,7 @@ class _DetailDescription extends State<DetailDescription> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     StreamBuilder(
                         stream: Firestore.instance
@@ -165,7 +165,7 @@ class _DetailDescription extends State<DetailDescription> {
                           }
                         }),
                     SizedBox(
-                      height: 150,
+                      height: getDynamicHeight(150),
                     ),
                   ]))),
         ));

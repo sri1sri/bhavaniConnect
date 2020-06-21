@@ -74,6 +74,11 @@ class _StockScreen extends State<StockScreen> {
           leftAction: () {
             Navigator.pop(context, true);
           },
+          rightActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: backgroundColor,
+          ),
           primaryText: 'Catalog',
           tabBarWidget: null,
         ),
@@ -83,76 +88,73 @@ class _StockScreen extends State<StockScreen> {
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
+          height: double.infinity,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
+
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
-                    height: 600,
-                    child: Expanded(
-                      child: GridView.builder(
-                        itemCount: Stock.length,
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.7,
-                          mainAxisSpacing: 2.0,
-                          crossAxisSpacing: 2.0,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return new GestureDetector(
-                            child: new Card(
-                              elevation: 0.0,
-                              child: new Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                                alignment: Alignment.center,
-                                margin: new EdgeInsets.only(
-                                    top: 5.0,
-                                    bottom: 5.0,
-                                    left: 5.0,
-                                    right: 5.0),
-                                child: new Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Image.asset(
-                                      F_image[index],
-                                      height: 60,
-                                    ),
-                                    new Text(
-                                      Stock[index],
-                                      style: subTitleStyle,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
+                    height: MediaQuery.of(context).size.height / 1.2,
+                    child: GridView.builder(
+                      itemCount: Stock.length,
+                      gridDelegate:
+                      new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 0.7,
+                        mainAxisSpacing: 2.0,
+                        crossAxisSpacing: 2.0,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return new GestureDetector(
+                          child: new Card(
+                            elevation: 0.0,
+                            child: new Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.grey.withOpacity(0.2),
+                              ),
+                              alignment: Alignment.center,
+                              margin: new EdgeInsets.only(
+                                  top: 5.0,
+                                  bottom: 5.0,
+                                  left: 5.0,
+                                  right: 5.0),
+                              child: new Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Image.asset(
+                                    F_image[index],
+                                    height: getDynamicHeight(60),
+                                  ),
+                                  new Text(
+                                    Stock[index],
+                                    style: subTitleStyle,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             ),
-                            onTap: () {
-                              GoToPage(
-                                  context,
-                                  AddStockScreen(
-                                    title: Stock[index],
-                                    collectionName: F_collection[index],
-                                  ));
-                            },
-                          );
-                        },
-                      ),
+                          ),
+                          onTap: () {
+                            GoToPage(
+                                context,
+                                AddStockScreen(
+                                  title: Stock[index],
+                                  collectionName: F_collection[index],
+                                ));
+                          },
+                        );
+                      },
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 500,
+                  height: getDynamicHeight(500),
                 )
               ],
             ),

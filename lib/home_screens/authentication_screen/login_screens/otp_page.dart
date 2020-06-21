@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/button_widget/to_do_button.dart';
 import 'package:bhavaniconnect/common_variables/firebase_components.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -115,7 +116,7 @@ class _OTPPageState extends State<OTPPage> {
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 10,
+              height: getDynamicHeight(10.0)
             ),
             Text(
               'Enter OTP sent to +91 ${this.phoneNo}.',
@@ -165,7 +166,7 @@ class _OTPPageState extends State<OTPPage> {
                 fontFamily: "Poppins",
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: getDynamicHeight(20.0)),
             ToDoButton(
               assetName: 'images/google-lodgo.png',
               text: 'Verify',
@@ -179,7 +180,7 @@ class _OTPPageState extends State<OTPPage> {
               },
               //onPressed: model.canSubmit ? () => _submit() : null,
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: getDynamicHeight(10.0)),
             ToDoButton(
               assetName: 'images/google-lodgo.png',
               text: 'Edit phone number',
@@ -203,7 +204,7 @@ class _OTPPageState extends State<OTPPage> {
           return new AlertDialog(
             title: Text('Enter SMS Code'),
             content: Container(
-              height: 85,
+              height: getDynamicHeight(85.0),
               child: Column(children: [
                 TextField(
                   onChanged: (value) {

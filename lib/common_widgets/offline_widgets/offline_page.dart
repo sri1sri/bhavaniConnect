@@ -1,4 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 
 class OfflinePage extends CustomOfflinePage {
@@ -23,15 +25,13 @@ class CustomOfflinePage extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: <Widget>[
-            Image(
-              image: AssetImage(
-                'images/no_internet.png',
-              ),
-              height: 300.0,
-              width: 300.0,
+            SizedBox(
+              width: getDynamicWidth(350.0),
+              height: getDynamicHeight(450.0),
+              child: FlareActor("images/no internet.flr", alignment:Alignment.center, fit:BoxFit.contain, animation:'no_netwrok'),
             ),
             SizedBox(
-              height: 30.0,
+              height: getDynamicHeight(30),
             ),
             Text(
               text ?? 'No Internet connection.\nPlease check connection!!!',

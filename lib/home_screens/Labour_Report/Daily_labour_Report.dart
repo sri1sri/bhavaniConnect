@@ -270,7 +270,7 @@ Widget LabourEntry(
       padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
-        height: 210,
+        height: getDynamicHeight(210),
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -285,10 +285,10 @@ Widget LabourEntry(
               child: Container(
                 padding: EdgeInsets.only(
                   left: 24,
-                  top: 24,
+                  top: 14,
                   right: size.width * .35,
                 ),
-                height: 185,
+                height: getDynamicHeight(185),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -298,21 +298,21 @@ Widget LabourEntry(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Text(
                       "Block: $block",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Expanded(
                       child: Text(labourType,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: subTitleStyleDark1),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Text(dealerName, style: subTitleStyle),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                   ],
                 ),
               ),

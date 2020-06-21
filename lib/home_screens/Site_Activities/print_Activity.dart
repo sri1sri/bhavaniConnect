@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Site_Activities/print_preview.dart';
@@ -134,7 +135,7 @@ class _PrintActivity extends State<PrintActivity> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -146,7 +147,7 @@ class _PrintActivity extends State<PrintActivity> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -200,14 +201,14 @@ class _PrintActivity extends State<PrintActivity> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Block",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -261,14 +262,14 @@ class _PrintActivity extends State<PrintActivity> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Category",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -321,14 +322,14 @@ class _PrintActivity extends State<PrintActivity> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Sub Category",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -381,7 +382,7 @@ class _PrintActivity extends State<PrintActivity> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -397,7 +398,7 @@ class _PrintActivity extends State<PrintActivity> {
                                       style: titleStyle,
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: getDynamicHeight(15),
                                     ),
                                     GestureDetector(
                                       onTap: () => showPickerFrom(context),
@@ -410,7 +411,7 @@ class _PrintActivity extends State<PrintActivity> {
                                               color: backgroundColor,
                                             ),
                                             SizedBox(
-                                              width: 10,
+                                              width: getDynamicHeight(10),
                                             ),
                                             Text(
                                                 '${customFormat2.format(selectedDateFrom)}',
@@ -433,7 +434,7 @@ class _PrintActivity extends State<PrintActivity> {
                                       style: titleStyle,
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: getDynamicHeight(15),
                                     ),
                                     GestureDetector(
                                       onTap: () => showPickerTo(context),
@@ -446,7 +447,7 @@ class _PrintActivity extends State<PrintActivity> {
                                               color: backgroundColor,
                                             ),
                                             SizedBox(
-                                              width: 10,
+                                              width: getDynamicHeight(10),
                                             ),
                                             Text(
                                                 '${customFormat2.format(selectedDateTo)}',
@@ -464,14 +465,14 @@ class _PrintActivity extends State<PrintActivity> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 55,
-                          width: 180,
+                          height: getDynamicHeight(55),
+                          width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -514,7 +515,7 @@ class _PrintActivity extends State<PrintActivity> {
                       ],
                     ),
                     SizedBox(
-                      height: 300,
+                      height: getDynamicHeight(300),
                     ),
                   ],
                 ),

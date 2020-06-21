@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -110,7 +111,7 @@ class _PrintPreview extends State<PrintPreview> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: getDynamicHeight(20),
                 ),
                 Column(
                   children: [
@@ -119,14 +120,14 @@ class _PrintPreview extends State<PrintPreview> {
                       style: subTitleStyleDark1,
                     ),
                     SizedBox(
-                      height: 5,
+                      height: getDynamicHeight(5),
                     ),
                     Text(
                       "${widget.constructionSite ?? 'All'} (${widget.blockName ?? 'All'})",
                       style: descriptionStyleDarkBlur2,
                     ),
                     SizedBox(
-                      height: 5,
+                      height: getDynamicHeight(5),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +149,7 @@ class _PrintPreview extends State<PrintPreview> {
                   ],
                 ),
                 SizedBox(
-                  height: 40,
+                  height: getDynamicHeight(40),
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -181,7 +182,7 @@ class _PrintPreview extends State<PrintPreview> {
                           onSelectAll: (b) {},
                           sortAscending: true,
                           showCheckboxColumn: false,
-                          dataRowHeight: 70.0,
+                          dataRowHeight: getDynamicHeight(70),
                           columns: <DataColumn>[
                             DataColumn(
                                 label: Text(
@@ -347,7 +348,7 @@ class _PrintPreview extends State<PrintPreview> {
                   ),
                 ),
                 SizedBox(
-                  height: 500,
+                  height: getDynamicHeight(500),
                 )
               ],
             ),

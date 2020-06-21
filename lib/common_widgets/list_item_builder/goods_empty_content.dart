@@ -1,3 +1,4 @@
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,13 +17,13 @@ class GoodsEmptyContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 20.0,),
-            Text(title, style: TextStyle(fontSize: 30.0, color: Colors.blueGrey),
+            SizedBox(height: getDynamicHeight(20)),
+            Text(title, style: TextStyle(fontSize: getDynamicTextSize(30), color: Colors.blueGrey),
             ),
-            SizedBox(height: 10.0,),
-            Text(message, style: TextStyle(fontSize: 18.0, color: Colors.blueGrey,fontWeight: FontWeight.w600),
+            SizedBox(height: getDynamicHeight(10)),
+            Text(message, style: TextStyle(fontSize: getDynamicTextSize(18), color: Colors.blueGrey,fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 40.0,),
+            SizedBox(height: getDynamicHeight(40),),
           ],
         ),
       ),

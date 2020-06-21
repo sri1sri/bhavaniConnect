@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
@@ -143,7 +144,7 @@ class _AddAttendance extends State<AddAttendance> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(
-                        height: 20,
+                        height: getDynamicHeight(20),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -154,8 +155,8 @@ class _AddAttendance extends State<AddAttendance> {
                                 decoration: BoxDecoration(
                                     color: backgroundColor.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(15)),
-                                height: 120,
-                                width: 600,
+                                height: getDynamicHeight(120),
+                                width: getDynamicWidth(600),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -167,7 +168,7 @@ class _AddAttendance extends State<AddAttendance> {
                                           color: backgroundColor,
                                         ),
                                         SizedBox(
-                                          width: 15,
+                                          width: getDynamicWidth(15),
                                         ),
                                         Column(
                                           mainAxisAlignment:
@@ -179,7 +180,7 @@ class _AddAttendance extends State<AddAttendance> {
                                               style: descriptionStyleDark,
                                             ),
                                             SizedBox(
-                                              height: 8,
+                                              height: getDynamicHeight(8),
                                             ),
                                             Text(
                                               DateTimeUtils.formatDayMonthYear(
@@ -191,18 +192,18 @@ class _AddAttendance extends State<AddAttendance> {
                                       ],
                                     ),
                                     SizedBox(
-                                      width: 5,
+                                      width: getDynamicWidth(5),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
-                                        width: 2,
+                                        width: getDynamicWidth(2),
                                         height: double.maxFinite,
                                         color: Colors.grey,
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 5,
+                                      width: getDynamicWidth(5),
                                     ),
                                     Row(
                                       children: [
@@ -212,7 +213,7 @@ class _AddAttendance extends State<AddAttendance> {
                                           color: backgroundColor,
                                         ),
                                         SizedBox(
-                                          width: 15,
+                                          width: getDynamicWidth(15),
                                         ),
                                         Column(
                                           mainAxisAlignment:
@@ -223,7 +224,7 @@ class _AddAttendance extends State<AddAttendance> {
                                               style: descriptionStyleDark,
                                             ),
                                             SizedBox(
-                                              height: 8,
+                                              height: getDynamicHeight(8),
                                             ),
                                             Text(
                                               snapshot.data == null ||
@@ -255,7 +256,7 @@ class _AddAttendance extends State<AddAttendance> {
                                   ],
                                 )),
                             SizedBox(
-                              height: 20,
+                              height: getDynamicHeight(20),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -265,8 +266,8 @@ class _AddAttendance extends State<AddAttendance> {
                                         color: backgroundColor.withOpacity(0.2),
                                         borderRadius:
                                             BorderRadius.circular(15)),
-                                    height: 100,
-                                    width: 180,
+                                    height: getDynamicHeight(100),
+                                    width: getDynamicWidth(180),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -279,7 +280,7 @@ class _AddAttendance extends State<AddAttendance> {
                                               color: Colors.green,
                                             ),
                                             SizedBox(
-                                              width: 15,
+                                              width: getDynamicWidth(15),
                                             ),
                                             Column(
                                               mainAxisAlignment:
@@ -290,7 +291,7 @@ class _AddAttendance extends State<AddAttendance> {
                                                   style: descriptionStyleDark,
                                                 ),
                                                 SizedBox(
-                                                  height: 8,
+                                                  height: getDynamicHeight(8),
                                                 ),
                                                 Text(
                                                   snapshot.data == null ||
@@ -315,15 +316,15 @@ class _AddAttendance extends State<AddAttendance> {
                                       ],
                                     )),
                                 SizedBox(
-                                  width: 10,
+                                  width: getDynamicWidth(10),
                                 ),
                                 Container(
                                     decoration: BoxDecoration(
                                         color: backgroundColor.withOpacity(0.2),
                                         borderRadius:
                                             BorderRadius.circular(15)),
-                                    height: 100,
-                                    width: 180,
+                                    height: getDynamicHeight(100),
+                                    width: getDynamicWidth(180),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -336,7 +337,7 @@ class _AddAttendance extends State<AddAttendance> {
                                               color: Colors.red,
                                             ),
                                             SizedBox(
-                                              width: 15,
+                                              width: getDynamicWidth(15),
                                             ),
                                             Column(
                                               mainAxisAlignment:
@@ -347,7 +348,7 @@ class _AddAttendance extends State<AddAttendance> {
                                                   style: descriptionStyleDark,
                                                 ),
                                                 SizedBox(
-                                                  height: 8,
+                                                  height: getDynamicHeight(8),
                                                 ),
                                                 Text(
                                                   snapshot.data == null ||
@@ -517,8 +518,8 @@ class _AddAttendance extends State<AddAttendance> {
             decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(15)),
-            height: 90,
-            width: 70,
+            height: getDynamicHeight(90),
+            width: getDynamicWidth(70),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -538,7 +539,7 @@ class _AddAttendance extends State<AddAttendance> {
             ),
           ),
           SizedBox(
-            width: 10,
+            width: getDynamicWidth(10),
           ),
           inRadius == null
               ? CircularProgressIndicator()
@@ -547,8 +548,8 @@ class _AddAttendance extends State<AddAttendance> {
                       decoration: BoxDecoration(
                           color: backgroundColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(15)),
-                      height: 90,
-                      width: 300,
+                      height: getDynamicHeight(90),
+                      width: getDynamicWidth(300),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -560,7 +561,7 @@ class _AddAttendance extends State<AddAttendance> {
                                 color: Colors.green,
                               ),
                               SizedBox(
-                                width: 7,
+                                width: getDynamicWidth(7),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -570,7 +571,7 @@ class _AddAttendance extends State<AddAttendance> {
                                     style: descriptionStyleDark,
                                   ),
                                   SizedBox(
-                                    height: 5,
+                                    height: getDynamicHeight(5),
                                   ),
                                   Text(
                                     inTime,
@@ -581,18 +582,18 @@ class _AddAttendance extends State<AddAttendance> {
                             ],
                           ),
                           SizedBox(
-                            width: 5,
+                            width: getDynamicWidth(5),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                              width: 2,
+                              width: getDynamicWidth(2),
                               height: double.maxFinite,
                               color: Colors.grey,
                             ),
                           ),
                           SizedBox(
-                            width: 5,
+                            width: getDynamicWidth(5),
                           ),
                           Row(
                             children: [
@@ -602,7 +603,7 @@ class _AddAttendance extends State<AddAttendance> {
                                 color: Colors.red,
                               ),
                               SizedBox(
-                                width: 7,
+                                width: getDynamicWidth(7),
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -612,7 +613,7 @@ class _AddAttendance extends State<AddAttendance> {
                                     style: descriptionStyleDark,
                                   ),
                                   SizedBox(
-                                    height: 5,
+                                    height: getDynamicHeight(5),
                                   ),
                                   Text(
                                     outTime,

@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Site_Activities/site_Activities_HomePage.dart';
@@ -68,7 +69,7 @@ class _SearchActivity extends State<SearchActivity> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -80,7 +81,7 @@ class _SearchActivity extends State<SearchActivity> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           DropdownSearch(
                               showSelectedItem: true,

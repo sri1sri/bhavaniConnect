@@ -100,10 +100,10 @@ class _SearchResultActivitiesState extends State<SearchResultActivities> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: 15,
+                  height: getDynamicHeight(50),
                 ),
                 Container(
-                  height: 80,
+                  height: getDynamicHeight(80),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -377,7 +377,7 @@ Widget SiteActivity(
       padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
-        height: 210,
+        height:getDynamicHeight(210),
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -395,7 +395,7 @@ Widget SiteActivity(
                   top: 24,
                   right: size.width * .35,
                 ),
-                height: 185,
+                height: getDynamicHeight(185),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -405,12 +405,12 @@ Widget SiteActivity(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Text(
                       "Block: $block",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Expanded(
                       child: Text(description,
                           maxLines: 2,
@@ -418,7 +418,7 @@ Widget SiteActivity(
                           style: subTitleStyleDark1),
                     ),
                     Text('$category - $subCat', style: subTitleStyle),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                   ],
                 ),
               ),
@@ -427,7 +427,7 @@ Widget SiteActivity(
               bottom: 0,
               right: 0,
               child: SizedBox(
-                height: 50,
+                height: getDynamicHeight(50),
                 width: size.width * .40,
                 child: Container(
                   alignment: Alignment.center,

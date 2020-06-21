@@ -98,7 +98,7 @@ class _EntryDescription extends State<EntryDescription> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -160,7 +160,7 @@ class _EntryDescription extends State<EntryDescription> {
                                               onSelectAll: (b) {},
                                               sortAscending: true,
                                               showCheckboxColumn: false,
-                                              dataRowHeight: 70.0,
+                                              dataRowHeight: getDynamicHeight(70),
                                               columns: <DataColumn>[
                                                 DataColumn(
                                                     label: Text(
@@ -304,7 +304,7 @@ class _EntryDescription extends State<EntryDescription> {
                                         style: subTitleStyle,
                                       ),
                                       SizedBox(
-                                        height: 5,
+                                        height: getDynamicHeight(5),
                                       ),
                                       Text(
                                         "Transfer from store to construction site",
@@ -317,7 +317,7 @@ class _EntryDescription extends State<EntryDescription> {
                             ),
                           ),
                           SizedBox(
-                            height: 550,
+                            height: getDynamicHeight(500),
                           ),
                         ]));
                   }
@@ -349,8 +349,8 @@ class _EntryDescription extends State<EntryDescription> {
                           borderRadius: BorderRadius.circular(5),
                           color: backgroundColor,
                         ),
-                        height: 40,
-                        width: 90,
+                        height: getDynamicHeight(40),
+                        width: getDynamicWidth(90),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -74,14 +75,14 @@ class _SearchEmployeeAttendance extends State<SearchEmployeeAttendance> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20),
                   ),
                   Text(
                     "Employee Name",
                     style: titleStyle,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20),
                   ),
                   StreamBuilder(
                     stream: Firestore.instance
@@ -129,14 +130,14 @@ class _SearchEmployeeAttendance extends State<SearchEmployeeAttendance> {
                     },
                   ),
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20),
                   ),
                   Text(
                     "Attendance Month",
                     style: titleStyle,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20),
                   ),
                   DropdownSearch(
                     showSelectedItem: true,
@@ -163,14 +164,14 @@ class _SearchEmployeeAttendance extends State<SearchEmployeeAttendance> {
                     showSearchBox: true,
                   ),
                   SizedBox(
-                    height: 50,
+                    height: getDynamicHeight(50),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        height: 55,
-                        width: 180,
+                        height: getDynamicHeight(55),
+                        width: getDynamicWidth(180),
                         child: GestureDetector(
                           onTap: () {
                             widget.employeeSearch(

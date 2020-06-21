@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
@@ -122,6 +123,11 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
           leftAction: () {
             Navigator.pop(context, true);
           },
+          rightActionBar: Icon(
+            Icons.arrow_back_ios,
+            size: 25,
+            color: backgroundColor,
+          ),
           primaryText: _title(),
           tabBarWidget: null,
         ),
@@ -153,7 +159,7 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
                               style: titleStyle,
                             ),
                             SizedBox(
-                              height: 15,
+                              height: getDynamicHeight(15),
                             ),
                             TextFormField(
                               controller: _addStockController,
@@ -197,20 +203,20 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
                         )
                       : Container(),
                   SizedBox(
-                    height: 20,
+                    height: getDynamicHeight(20),
                   ),
                   Text(
                     "${widget.title}'s which you have",
                     style: titleStyle,
                   ),
                   SizedBox(
-                    height: 15,
+                    height: getDynamicHeight(15),
                   ),
                   Container(
                     child: buildListStockCard(),
                   ),
                   SizedBox(
-                    height: 500,
+                    height: getDynamicHeight(500),
                   )
                 ],
               ),
@@ -303,7 +309,7 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
             ),
-            height: 50,
+            height: getDynamicHeight(55),
             width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
@@ -103,8 +104,8 @@ Widget attendanceCard(String day,String month,String year,String inTime,String o
               color: backgroundColor,
               borderRadius: BorderRadius.circular(15)
           ),
-          height: 90,
-          width: 70,
+          height: getDynamicHeight(90),
+          width: getDynamicWidth(70),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -114,14 +115,14 @@ Widget attendanceCard(String day,String month,String year,String inTime,String o
             ],
           ),
         ),
-        SizedBox(width: 10,),
+        SizedBox(width: getDynamicWidth(10),),
         Container(
             decoration: BoxDecoration(
                 color: backgroundColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(15)
             ),
-            height: 90,
-            width: 300,
+            height: getDynamicHeight(90),
+            width: getDynamicWidth(300),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -133,31 +134,31 @@ Widget attendanceCard(String day,String month,String year,String inTime,String o
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Punch In",style: descriptionStyleDark,),
-                        SizedBox(height: 5,),
+                        SizedBox(height: getDynamicHeight(5),),
                         Text(inTime,style: subTitleStyleDark1,)
                       ],
                     )
                   ],
                 ),
-                SizedBox(width: 5,),
+                SizedBox(width: getDynamicWidth(5),),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    width: 2,
+                    width: getDynamicWidth(2),
                     height: double.maxFinite,
                     color: Colors.grey,
                   ),
                 ),
-                SizedBox(width: 5,),
+                SizedBox(width: getDynamicWidth(5),),
                 Row(
                   children: [
                     Icon(Icons.call_made,size: 30,color: Colors.red,),
-                    SizedBox(width: 7,),
+                    SizedBox(width: getDynamicWidth(7),),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Punch Out",style: descriptionStyleDark,),
-                        SizedBox(height: 5,),
+                        SizedBox(height: getDynamicHeight(5),),
                         Text(outTime,style: subTitleStyleDark1,)
                       ],
                     )

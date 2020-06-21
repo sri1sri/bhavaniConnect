@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
@@ -79,7 +80,7 @@ class _DetailReport extends State<DetailReport> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                         SizedBox(
-                          height: 20,
+                          height: getDynamicHeight(20),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -115,7 +116,7 @@ class _DetailReport extends State<DetailReport> {
                           ),
                         ),
                         SizedBox(
-                          height: 550,
+                          height: getDynamicHeight(550),
                         ),
                       ]));
                 }

@@ -89,17 +89,17 @@ class _SiteActivities extends State<SiteActivities> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: 15,
+                  height: getDynamicHeight(15),
                 ),
                 Container(
-                  height: 80,
+                  height: getDynamicHeight(80),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(
-                          top: 45,
+                          top: 35,
                           left: 20,
                         ),
                         child: InkWell(
@@ -128,7 +128,7 @@ class _SiteActivities extends State<SiteActivities> {
                       ),
                       Padding(
                           padding: EdgeInsets.only(
-                            top: 35,
+                            top: 25,
                             right: 20,
                           ),
                           child: Row(
@@ -404,7 +404,7 @@ Widget SiteActivity(
       padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
-        height: 210,
+        height: getDynamicHeight(250),
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -419,10 +419,10 @@ Widget SiteActivity(
               child: Container(
                 padding: EdgeInsets.only(
                   left: 24,
-                  top: 24,
+                  top: 14,
                   right: size.width * .35,
                 ),
-                height: 185,
+                height: getDynamicHeight(210),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -432,12 +432,12 @@ Widget SiteActivity(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Text(
                       "Block: $block",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Expanded(
                       child: Text(description,
                           maxLines: 2,
@@ -445,7 +445,7 @@ Widget SiteActivity(
                           style: subTitleStyleDark1),
                     ),
                     Text('$subCat', style: subTitleStyle),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                   ],
                 ),
               ),
@@ -454,8 +454,8 @@ Widget SiteActivity(
               bottom: 0,
               right: 0,
               child: SizedBox(
-                height: 50,
-                width: size.width * .40,
+                height: getDynamicHeight(60),
+                width: getDynamicWidth(size.width * .40),
                 child: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 10),

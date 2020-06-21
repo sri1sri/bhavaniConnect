@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -104,14 +105,14 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(
-                            height: 50,
+                            height: getDynamicHeight(50),
                           ),
                           Text(
                             "Trip Records",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -161,14 +162,14 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                             ),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: getDynamicHeight(30),
                           ),
                           Text(
                             "Approval Status",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -180,7 +181,7 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
 
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  top: 10.0, bottom: 30, left: 5, right: 10),
+                                  top: 10.0, bottom: 30, left: 0, right: 10),
                               child: DataTable(
                                   showCheckboxColumn:
                                       false, // <-- this is important
@@ -253,14 +254,14 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                             ),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: getDynamicHeight(30),
                           ),
                           Text(
                             "Details",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -281,21 +282,21 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                                     style: subTitleStyle,
                                   ),
                                   SizedBox(
-                                    height: 5,
+                                    height: getDynamicHeight(5),
                                   ),
                                   Text(
                                     result['dealer']['dealerName'],
                                     style: descriptionStyleDark,
                                   ),
                                   SizedBox(
-                                    height: 15,
+                                    height: getDynamicHeight(15),
                                   ),
                                   Text(
                                     "Vehicle No.",
                                     style: subTitleStyle,
                                   ),
                                   SizedBox(
-                                    height: 5,
+                                    height: getDynamicHeight(5),
                                   ),
                                   Text(
                                     "${result['vehicleNumber']} (${result['unitsPerTrip'] ?? ''} ${result['units']['unitName'] ?? ''})",
@@ -337,8 +338,8 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                     borderRadius: BorderRadius.circular(5),
                     color: Colors.green.withOpacity(0.8),
                   ),
-                  height: 35,
-                  width: 80,
+                  height: getDynamicHeight(45),
+                  width: getDynamicWidth(80),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -374,7 +375,7 @@ Widget timeCard(BuildContext context, int count, String time) {
           style: descriptionStyleDark,
         ),
         SizedBox(
-          width: 150,
+          width: getDynamicWidth(150),
         ),
         Text(
           time,

@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 
@@ -22,8 +23,8 @@ class PrintReport extends StatefulWidget {
 }
 
 class _PrintReport extends State<PrintReport> {
-  DateTime selectedDateFrom = DateTime(2010);
-  DateTime selectedDateTo = DateTime(2010);
+  DateTime selectedDateFrom = DateTime.now();
+  DateTime selectedDateTo = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -104,7 +105,7 @@ class _PrintReport extends State<PrintReport> {
             Navigator.pop(context, true);
           },
           rightActionBar: Container(
-            width: 10,
+            width: getDynamicWidth(10),
           ),
           rightAction: () {
             print('right action bar is pressed in appbar');
@@ -127,7 +128,7 @@ class _PrintReport extends State<PrintReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -139,7 +140,7 @@ class _PrintReport extends State<PrintReport> {
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -193,14 +194,14 @@ class _PrintReport extends State<PrintReport> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Block",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -254,14 +255,14 @@ class _PrintReport extends State<PrintReport> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Labour Type",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           DropdownSearch(
                               showSelectedItem: true,
@@ -281,14 +282,14 @@ class _PrintReport extends State<PrintReport> {
                                   labourType ?? "All labour type selected",
                               showSearchBox: true),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           Text(
                             "Dealer Name",
                             style: titleStyle,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: getDynamicHeight(20),
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
@@ -342,7 +343,7 @@ class _PrintReport extends State<PrintReport> {
                             },
                           ),
                           SizedBox(
-                            height: 20,
+                            height:getDynamicHeight(20),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -358,7 +359,7 @@ class _PrintReport extends State<PrintReport> {
                                       style: titleStyle,
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: getDynamicHeight(15),
                                     ),
                                     GestureDetector(
                                       onTap: () => showPickerFrom(context),
@@ -371,7 +372,7 @@ class _PrintReport extends State<PrintReport> {
                                               color: backgroundColor,
                                             ),
                                             SizedBox(
-                                              width: 10,
+                                              width: getDynamicWidth(10),
                                             ),
                                             Text(
                                                 '${customFormat2.format(selectedDateFrom)}',
@@ -394,7 +395,7 @@ class _PrintReport extends State<PrintReport> {
                                       style: titleStyle,
                                     ),
                                     SizedBox(
-                                      height: 15,
+                                      height: getDynamicHeight(15),
                                     ),
                                     GestureDetector(
                                       onTap: () => showPickerTo(context),
@@ -407,7 +408,7 @@ class _PrintReport extends State<PrintReport> {
                                               color: backgroundColor,
                                             ),
                                             SizedBox(
-                                              width: 10,
+                                              width: getDynamicWidth(10),
                                             ),
                                             Text(
                                                 '${customFormat2.format(selectedDateTo)}',
@@ -425,14 +426,14 @@ class _PrintReport extends State<PrintReport> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height: 55,
-                          width: 180,
+                          height: getDynamicHeight(55),
+                          width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: visible
                                 ? () {
@@ -494,7 +495,7 @@ class _PrintReport extends State<PrintReport> {
                       ],
                     ),
                     SizedBox(
-                      height: 300,
+                      height: getDynamicHeight(300),
                     ),
                   ],
                 ),

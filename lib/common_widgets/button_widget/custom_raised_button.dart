@@ -1,3 +1,4 @@
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class CustomRaisedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      height: 60.0,
+      height: getDynamicHeight(60.0),
       child: FlatButton(
         onPressed: onPressed,
         color: color,

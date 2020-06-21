@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -103,12 +104,13 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
           color: Colors.white,
+          height: double.infinity,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 20,
+                  height: getDynamicHeight(20),
                 ),
                 Column(
                   children: [
@@ -117,14 +119,14 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                       style: subTitleStyleDark1,
                     ),
                     SizedBox(
-                      height: 5,
+                      height: getDynamicHeight(5),
                     ),
                     Text(
                       "${widget.constructionSite ?? 'All'} (${widget.blockName ?? 'All'})",
                       style: descriptionStyleDarkBlur2,
                     ),
                     SizedBox(
-                      height: 5,
+                      height: getDynamicHeight(5),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +148,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                   ],
                 ),
                 SizedBox(
-                  height: 40,
+                  height: getDynamicHeight(40),
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -177,7 +179,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                           onSelectAll: (b) {},
                           sortAscending: true,
                           showCheckboxColumn: false,
-                          dataRowHeight: 70.0,
+                          dataRowHeight: getDynamicHeight(70),
                           columns: <DataColumn>[
                             DataColumn(
                                 label: Text(
@@ -327,7 +329,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                   ),
                 ),
                 SizedBox(
-                  height: 500,
+                  height: getDynamicHeight(500),
                 )
               ],
             ),

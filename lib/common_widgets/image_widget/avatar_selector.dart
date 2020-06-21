@@ -1,4 +1,5 @@
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/helpers.dart';
 import 'package:bhavaniconnect/common_widgets/image_widget/image_uploader.dart';
 import 'package:bhavaniconnect/common_widgets/image_widget/radial-progress-painter.dart';
@@ -124,8 +125,8 @@ class AvatarSelectorState extends State<AvatarSelector>
                     alignment: Alignment.bottomRight),
               ],
             ),
-            width: 110.0,
-            height: 110.0,
+            width: getDynamicWidth(110.0),
+            height: getDynamicHeight(110.0),
             padding: EdgeInsets.only(right: 10.0),
           ),
           _buildStatusMessage(),
@@ -152,8 +153,8 @@ class AvatarSelectorState extends State<AvatarSelector>
       child: Opacity(
         opacity: 0.8,
         child: Container(
-          width: 50.0,
-          height: 50.0,
+          width: getDynamicWidth(50.0),
+          height: getDynamicHeight(50.0),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.black,
@@ -199,8 +200,8 @@ class AvatarSelectorState extends State<AvatarSelector>
               )),
           hasData && !HasValue.hasValue(avatarUrl)
               ? Container(
-                  width: 100,
-                  height: 100,
+                  width: getDynamicWidth(100),
+                  height: getDynamicHeight(100),
                   alignment: Alignment.center,
                   child: Text(
                     'Add Photo',
@@ -230,7 +231,7 @@ class AvatarSelectorState extends State<AvatarSelector>
             lineColor: Colors.white,
             completeColor: Colors.blueAccent,
             completePercent: uploadStatus.percentageDone,
-            width: 5.0),
+            width: getDynamicWidth(0.5)),
       ),
     );
   }

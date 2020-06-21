@@ -265,7 +265,7 @@ Widget StockRegister(
       padding: const EdgeInsets.only(right: 15.0, left: 15, top: 20),
       child: Container(
         width: double.infinity,
-        height: 210,
+        height: getDynamicHeight(250),
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -280,10 +280,10 @@ Widget StockRegister(
               child: Container(
                 padding: EdgeInsets.only(
                   left: 24,
-                  top: 24,
+                  top: 14,
                   right: size.width * .35,
                 ),
-                height: 185,
+                height: getDynamicHeight(210),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -293,7 +293,7 @@ Widget StockRegister(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10)),
                     Expanded(
                       child: Text(description,
                           maxLines: 2,
@@ -301,12 +301,12 @@ Widget StockRegister(
                           style: subTitleStyleDark1),
                     ),
                     Text(category, style: subTitleStyle),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                     Text(
                       "Invoice No.:$invoiceNo",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10),),
                   ],
                 ),
               ),
@@ -315,7 +315,7 @@ Widget StockRegister(
               bottom: 0,
               right: 0,
               child: SizedBox(
-                height: 50,
+                height: getDynamicHeight(60),
                 width: size.width * .35,
                 child: Container(
                   alignment: Alignment.center,

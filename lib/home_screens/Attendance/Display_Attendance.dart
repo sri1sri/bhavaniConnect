@@ -63,13 +63,13 @@ class _DisplayAttendance extends State<DisplayAttendance> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        height: 300.0,
-        width: 300.0,
+        height: getDynamicHeight(300),
+        width: getDynamicWidth(300),
         child: Stack(
           children: <Widget>[
             Container(
               width: double.infinity,
-              height: 300,
+              height: getDynamicHeight(300),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(12.0),
@@ -186,7 +186,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
             ),
             Container(
               width: double.infinity,
-              height: 50,
+              height: getDynamicHeight(50),
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                 color: backgroundColor,
@@ -208,7 +208,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                 },
                 child: Container(
                   width: double.infinity,
-                  height: 50,
+                  height: getDynamicHeight(50),
                   decoration: BoxDecoration(
                     color: backgroundColor,
                     borderRadius: BorderRadius.only(
@@ -281,18 +281,18 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(
-                    height: 15,
+                    height: getDynamicHeight(15),
                   ),
                   Container(
-                    height: 80,
+                    height: getDynamicHeight(80),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(
-                            top: 45,
-                            left: 20,
+                            top: getDynamicHeight(45),
+                            left: getDynamicWidth(20),
                           ),
                           child: InkWell(
                             child: Icon(
@@ -306,7 +306,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                          padding: EdgeInsets.fromLTRB(0, getDynamicHeight(30), 0, 0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -320,8 +320,8 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                         ),
                         Padding(
                             padding: EdgeInsets.only(
-                              top: 35,
-                              right: 10,
+                              top: getDynamicHeight(35),
+                              right: getDynamicWidth(10),
                             ),
                             child: Row(
                               children: [
@@ -380,7 +380,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -420,8 +420,8 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                     borderRadius: BorderRadius.circular(5),
                     color: backgroundColor.withOpacity(0.9),
                   ),
-                  height: 35,
-                  width: 80,
+                  height: getDynamicHeight(45),
+                  width: getDynamicWidth(80),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -480,8 +480,8 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                   decoration: BoxDecoration(
                       color: backgroundColor,
                       borderRadius: BorderRadius.circular(15)),
-                  height: 90,
-                  width: 70,
+                  height: getDynamicHeight(95),
+                  width: getDynamicWidth(70),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -501,7 +501,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: getDynamicWidth(10),
                 ),
                 Expanded(
                   child: Container(
@@ -509,7 +509,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                         color: backgroundColor.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(15)),
                     alignment: Alignment.center,
-                    height: 90,
+                    height: getDynamicHeight(95),
                     width: double.infinity,
                     child: GestureDetector(
                       onTap: () {
@@ -541,7 +541,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                       color: Colors.green,
                                     ),
                                     SizedBox(
-                                      width: 7,
+                                      width: getDynamicWidth(7),
                                     ),
                                     Column(
                                       mainAxisAlignment:
@@ -552,7 +552,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                           style: descriptionStyleDark,
                                         ),
                                         SizedBox(
-                                          height: 5,
+                                          height: getDynamicHeight(5),
                                         ),
                                         Text(
                                           inTime,
@@ -563,18 +563,18 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                   ],
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: getDynamicWidth(5),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    width: 2,
+                                    width: getDynamicWidth(2),
                                     height: double.maxFinite,
                                     color: Colors.grey,
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 5,
+                                  width: getDynamicWidth(5),
                                 ),
                                 Row(
                                   children: [
@@ -584,7 +584,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                       color: Colors.red,
                                     ),
                                     SizedBox(
-                                      width: 7,
+                                      width: getDynamicWidth(7),
                                     ),
                                     Column(
                                       mainAxisAlignment:
@@ -595,7 +595,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                           style: descriptionStyleDark,
                                         ),
                                         SizedBox(
-                                          height: 5,
+                                          height: getDynamicHeight(5),
                                         ),
                                         Text(
                                           outTime,

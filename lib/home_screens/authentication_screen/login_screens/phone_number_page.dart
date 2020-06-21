@@ -83,7 +83,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 10,
+              height: getDynamicHeight(10),
             ),
             Text(
               'To create an Account or SignIn \nuse your phone number.',
@@ -142,7 +142,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
                     style: TextStyle(color: Colors.red),
                   )
                 : Container()),
-            SizedBox(height: 20.0),
+            SizedBox(height: getDynamicHeight(20.0)),
             ToDoButton(
               isEnabled: phoneNo != null && phoneNo.length == 10,
               assetName: '',
@@ -157,7 +157,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
               //   GoToPage(context, OTPPage());
               // },
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: getDynamicHeight(10.0)),
             ToDoButton(
               assetName: '',
               text: 'back',

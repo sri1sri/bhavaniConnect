@@ -210,7 +210,7 @@ Widget goodsDetails(
     padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
     child: Container(
       width: double.infinity,
-      height: 240,
+      height: getDynamicHeight(280),
       child: Stack(
         children: <Widget>[
           Positioned(
@@ -228,7 +228,7 @@ Widget goodsDetails(
                 top: 20,
                 //right: size.width * .35,
               ),
-              height: 215,
+              height: getDynamicHeight(255),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -238,14 +238,14 @@ Widget goodsDetails(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(site, style: subTitleStyle1),
-                  SizedBox(height: 10),
+                  SizedBox(height: getDynamicHeight(10),),
                   Text(
                     "Dealer: $dealer",
                     style: descriptionStyleDarkBlur1,
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: getDynamicHeight(10)),
                   Text(category, style: subTitleStyle),
-                  SizedBox(height: 10),
+                  SizedBox(height: getDynamicHeight(10)),
                   Expanded(
                     child: Text("Requested By:\n$requestedBy",
                         maxLines: 2,
@@ -266,7 +266,7 @@ Widget goodsDetails(
             bottom: 0,
             right: 0,
             child: SizedBox(
-              height: 50,
+              height: getDynamicHeight(60),
               width: size.width * .35,
               child: Container(
                 alignment: Alignment.center,

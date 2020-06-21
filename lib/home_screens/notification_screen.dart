@@ -310,7 +310,7 @@ class _F_NotificationPageState extends State<NotificationPage> {
         padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
         child: Container(
           width: double.infinity,
-          height: 225,
+          height: 245,
           child: Stack(
             children: <Widget>[
               Positioned(

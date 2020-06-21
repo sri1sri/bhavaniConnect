@@ -273,7 +273,7 @@ Widget ConcreteEntry(
       padding: EdgeInsets.only(right: 15.0, left: 15, top: topPadding),
       child: Container(
         width: double.infinity,
-        height: 190,
+        height: getDynamicHeight(220),
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -291,7 +291,7 @@ Widget ConcreteEntry(
                   top: 24,
                   right: size.width * .35,
                 ),
-                height: 165,
+                height: getDynamicHeight(195),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFEAEAEA).withOpacity(.45),
@@ -301,19 +301,19 @@ Widget ConcreteEntry(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10)),
                     Text(
                       "Block: $block",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10)),
                     Expanded(
                       child: Text(concreteType,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: subTitleStyleDark1),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: getDynamicHeight(10)),
                   ],
                 ),
               ),
@@ -322,7 +322,7 @@ Widget ConcreteEntry(
               bottom: 0,
               right: 0,
               child: SizedBox(
-                height: 50,
+                height: getDynamicHeight(60),
                 width: size.width * .40,
                 child: Container(
                   alignment: Alignment.center,

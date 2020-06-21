@@ -1,5 +1,6 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 // import 'package:bhavaniconnect/common_variables/app_functions.dart';
 // import 'package:bhavaniconnect/common_widgets/button_widget/to_do_button.dart';
@@ -116,14 +117,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      height: 50,
+                      height: getDynamicHeight(50),
                     ),
                     Text(
                       "Records",
                       style: titleStyle,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -232,14 +233,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: getDynamicHeight(30),
                     ),
                     Text(
                       "Approval Status",
                       style: titleStyle,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -251,7 +252,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
 
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            top: 10.0, bottom: 30, left: 5, right: 10),
+                            top: 10.0, bottom: 30, left: 0, right: 20),
                         child: DataTable(
                             showCheckboxColumn: false, // <-- this is important
                             columns: [
@@ -324,14 +325,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: getDynamicHeight(30),
                     ),
                     Text(
                       "Details",
                       style: titleStyle,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: getDynamicHeight(20),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -352,21 +353,21 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                               style: subTitleStyle,
                             ),
                             SizedBox(
-                              height: 5,
+                              height: getDynamicHeight(5),
                             ),
                             Text(
                               vehicleData['dealer']['dealerName'],
                               style: descriptionStyleDark,
                             ),
                             SizedBox(
-                              height: 15,
+                              height: getDynamicHeight(15),
                             ),
                             Text(
                               "Vehicle No.",
                               style: subTitleStyle,
                             ),
                             SizedBox(
-                              height: 5,
+                              height: getDynamicHeight(5),
                             ),
                             Text(
                               "${vehicleData['vehicleNumber']} (${vehicleData['unitsPerTrip'] ?? ''} ${vehicleData['units']['unitName'] ?? ''})",
@@ -377,7 +378,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                       ),
                     ),
                     SizedBox(
-                      height: 100,
+                      height: 200,
                     ),
                   ],
                 ),
@@ -403,8 +404,8 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                             borderRadius: BorderRadius.circular(5),
                             color: Colors.green.withOpacity(0.8),
                           ),
-                          height: 35,
-                          width: 80,
+                          height: getDynamicHeight(45),
+                          width: getDynamicWidth(80),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -428,8 +429,8 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                 borderRadius: BorderRadius.circular(5),
                                 color: Colors.red.withOpacity(0.8),
                               ),
-                              height: 35,
-                              width: 80,
+                              height: getDynamicHeight(45),
+                              width: getDynamicWidth(80),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -477,14 +478,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    height: 250.0,
-                    width: 400.0,
+                    ), 
+                    height: getDynamicHeight(250),
+                   width: getDynamicWidth(400),
                     child: Stack(
                       children: <Widget>[
                         Container(
                           width: double.infinity,
-                          height: 250,
+                          height: getDynamicHeight(250),
                           decoration: BoxDecoration(
                             color: Colors.green.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12.0),
@@ -517,14 +518,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                           cursorColor: backgroundColor,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontSize: 22,
+                                            fontSize: getDynamicTextSize(22),
                                             fontWeight: FontWeight.w600,
                                           ),
                                           decoration: InputDecoration(
                                             counterStyle: TextStyle(
                                               // fontFamily: mainFontFamily,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 18,
+                                              fontSize: getDynamicTextSize(18),
                                             ),
                                             focusedBorder: UnderlineInputBorder(
                                               borderSide: const BorderSide(
@@ -534,7 +535,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                             hintStyle: TextStyle(
                                               // fontFamily: mainFontFamily,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 22,
+                                              fontSize: getDynamicTextSize(22),
                                             ),
                                             enabledBorder:
                                                 const OutlineInputBorder(
@@ -551,8 +552,8 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     ),
                                   ),
                                   Container(
-                                    height: 55,
-                                    width: 180,
+                                    height: getDynamicHeight(55),
+                                    width: getDynamicWidth(150),
                                     child: GestureDetector(
                                       onTap: startVisible
                                           ? () async {
@@ -619,7 +620,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                                           //fontFamily: mainFontFamily,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          fontSize: 22,
+                                                          fontSize: getDynamicTextSize(22),
                                                           decoration:
                                                               TextDecoration
                                                                   .none),
@@ -699,13 +700,13 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    height: 250.0,
-                    width: 400.0,
+                    height: getDynamicHeight(250),
+                    width: getDynamicWidth(400),
                     child: Stack(
                       children: <Widget>[
                         Container(
                           width: double.infinity,
-                          height: 250,
+                          height: getDynamicHeight(250),
                           decoration: BoxDecoration(
                             color: Colors.red.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12.0),
@@ -738,14 +739,14 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                           cursorColor: backgroundColor,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontSize: 22,
+                                            fontSize: getDynamicTextSize(22),
                                             fontWeight: FontWeight.w600,
                                           ),
                                           decoration: InputDecoration(
                                             counterStyle: TextStyle(
                                               // fontFamily: mainFontFamily,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 18,
+                                              fontSize: getDynamicTextSize(18),
                                             ),
                                             focusedBorder: UnderlineInputBorder(
                                               borderSide: const BorderSide(
@@ -755,7 +756,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                             hintStyle: TextStyle(
                                               // fontFamily: mainFontFamily,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 22,
+                                              fontSize: getDynamicTextSize(22),
                                             ),
                                             enabledBorder:
                                                 const OutlineInputBorder(
@@ -772,8 +773,8 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                     ),
                                   ),
                                   Container(
-                                    height: 55,
-                                    width: 180,
+                                    height: getDynamicHeight(55),
+                                    width: getDynamicWidth(180),
                                     child: GestureDetector(
                                       onTap: stopVisible
                                           ? () async {
@@ -839,7 +840,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                                           //fontFamily: mainFontFamily,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          fontSize: 22,
+                                                          fontSize: getDynamicWidth(22),
                                                           decoration:
                                                               TextDecoration
                                                                   .none),
