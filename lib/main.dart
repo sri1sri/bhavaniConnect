@@ -18,6 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
+import 'common_variables/app_functions.dart';
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
@@ -261,8 +263,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SCREEN_SIZE = MediaQuery.of(context).size;
     return MaterialApp(
-        title: 'Know It',
+        title: 'B-Connect',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
