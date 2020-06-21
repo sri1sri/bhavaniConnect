@@ -53,6 +53,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
 
   @override
   Widget build(BuildContext context) {
+    SCREEN_SIZE = MediaQuery.of(context).size;
     return offlineWidget(context);
   }
 

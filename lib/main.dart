@@ -263,7 +263,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    SCREEN_SIZE = MediaQuery.of(context).size;
     return MaterialApp(
         title: 'B-Connect',
         debugShowCheckedModeBanner: false,

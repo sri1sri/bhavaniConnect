@@ -3,6 +3,7 @@ import 'package:bhavaniconnect/home_screens/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'common_variables/app_functions.dart';
 import 'common_widgets/navigationBar.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,8 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildContent(BuildContext context) {
     Widget child;
-    //final database = Provider.of<Database>(context, listen: false);
-
+    SCREEN_SIZE = MediaQuery.of(context).size;
     switch (currentIndex) {
       case 0:
         child = Dashboard(

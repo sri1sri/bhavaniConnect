@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
+import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_widgets/button_widget/to_do_button.dart';
 import 'package:bhavaniconnect/common_widgets/image_widget/avatar_selector.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
@@ -114,6 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    SCREEN_SIZE = MediaQuery.of(context).size;
     return offlineWidget(context);
   }
 

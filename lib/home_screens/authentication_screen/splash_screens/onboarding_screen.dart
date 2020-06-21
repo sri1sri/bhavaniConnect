@@ -10,6 +10,7 @@ class OnboardingScreen extends StatelessWidget {
   BuildContext context;
   @override
   Widget build(BuildContext context) {
+    SCREEN_SIZE = MediaQuery.of(context).size;
     return Container(
       child: F_OnboardingScreen(context: context,),
     );
