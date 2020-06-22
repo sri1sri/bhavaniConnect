@@ -5,7 +5,7 @@ admin.initializeApp(functions.config().functions);
 
 var prod = "prod_"
 
-exports.messageTrigger = functions.firestore.document(prod + "pendingRequests/{messageId}").onCreate(async (snapshot, context) => {
+exports.prodMessageTrigger = functions.firestore.document(prod + "pendingRequests/{messageId}").onCreate(async (snapshot, context) => {
     if (snapshot.empty) {
         console.log('No Devices');
         return;
@@ -48,7 +48,7 @@ exports.messageTrigger = functions.firestore.document(prod + "pendingRequests/{m
     }
 });
 
-exports.statusChangeTrigger = functions.firestore.document(prod + "goodsApproval/{messageId}").onUpdate(async (snapshot, context) => {
+exports.prodStatusChangeTrigger = functions.firestore.document(prod + "goodsApproval/{messageId}").onUpdate(async (snapshot, context) => {
     if (snapshot.empty) {
         console.log('No Devices');
         return;
@@ -86,7 +86,7 @@ exports.statusChangeTrigger = functions.firestore.document(prod + "goodsApproval
     }
 });
 
-exports.vehicleEntryStatusChangeTrigger = functions.firestore.document(prod + "vehicleEntries/{messageId}").onUpdate(async (snapshot, context) => {
+exports.prodVehicleEntryStatusChangeTrigger = functions.firestore.document(prod + "vehicleEntries/{messageId}").onUpdate(async (snapshot, context) => {
     if (snapshot.empty) {
         console.log('No Devices');
         return;
