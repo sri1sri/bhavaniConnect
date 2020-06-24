@@ -203,56 +203,28 @@ class _PrintReport extends State<PrintReport> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          StreamBuilder(
-                            stream: Firestore.instance
-                                .collection(AppConstants.prod + "blocks")
-                                .orderBy('name', descending: false)
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                List<String> items = snapshot.data.documents
-                                    .map((e) => (e.documentID.toString()))
-                                    .toList();
-                                return DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: items,
-                                  dropdownItemBuilder:
-                                      (context, value, isTrue) {
-                                    return ListTile(
-                                      title: Text(snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              value)['name']
-                                          .toString()),
-                                      selected: isTrue,
-                                      onTap: () {
-                                        setState(() {
-                                          selectedBlock = snapshot
-                                              .data.documents
-                                              .firstWhere((element) =>
-                                                  element.documentID ==
-                                                  value)['name']
-                                              .toString();
-                                          selectedBlockId = value;
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                  label: "Block",
-                                  onChanged: (value) {},
-                                  selectedItem:
-                                      selectedBlock ?? "All Block selected",
-                                  showSearchBox: true,
-                                );
-                              }
+                          DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: AppConstants.blockType,
+                            dropdownItemBuilder: (context, value, isTrue) {
+                              return ListTile(
+                                title: Text(value),
+                                selected: isTrue,
+                                onTap: () {
+                                  setState(() {
+                                    selectedBlock = value;
+                                    selectedBlockId = value;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
                             },
+                            label: "Block",
+                            onChanged: (value) {},
+                            selectedItem: selectedBlock ?? "All block selected",
+                            showSearchBox: true,
                           ),
                           SizedBox(
                             height: getDynamicHeight(20),
@@ -343,7 +315,7 @@ class _PrintReport extends State<PrintReport> {
                             },
                           ),
                           SizedBox(
-                            height:getDynamicHeight(20),
+                            height: getDynamicHeight(20),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

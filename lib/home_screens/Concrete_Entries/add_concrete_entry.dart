@@ -263,62 +263,35 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          StreamBuilder(
-                            stream: Firestore.instance
-                                .collection(AppConstants.prod + "blocks")
-                                .orderBy('name', descending: false)
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
+                          DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: AppConstants.blockType,
+                            dropdownItemBuilder: (context, value, isTrue) {
+                              return ListTile(
+                                title: Text(value),
+                                selected: isTrue,
+                                onTap: () {
+                                  setState(() {
+                                    selectedBlock = value;
+                                    selectedBlockId = value;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
+                            label: "Block",
+                            onChanged: (value) {},
+                            selectedItem: selectedBlock ?? "Choose Block",
+                            showSearchBox: true,
+                            validate: (value) {
+                              if (validated &&
+                                  (selectedBlock == null ||
+                                      selectedBlock.isEmpty)) {
+                                return "Block cannot be empty";
                               } else {
-                                List<String> items = snapshot.data.documents
-                                    .map((e) => (e.documentID.toString()))
-                                    .toList();
-                                return DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: items,
-                                  dropdownItemBuilder:
-                                      (context, value, isTrue) {
-                                    return ListTile(
-                                      title: Text(snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              value)['name']
-                                          .toString()),
-                                      selected: isTrue,
-                                      onTap: () {
-                                        setState(() {
-                                          selectedBlock = snapshot
-                                              .data.documents
-                                              .firstWhere((element) =>
-                                                  element.documentID ==
-                                                  value)['name']
-                                              .toString();
-                                          selectedBlockId = value;
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                  label: "Block",
-                                  onChanged: (value) {},
-                                  selectedItem: selectedBlock ?? "Choose Block",
-                                  showSearchBox: true,
-                                  validate: (value) {
-                                    if (validated &&
-                                        (selectedBlock == null ||
-                                            selectedBlock.isEmpty)) {
-                                      return "Block cannot be empty";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                );
+                                return null;
                               }
                             },
                           ),
@@ -332,63 +305,36 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          StreamBuilder(
-                            stream: Firestore.instance
-                                .collection(AppConstants.prod + "concreteType")
-                                .orderBy('name', descending: false)
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
+                          DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: AppConstants.concreteType,
+                            dropdownItemBuilder: (context, value, isTrue) {
+                              return ListTile(
+                                title: Text(value),
+                                selected: isTrue,
+                                onTap: () {
+                                  setState(() {
+                                    selectedConcreteType = value;
+                                    selectedConcreteTypeId = value;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
+                            label: "Concrete Type",
+                            onChanged: (value) {},
+                            selectedItem:
+                                selectedConcreteType ?? "Choose Concrete Type",
+                            showSearchBox: true,
+                            validate: (value) {
+                              if (validated &&
+                                  (selectedConcreteType == null ||
+                                      selectedConcreteType.isEmpty)) {
+                                return "Concrete Type cannot be empty";
                               } else {
-                                List<String> items = snapshot.data.documents
-                                    .map((e) => (e.documentID.toString()))
-                                    .toList();
-                                return DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: items,
-                                  dropdownItemBuilder:
-                                      (context, value, isTrue) {
-                                    return ListTile(
-                                      title: Text(snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              value)['name']
-                                          .toString()),
-                                      selected: isTrue,
-                                      onTap: () {
-                                        setState(() {
-                                          selectedConcreteType = snapshot
-                                              .data.documents
-                                              .firstWhere((element) =>
-                                                  element.documentID ==
-                                                  value)['name']
-                                              .toString();
-                                          selectedConcreteTypeId = value;
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                  label: "Concrete Type",
-                                  onChanged: (value) {},
-                                  selectedItem: selectedConcreteType ??
-                                      "Choose Concrete Type",
-                                  showSearchBox: true,
-                                  validate: (value) {
-                                    if (validated &&
-                                        (selectedConcreteType == null ||
-                                            selectedConcreteType.isEmpty)) {
-                                      return "Concrete Type cannot be empty";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                );
+                                return null;
                               }
                             },
                           ),
@@ -444,7 +390,7 @@ class _AddConcreteEntry extends State<AddConcreteEntry> {
                       children: [
                         Container(
                           height: getDynamicHeight(55),
-                          width:getDynamicWidth(180),
+                          width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: visible
                                 ? () async {

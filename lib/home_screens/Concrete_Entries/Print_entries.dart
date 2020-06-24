@@ -207,56 +207,28 @@ class _PrintEntries extends State<PrintEntries> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          StreamBuilder(
-                            stream: Firestore.instance
-                                .collection(AppConstants.prod + "blocks")
-                                .orderBy('name', descending: false)
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                List<String> items = snapshot.data.documents
-                                    .map((e) => (e.documentID.toString()))
-                                    .toList();
-                                return DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: items,
-                                  dropdownItemBuilder:
-                                      (context, value, isTrue) {
-                                    return ListTile(
-                                      title: Text(snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              value)['name']
-                                          .toString()),
-                                      selected: isTrue,
-                                      onTap: () {
-                                        setState(() {
-                                          selectedBlock = snapshot
-                                              .data.documents
-                                              .firstWhere((element) =>
-                                                  element.documentID ==
-                                                  value)['name']
-                                              .toString();
-                                          selectedBlockId = value;
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                  label: "Block",
-                                  onChanged: (value) {},
-                                  selectedItem:
-                                      selectedBlock ?? "All block selected",
-                                  showSearchBox: true,
-                                );
-                              }
+                          DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: AppConstants.blockType,
+                            dropdownItemBuilder: (context, value, isTrue) {
+                              return ListTile(
+                                title: Text(value),
+                                selected: isTrue,
+                                onTap: () {
+                                  setState(() {
+                                    selectedBlock = value;
+                                    selectedBlockId = value;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
                             },
+                            label: "Block",
+                            onChanged: (value) {},
+                            selectedItem: selectedBlock ?? "All block selected",
+                            showSearchBox: true,
                           ),
                           SizedBox(
                             height: getDynamicHeight(20),
@@ -268,55 +240,29 @@ class _PrintEntries extends State<PrintEntries> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          StreamBuilder(
-                            stream: Firestore.instance
-                                .collection(AppConstants.prod + "concreteType")
-                                .snapshots(),
-                            builder: (context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                List<String> items = snapshot.data.documents
-                                    .map((e) => (e.documentID.toString()))
-                                    .toList();
-                                return DropdownSearch(
-                                  showSelectedItem: true,
-                                  maxHeight: 400,
-                                  mode: Mode.MENU,
-                                  items: items,
-                                  dropdownItemBuilder:
-                                      (context, value, isTrue) {
-                                    return ListTile(
-                                      title: Text(snapshot.data.documents
-                                          .firstWhere((element) =>
-                                              element.documentID ==
-                                              value)['name']
-                                          .toString()),
-                                      selected: isTrue,
-                                      onTap: () {
-                                        setState(() {
-                                          selectedConcreteType = snapshot
-                                              .data.documents
-                                              .firstWhere((element) =>
-                                                  element.documentID ==
-                                                  value)['name']
-                                              .toString();
-                                          selectedConcreteTypeId = value;
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                  label: "Category",
-                                  onChanged: (value) {},
-                                  selectedItem: selectedConcreteType ??
-                                      "All concrete type selected",
-                                  showSearchBox: true,
-                                );
-                              }
+                          DropdownSearch(
+                            showSelectedItem: true,
+                            maxHeight: 400,
+                            mode: Mode.MENU,
+                            items: AppConstants.concreteType,
+                            dropdownItemBuilder: (context, value, isTrue) {
+                              return ListTile(
+                                title: Text(value),
+                                selected: isTrue,
+                                onTap: () {
+                                  setState(() {
+                                    selectedConcreteType = value;
+                                    selectedConcreteTypeId = value;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
                             },
+                            label: "Concrete Type",
+                            onChanged: (value) {},
+                            selectedItem: selectedConcreteType ??
+                                "All concrete type selected",
+                            showSearchBox: true,
                           ),
                           SizedBox(
                             height: getDynamicHeight(20),

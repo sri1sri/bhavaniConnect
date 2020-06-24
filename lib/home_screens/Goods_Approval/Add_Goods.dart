@@ -250,7 +250,7 @@ class _AddGoods extends State<AddGoods> {
                           ),
                           StreamBuilder(
                             stream: Firestore.instance
-                                .collection(AppConstants.prod + "concreteType")
+                                .collection(AppConstants.prod + "category")
                                 .orderBy('name', descending: false)
                                 .snapshots(),
                             builder: (context,
@@ -290,16 +290,16 @@ class _AddGoods extends State<AddGoods> {
                                       },
                                     );
                                   },
-                                  label: "Concrete Type",
+                                  label: "Category Type",
                                   onChanged: (value) {},
                                   selectedItem: selectedConcreteType ??
-                                      "Choose Concrete Type",
+                                      "Choose Category Type",
                                   showSearchBox: true,
                                   validate: (value) {
                                     if (validated &&
                                         (selectedConcreteType == null ||
                                             selectedConcreteType.isEmpty)) {
-                                      return "Concrete Type cannot be empty";
+                                      return "Category Type cannot be empty";
                                     } else {
                                       return null;
                                     }

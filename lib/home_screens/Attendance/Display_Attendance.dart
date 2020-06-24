@@ -306,7 +306,8 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0, getDynamicHeight(30), 0, 0),
+                          padding: EdgeInsets.fromLTRB(
+                              0, getDynamicHeight(30), 0, 0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -512,12 +513,16 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                     height: getDynamicHeight(95),
                     width: double.infinity,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         if (inTime != null) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => AddAttendance(
                                     currentUserId: widget.currentUserId,
-                                    documentId: snapshot.data.documentID,
+                                    documentId:
+                                        DateTimeUtils.isSameDay(datetime, now)
+                                            ? null
+                                            : snapshot.data.documentID,
                                   )));
                         }
                       },
