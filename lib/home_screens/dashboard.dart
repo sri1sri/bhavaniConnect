@@ -8,10 +8,13 @@ import 'package:bhavaniconnect/home_screens/Goods_Approval/Display_Goods.dart';
 import 'package:bhavaniconnect/home_screens/Site_Activities/site_Activities_HomePage.dart';
 import 'package:bhavaniconnect/home_screens/Stock_Register/showAllInvoice.dart';
 import 'package:bhavaniconnect/home_screens/Vehicle_Entry/vehicle_list_details.dart';
+import 'package:bhavaniconnect/home_screens/badge_icon.dart';
 import 'package:bhavaniconnect/home_screens/notification_screen.dart';
+import 'package:bhavaniconnect/models/notification_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import 'Add_Stock/Stock_Screen.dart';
 import 'Concrete_Entries/Concrete_HomePage.dart';
@@ -85,12 +88,20 @@ class _Dashboard extends State<Dashboard> {
             size: 30,
             color: Colors.transparent,
           ),
-          rightActionBar: Icon(
-            Icons.notifications,
-            size: 25,
-            color: Colors.white,
+          rightActionBar: Consumer<NotificationModel>(
+            builder: (context, model, child) {
+              return BadgeIcon(
+                icon: Icon(
+                  Icons.notifications,
+                  size: 25,
+                  color: Colors.white,
+                ),
+                badgeCount: model.count,
+              );
+            },
           ),
           rightAction: () {
+            Provider.of<NotificationModel>(context).removeNotifications();
             GoToPage(
               context,
               NotificationPage(currentUserId: widget.currentUserId),

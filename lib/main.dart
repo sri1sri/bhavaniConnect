@@ -9,16 +9,16 @@ import 'package:bhavaniconnect/home_screens/authentication_screen/login_screens/
 import 'package:bhavaniconnect/home_screens/authentication_screen/registrtion_screens/sign_up_page.dart';
 import 'package:bhavaniconnect/home_screens/authentication_screen/splash_screens/onboarding_screen.dart';
 import 'package:bhavaniconnect/home_screens/notification_screen.dart';
+import 'package:bhavaniconnect/models/notification_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
-
-import 'common_variables/app_functions.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -87,9 +87,10 @@ class _MyAppState extends State<MyApp> {
       final String body = notification['body'];
 
       String mMessage = data != null ? data['message'] : message['message'];
-
+      if (mMessage != "vehicle" || mMessage != "goods") {
+        Provider.of<NotificationModel>(context).increment();
+      }
       if (title == null && mMessage != null) {
-        print(mMessage);
         navigatorKey.currentState.pushNamed("/" + mMessage);
       } else {
         showNotificaitonDialog(context, title, mMessage);
@@ -104,6 +105,7 @@ class _MyAppState extends State<MyApp> {
 
       if (title == null && mMessage != null) {
         print(mMessage);
+        Provider.of<NotificationModel>(context).removeNotifications();
         navigatorKey.currentState.pushNamed("/" + mMessage);
       } else {
         showNotificaitonDialog(context, title, mMessage);
@@ -136,6 +138,8 @@ class _MyAppState extends State<MyApp> {
                     FlatButton(
                       child: const Text('Yes Sure'),
                       onPressed: () async {
+                        Provider.of<NotificationModel>(context)
+                            .removeNotifications();
                         navigatorKey.currentState.pop();
                         if (mMessage == "goods") {
                           navigatorKey.currentState.push(MaterialPageRoute(
@@ -263,24 +267,31 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'B-Connect',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        home: _handleCurrentScreen(),
-        routes: <String, WidgetBuilder>{
-          "/goods": (BuildContext context) =>
-              GoodsScreen(currentUserId: authenticationState.user.uid),
-          "/vehicle": (BuildContext context) =>
-              new DaySelection(currentUserId: authenticationState.user.uid),
-          "/" + AppConstants.prod + "goodsApproval": (BuildContext context) =>
-              new NotificationPage(currentUserId: authenticationState.user.uid),
-          "/" + AppConstants.prod + "vehicleEntries": (BuildContext context) =>
-              new NotificationPage(currentUserId: authenticationState.user.uid),
-        },
-        navigatorKey: navigatorKey);
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => NotificationModel()),
+      ],
+      child: MaterialApp(
+          title: 'B-Connect',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blueGrey,
+          ),
+          home: _handleCurrentScreen(),
+          routes: <String, WidgetBuilder>{
+            "/goods": (BuildContext context) =>
+                GoodsScreen(currentUserId: authenticationState.user.uid),
+            "/vehicle": (BuildContext context) =>
+                new DaySelection(currentUserId: authenticationState.user.uid),
+            "/" + AppConstants.prod + "goodsApproval": (BuildContext context) =>
+                new NotificationPage(
+                    currentUserId: authenticationState.user.uid),
+            "/" + AppConstants.prod + "vehicleEntries":
+                (BuildContext context) => new NotificationPage(
+                    currentUserId: authenticationState.user.uid),
+          },
+          navigatorKey: navigatorKey),
+    );
   }
 
   Widget _handleCurrentScreen() {
