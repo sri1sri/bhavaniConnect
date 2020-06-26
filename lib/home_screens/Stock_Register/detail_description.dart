@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'AddIssueDetails.dart';
 import 'AddNewInvoice.dart';
 
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
@@ -51,14 +52,6 @@ class _DetailDescription extends State<DetailDescription> {
             ),
             leftAction: () {
               Navigator.pop(context, true);
-            },
-            // rightActionBar: Icon(
-            //   Icons.border_color,
-            //   size: 25,
-            //   color: Colors.white,
-            // ),
-            rightAction: () {
-              GoToPage(context, AddInvoice());
             },
             primaryText: 'Stock Details',
             tabBarWidget: null,
@@ -139,25 +132,107 @@ class _DetailDescription extends State<DetailDescription> {
                                     thickness: 1,
                                     color: Colors.black54,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Remarks:",
-                                          style: subTitleStyle,
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          result['remarks'],
-                                          style: descriptionStyleDarkBlur1,
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Remarks:",
+                                        style: subTitleStyle,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        result['remarks'],
+                                        style: descriptionStyleDarkBlur1,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "Issue Details:",
+                                    style: subTitleStyle,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Divider(
+                                    thickness: 1,
+                                    color: Colors.black54,
+                                  ),
+                                  Container(
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                        onSelectAll: (b) {},
+                                        sortAscending: true,
+                                        columns: <DataColumn>[
+                                          DataColumn(
+                                              label: Text(
+                                                'Sl.No',
+                                                style: subTitleStyle,
+                                              )),
+                                          DataColumn(
+                                              label: Text(
+                                                'Date',
+                                                style: subTitleStyle,
+                                              )),
+                                          DataColumn(
+                                              label: Text(
+                                                'Issued Quantity',
+                                                style: subTitleStyle,
+                                              )),
+                                          DataColumn(
+                                              label: Text(
+                                                'Issued By',
+                                                style: subTitleStyle,
+                                              )),
+                                          DataColumn(
+                                              label: Text(
+                                                'Issued To',
+                                                style: subTitleStyle,
+                                              )),
+                                        ],
+                                        rows: items
+                                            .map(
+                                              (itemRow) => DataRow(
+                                            cells: [
+                                              DataCell(Text(
+                                                itemRow.slNo,
+                                                style: descriptionStyleDark,
+                                              )),
+                                              DataCell(Text(
+                                                itemRow.date,
+                                                style: descriptionStyleDark,
+                                              )),
+                                              DataCell(Text(
+                                                itemRow.issuedQuantity,
+                                                style: descriptionStyleDark,
+                                              )),
+                                              DataCell(Text(
+                                                itemRow.issuedBy,
+                                                style: descriptionStyleDark,
+                                              )),
+                                              DataCell(Text(
+                                                itemRow.issuedTo,
+                                                style: descriptionStyleDark,
+                                              )),
+                                            ],
+                                          ),
                                         )
-                                      ],
+                                            .toList(),
+                                      ),
                                     ),
+                                  ),
+                                  Divider(
+                                    thickness: 1,
+                                    color: Colors.black54,
                                   ),
                                 ],
                               ),
@@ -168,7 +243,41 @@ class _DetailDescription extends State<DetailDescription> {
                       height: getDynamicHeight(150),
                     ),
                   ]))),
-        ));
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  GoToPage(
+                      context,
+                      IssuedDetails());
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: backgroundColor,
+                  ),
+                  height: getDynamicHeight(40),
+                  width: getDynamicWidth(90),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ADD",
+                        style: subTitleStyleLight1,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+    );
   }
 }
 
@@ -197,3 +306,43 @@ Widget totalsubtext(String _left, String _right) {
     ),
   );
 }
+
+class ItemInfo {
+  String slNo;
+  String date;
+  String issuedQuantity;
+  String issuedBy;
+  String issuedTo;
+
+  ItemInfo({
+    this.slNo,
+    this.date,
+    this.issuedQuantity,
+    this.issuedBy,
+    this.issuedTo,
+  });
+}
+
+var items = <ItemInfo>[
+  ItemInfo(
+    slNo:"1",
+    date: "29/10/2010",
+    issuedBy: "Vasanth(Manager)",
+    issuedTo: "Srivatsav(Site Engineer)",
+    issuedQuantity: "2343"
+  ),
+  ItemInfo(
+      slNo:"2",
+      date: "29/10/2010",
+      issuedBy: "Vasanth(Manager)",
+      issuedTo: "Srivatsav(Site Engineer)",
+      issuedQuantity: "2343"
+  ),
+  ItemInfo(
+      slNo:"3",
+      date: "29/10/2010",
+      issuedBy: "Vasanth(Manager)",
+      issuedTo: "Srivatsav(Site Engineer)",
+      issuedQuantity: "2343"
+  ),
+];
