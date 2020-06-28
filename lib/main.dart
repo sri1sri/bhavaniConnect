@@ -88,7 +88,9 @@ class _MyAppState extends State<MyApp> {
 
       String mMessage = data != null ? data['message'] : message['message'];
       if (mMessage != "vehicle" || mMessage != "goods") {
-        Provider.of<NotificationModel>(context).increment();
+        Provider.of<NotificationModel>(context).increment(
+          listen: false,
+        );
       }
       if (title == null && mMessage != null) {
         navigatorKey.currentState.pushNamed("/" + mMessage);
@@ -105,7 +107,8 @@ class _MyAppState extends State<MyApp> {
 
       if (title == null && mMessage != null) {
         print(mMessage);
-        Provider.of<NotificationModel>(context).removeNotifications();
+        Provider.of<NotificationModel>(context)
+            .removeNotifications(listen: false);
         navigatorKey.currentState.pushNamed("/" + mMessage);
       } else {
         showNotificaitonDialog(context, title, mMessage);

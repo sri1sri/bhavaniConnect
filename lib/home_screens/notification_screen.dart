@@ -5,10 +5,12 @@ import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
+import 'package:bhavaniconnect/models/notification_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
@@ -66,6 +68,12 @@ class _F_NotificationPageState extends State<NotificationPage> {
       userRoleValue = role;
       userName = name;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<NotificationModel>(context).removeNotifications();
   }
 
   int _n = 0;

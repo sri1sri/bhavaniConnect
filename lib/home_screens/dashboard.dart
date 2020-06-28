@@ -13,7 +13,6 @@ import 'package:bhavaniconnect/home_screens/notification_screen.dart';
 import 'package:bhavaniconnect/models/notification_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import 'Add_Stock/Stock_Screen.dart';
@@ -101,7 +100,6 @@ class _Dashboard extends State<Dashboard> {
             },
           ),
           rightAction: () {
-            Provider.of<NotificationModel>(context).removeNotifications();
             GoToPage(
               context,
               NotificationPage(currentUserId: widget.currentUserId),
