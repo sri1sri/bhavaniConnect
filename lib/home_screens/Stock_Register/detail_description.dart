@@ -3,26 +3,56 @@ import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
 import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
+import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'AddIssueDetails.dart';
-import 'AddNewInvoice.dart';
 
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 class DetailDescription extends StatefulWidget {
   final String documentId;
+  final String constructionId;
+  final String currentUserId;
 
-  const DetailDescription({Key key, this.documentId}) : super(key: key);
+  const DetailDescription(
+      {Key key, this.documentId, this.constructionId, this.currentUserId})
+      : super(key: key);
 
   @override
   _DetailDescription createState() => _DetailDescription();
 }
 
 class _DetailDescription extends State<DetailDescription> {
+  int index = 0;
+  int issuedQuantity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getIssuedQuantity();
+  }
+
+  getIssuedQuantity() {
+    Firestore.instance
+        .collection(AppConstants.prod + 'stockIssued')
+        .where('stockId', isEqualTo: widget.documentId)
+        .orderBy('added_on', descending: false)
+        .getDocuments()
+        .then((value) {
+      List<DocumentSnapshot> issuedResult = value.documents;
+
+      for (int i = 0; i < issuedResult.length; i++) {
+        setState(() {
+          issuedQuantity += int.parse(issuedResult[i]['issuedQuantity']);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return offlineWidget(context);
@@ -113,8 +143,11 @@ class _DetailDescription extends State<DetailDescription> {
                                   subtext("Invoice No.", result['invoice_no']),
                                   subtext("Received Quantity",
                                       result['received_quantity']),
-                                  subtext("Issued Quantity",
-                                      result['issued_quantity']),
+                                  subtext(
+                                      "Issued Quantity",
+                                      issuedQuantity == 0
+                                          ? result['issued_quantity']
+                                          : issuedQuantity.toString()),
                                   subtext("Balance Quantity",
                                       result['balance_quantity']),
                                   subtext("Rate", "₹${result['rate']}"),
@@ -137,7 +170,7 @@ class _DetailDescription extends State<DetailDescription> {
                                   ),
                                   Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Remarks:",
@@ -168,67 +201,126 @@ class _DetailDescription extends State<DetailDescription> {
                                   ),
                                   Container(
                                     child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: DataTable(
-                                        onSelectAll: (b) {},
-                                        sortAscending: true,
-                                        columns: <DataColumn>[
-                                          DataColumn(
-                                              label: Text(
-                                                'Sl.No',
-                                                style: subTitleStyle,
-                                              )),
-                                          DataColumn(
-                                              label: Text(
-                                                'Date',
-                                                style: subTitleStyle,
-                                              )),
-                                          DataColumn(
-                                              label: Text(
-                                                'Issued Quantity',
-                                                style: subTitleStyle,
-                                              )),
-                                          DataColumn(
-                                              label: Text(
-                                                'Issued By',
-                                                style: subTitleStyle,
-                                              )),
-                                          DataColumn(
-                                              label: Text(
-                                                'Issued To',
-                                                style: subTitleStyle,
-                                              )),
-                                        ],
-                                        rows: items
-                                            .map(
-                                              (itemRow) => DataRow(
-                                            cells: [
-                                              DataCell(Text(
-                                                itemRow.slNo,
-                                                style: descriptionStyleDark,
-                                              )),
-                                              DataCell(Text(
-                                                itemRow.date,
-                                                style: descriptionStyleDark,
-                                              )),
-                                              DataCell(Text(
-                                                itemRow.issuedQuantity,
-                                                style: descriptionStyleDark,
-                                              )),
-                                              DataCell(Text(
-                                                itemRow.issuedBy,
-                                                style: descriptionStyleDark,
-                                              )),
-                                              DataCell(Text(
-                                                itemRow.issuedTo,
-                                                style: descriptionStyleDark,
-                                              )),
-                                            ],
-                                          ),
-                                        )
-                                            .toList(),
-                                      ),
-                                    ),
+                                        scrollDirection: Axis.horizontal,
+                                        child: StreamBuilder(
+                                            stream: Firestore.instance
+                                                .collection(AppConstants.prod +
+                                                    'stockIssued')
+                                                .where('stockId',
+                                                    isEqualTo:
+                                                        widget.documentId)
+                                                .orderBy('added_on',
+                                                    descending: false)
+                                                .snapshots(),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<QuerySnapshot>
+                                                    snapshot) {
+                                              index = 0;
+                                              issuedQuantity = 0;
+                                              if (!snapshot.hasData) {
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              } else if (snapshot.hasError) {
+                                                return Center(
+                                                  child: Text(snapshot.error),
+                                                );
+                                              } else {
+                                                List<DocumentSnapshot> result =
+                                                    snapshot.data.documents;
+                                                if (result.length == 0) {
+                                                  return NoDataWidget();
+                                                }
+                                                return DataTable(
+                                                  onSelectAll: (b) {},
+                                                  sortAscending: true,
+                                                  columns: <DataColumn>[
+                                                    DataColumn(
+                                                        label: Text(
+                                                      'Sl.No',
+                                                      style: subTitleStyle,
+                                                    )),
+                                                    DataColumn(
+                                                        label: Text(
+                                                      'Date',
+                                                      style: subTitleStyle,
+                                                    )),
+                                                    DataColumn(
+                                                        label: Text(
+                                                      'Issued Quantity',
+                                                      style: subTitleStyle,
+                                                    )),
+                                                    DataColumn(
+                                                        label: Text(
+                                                      'Issued By',
+                                                      style: subTitleStyle,
+                                                    )),
+                                                    DataColumn(
+                                                        label: Text(
+                                                      'Issued To',
+                                                      style: subTitleStyle,
+                                                    )),
+                                                  ],
+                                                  rows: result.map((item) {
+                                                    index++;
+                                                    issuedQuantity += int.parse(
+                                                        item['issuedQuantity']);
+                                                    ItemInfo itemRow = ItemInfo(
+                                                        slNo: index.toString(),
+                                                        date: item['added_on'] !=
+                                                                null
+                                                            ? DateTimeUtils.slashDateFormat(
+                                                                (item['added_on']
+                                                                        as Timestamp)
+                                                                    .toDate())
+                                                            : '',
+                                                        issuedBy: item[
+                                                                    'created_by'] !=
+                                                                null
+                                                            ? "${item['created_by']['name']}  (${item['created_by']['role']})"
+                                                            : '',
+                                                        issuedTo: item[
+                                                                    'issued_to'] !=
+                                                                null
+                                                            ? "${item['issued_to']['name']}  (${item['issued_to']['role']})"
+                                                            : '',
+                                                        issuedQuantity: item[
+                                                            'issuedQuantity']);
+
+                                                    return DataRow(
+                                                      cells: [
+                                                        DataCell(Text(
+                                                          itemRow.slNo,
+                                                          style:
+                                                              descriptionStyleDark,
+                                                        )),
+                                                        DataCell(Text(
+                                                          itemRow.date,
+                                                          style:
+                                                              descriptionStyleDark,
+                                                        )),
+                                                        DataCell(Text(
+                                                          itemRow
+                                                              .issuedQuantity,
+                                                          style:
+                                                              descriptionStyleDark,
+                                                        )),
+                                                        DataCell(Text(
+                                                          itemRow.issuedBy,
+                                                          style:
+                                                              descriptionStyleDark,
+                                                        )),
+                                                        DataCell(Text(
+                                                          itemRow.issuedTo,
+                                                          style:
+                                                              descriptionStyleDark,
+                                                        )),
+                                                      ],
+                                                    );
+                                                  }).toList(),
+                                                );
+                                              }
+                                            })),
                                   ),
                                   Divider(
                                     thickness: 1,
@@ -254,7 +346,11 @@ class _DetailDescription extends State<DetailDescription> {
                 onTap: () {
                   GoToPage(
                       context,
-                      IssuedDetails());
+                      IssuedDetails(
+                        constructionId: widget.constructionId,
+                        stockId: widget.documentId,
+                        currentUserId: widget.currentUserId,
+                      ));
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -276,8 +372,7 @@ class _DetailDescription extends State<DetailDescription> {
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 }
 
@@ -325,24 +420,21 @@ class ItemInfo {
 
 var items = <ItemInfo>[
   ItemInfo(
-    slNo:"1",
-    date: "29/10/2010",
-    issuedBy: "Vasanth(Manager)",
-    issuedTo: "Srivatsav(Site Engineer)",
-    issuedQuantity: "2343"
-  ),
-  ItemInfo(
-      slNo:"2",
+      slNo: "1",
       date: "29/10/2010",
       issuedBy: "Vasanth(Manager)",
       issuedTo: "Srivatsav(Site Engineer)",
-      issuedQuantity: "2343"
-  ),
+      issuedQuantity: "2343"),
   ItemInfo(
-      slNo:"3",
+      slNo: "2",
       date: "29/10/2010",
       issuedBy: "Vasanth(Manager)",
       issuedTo: "Srivatsav(Site Engineer)",
-      issuedQuantity: "2343"
-  ),
+      issuedQuantity: "2343"),
+  ItemInfo(
+      slNo: "3",
+      date: "29/10/2010",
+      issuedBy: "Vasanth(Manager)",
+      issuedTo: "Srivatsav(Site Engineer)",
+      issuedQuantity: "2343"),
 ];

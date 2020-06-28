@@ -515,7 +515,8 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
-                        if (inTime != null) {
+                        if (inTime != null ||
+                            DateTimeUtils.isSameDay(datetime, now)) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => AddAttendance(
                                     currentUserId: widget.currentUserId,

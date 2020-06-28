@@ -261,6 +261,7 @@ class _MyAppState extends State<MyApp> {
           .collection(AppConstants.prod + 'constructionSite')
           .document(profile['construction_site']['constructionId'])
           .get();
+
       LatLng location = GeoUtil.locationToPoint(siteDocument);
 
       prefs.setDouble("siteLatitude", location.latitude);

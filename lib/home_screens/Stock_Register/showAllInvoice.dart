@@ -165,6 +165,7 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
                           size,
                           context,
                           result[index].documentID,
+                          result[index]['construction_site']['constructionId'],
                           DateTimeUtils.dayMonthYearTimeFormat(
                               (result[index]['added_on'] as Timestamp)
                                   .toDate()),
@@ -174,7 +175,8 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
                           result[index]['category']['categoryName'],
                           result[index]['invoice_no'],
                           double.parse(result[index]['total_amount_gst'])
-                              .toStringAsFixed(2));
+                              .toStringAsFixed(2),
+                          widget.currentUserId);
                     },
                   );
                 }
@@ -247,18 +249,22 @@ Widget StockRegister(
     Size size,
     BuildContext context,
     String documentId,
+    String constructionId,
     String date,
     String site,
     String description,
     String category,
     String invoiceNo,
-    String total) {
+    String total,
+    String currentUserId) {
   return GestureDetector(
     onTap: () {
       GoToPage(
           context,
           DetailDescription(
             documentId: documentId,
+            constructionId: constructionId,
+            currentUserId: currentUserId,
           ));
     },
     child: Padding(
@@ -301,12 +307,16 @@ Widget StockRegister(
                           style: subTitleStyleDark1),
                     ),
                     Text(category, style: subTitleStyle),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                     Text(
                       "Invoice No.:$invoiceNo",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                   ],
                 ),
               ),
