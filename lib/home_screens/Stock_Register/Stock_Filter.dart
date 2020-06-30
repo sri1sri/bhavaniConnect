@@ -20,6 +20,7 @@ class StockFilter extends StatefulWidget {
   final String dealerId;
   final String categoryId;
   final String itemId;
+  final String currentUserId;
   final Function(DateTime startDate, DateTime endDate, String constructionId,
       String dealerId, String categoryId, String itemId) returnFunction;
 
@@ -31,7 +32,8 @@ class StockFilter extends StatefulWidget {
       this.dealerId,
       this.itemId,
       this.categoryId,
-      this.returnFunction})
+      this.returnFunction,
+      this.currentUserId})
       : super(key: key);
 
   @override
@@ -235,7 +237,7 @@ class _StockFilter extends State<StockFilter> {
                                 style: titleStyle,
                               ),
                               SizedBox(
-                                height:getDynamicHeight(15),
+                                height: getDynamicHeight(15),
                               ),
                               StreamBuilder(
                                 stream: Firestore.instance
@@ -514,7 +516,7 @@ class _StockFilter extends State<StockFilter> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height:getDynamicHeight(55),
+                              height: getDynamicHeight(55),
                               width: getDynamicWidth(180),
                               child: GestureDetector(
                                 onTap: visible
@@ -529,17 +531,17 @@ class _StockFilter extends State<StockFilter> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   StockDataList(
-                                                selectedDateFrom,
-                                                selectedDateTo,
-                                                constructionId,
-                                                selectedConstructionSite,
-                                                selectedDealerId,
-                                                selectedCategoryId,
-                                                selectedItemId,
-                                                selectedDealer,
-                                                selectedCategory,
-                                                selectedItem,
-                                              ),
+                                                      selectedDateFrom,
+                                                      selectedDateTo,
+                                                      constructionId,
+                                                      selectedConstructionSite,
+                                                      selectedDealerId,
+                                                      selectedCategoryId,
+                                                      selectedItemId,
+                                                      selectedDealer,
+                                                      selectedCategory,
+                                                      selectedItem,
+                                                      widget.currentUserId),
                                             ),
                                           );
                                         } else {

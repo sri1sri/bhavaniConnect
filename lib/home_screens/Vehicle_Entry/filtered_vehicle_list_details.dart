@@ -123,6 +123,7 @@ class _VehicleDataList extends State<VehicleDataList> {
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
+                    index = 0;
                     if (!snapshot.hasData) {
                       return Container(
                           child: Center(child: CircularProgressIndicator()),

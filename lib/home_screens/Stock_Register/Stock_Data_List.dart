@@ -7,6 +7,7 @@ import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/no_data_widget.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
+import 'package:bhavaniconnect/home_screens/Stock_Register/detail_description.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +28,7 @@ class StockDataList extends StatefulWidget {
   final String dealerName;
   final String categoryName;
   final String itemName;
+  final String currentUserId;
 
   const StockDataList(
       this.startDate,
@@ -38,7 +40,8 @@ class StockDataList extends StatefulWidget {
       this.itemId,
       this.dealerName,
       this.categoryName,
-      this.itemName);
+      this.itemName,
+      this.currentUserId);
 
   @override
   _StockDataList createState() => _StockDataList();
@@ -110,7 +113,7 @@ class _StockDataList extends State<StockDataList> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height:getDynamicHeight(20),
+                  height: getDynamicHeight(20),
                 ),
                 Column(
                   children: [
@@ -177,6 +180,7 @@ class _StockDataList extends State<StockDataList> {
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
+                      index = 0;
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
@@ -300,19 +304,22 @@ class _StockDataList extends State<StockDataList> {
                                         .toDate()),
                                 site: item['construction_site']
                                     ['constructionSite'],
+                                constructionId: item['construction_site']
+                                    ['constructionId'],
                                 itemDescription: item['item']['itemName'],
                                 category: item['category']['categoryName'],
                                 umo: item['unit']['unitName'],
                                 supplierName: item['dealer']['dealerName'],
                                 invoiceNo: item['invoice_no'],
                                 receivedQty: item['received_quantity'],
-                                issuedQty: item['issued_quantity'],
-                                balanceQty: item['balance_quantity'],
+                                issuedQty: item['issued_quantity'].toString(),
+                                balanceQty: item['balance_quantity'].toString(),
                                 rate: "₹${item['rate']}",
                                 subTotal: "₹${item['sub_total']}",
                                 gstAmount: "₹${item['gst_amount']}",
                                 totalAmt: "₹${item['total_amount_gst']}",
-                                remarks: item['remarks']);
+                                remarks: item['remarks'],
+                                documentId: item.documentID);
 
                             return DataRow(
                               onSelectChanged: (b) {},
@@ -324,6 +331,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -332,6 +349,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -340,6 +367,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -348,6 +385,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -356,6 +403,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -364,6 +421,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -372,6 +439,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -380,6 +457,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -388,6 +475,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -396,6 +493,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -404,6 +511,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -412,6 +529,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -420,6 +547,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -428,6 +565,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -436,6 +583,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -444,6 +601,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -452,6 +619,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 DataCell(
                                   Text(
@@ -460,6 +637,16 @@ class _StockDataList extends State<StockDataList> {
                                   ),
                                   showEditIcon: false,
                                   placeholder: false,
+                                  onTap: () {
+                                    GoToPage(
+                                      context,
+                                      DetailDescription(
+                                        documentId: itemRow.documentId,
+                                        constructionId: itemRow.constructionId,
+                                        currentUserId: widget.currentUserId,
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             );
@@ -581,6 +768,8 @@ class ItemInfo {
   String gstAmount;
   String totalAmt;
   String remarks;
+  String documentId;
+  String constructionId;
 
   ItemInfo({
     this.slNo,
@@ -601,5 +790,7 @@ class ItemInfo {
     this.gstAmount,
     this.totalAmt,
     this.remarks,
+    this.documentId,
+    this.constructionId,
   });
 }

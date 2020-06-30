@@ -44,17 +44,33 @@ class _IssuedDetails extends State<IssuedDetails> {
 
   bool validated = false;
 
+  int issuedQuantitySum;
+  int balancedQuantitySum;
+
   @override
   void initState() {
     super.initState();
     getUserParams();
+    getStockItem();
+  }
+
+  getStockItem() {
+    Firestore.instance
+        .collection(AppConstants.prod + "stockRegister")
+        .document(widget.stockId)
+        .get()
+        .then((value) {
+      DocumentSnapshot result = value;
+      issuedQuantitySum = int.parse(result['issued_quantity'].toString());
+      balancedQuantitySum = int.parse(result['balance_quantity'].toString());
+    });
   }
 
   getUserParams() async {
     var prefs = await SharedPreferences.getInstance();
     String role = prefs.getString("userRole");
     String name = prefs.getString("userName");
-    String constructionSiteId = prefs.getString("constructionId");
+    // String constructionSiteId = prefs.getString("constructionId");
     setState(() {
       userRole = userRoleValues[role];
       userRoleValue = role;
@@ -259,6 +275,22 @@ class _IssuedDetails extends State<IssuedDetails> {
                           width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: () async {
+                              int issuedQuantity =
+                                  int.parse(_issuedQuantityController.text);
+                              int newIssuedQuantitySum =
+                                  issuedQuantitySum + issuedQuantity;
+                              int newBalanceQuantitySum =
+                                  balancedQuantitySum - issuedQuantity;
+                              if (newBalanceQuantitySum < 0) {
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                          content: Text(
+                                              "your balance quantity is $balancedQuantitySum"),
+                                        ));
+                                return;
+                              }
+
                               if (_formKey.currentState.validate() &&
                                   selectedUser != null) {
                                 _formKey.currentState.save();
@@ -269,7 +301,7 @@ class _IssuedDetails extends State<IssuedDetails> {
                                 String documentId =
                                     "${DateTime.now().millisecondsSinceEpoch}-${widget.currentUserId[5]}";
                                 try {
-                                  await Firestore.instance
+                                  Firestore.instance
                                       .collection(
                                           AppConstants.prod + 'stockIssued')
                                       .document(documentId)
@@ -292,8 +324,17 @@ class _IssuedDetails extends State<IssuedDetails> {
                                       "role": selectedUserRole,
                                     },
                                     "added_on": FieldValue.serverTimestamp(),
+                                  }).then((value) {
+                                    Firestore.instance
+                                        .collection(
+                                            AppConstants.prod + "stockRegister")
+                                        .document(widget.stockId)
+                                        .updateData({
+                                      'issued_quantity': newIssuedQuantitySum,
+                                      'balance_quantity': newBalanceQuantitySum,
+                                    });
+                                    Navigator.of(context).pop();
                                   });
-                                  Navigator.pop(context);
                                 } catch (err) {
                                   setState(() {
                                     // isProcessing = false;

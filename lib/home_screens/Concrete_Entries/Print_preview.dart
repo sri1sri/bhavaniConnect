@@ -114,6 +114,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
+                  index = 0;
                   if (!snapshot.hasData) {
                     return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {

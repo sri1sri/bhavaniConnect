@@ -116,6 +116,7 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
                   dealerId: dealerId,
                   itemId: itemId,
                   constructionId: constructionSiteId,
+                  currentUserId: widget.currentUserId,
                   returnFunction: (startDate, endDate, constructionId, dealerId,
                       categoryId, itemId) {
                     setState(() {
@@ -166,9 +167,11 @@ class _ShowAllInvoice extends State<ShowAllInvoice> {
                           context,
                           result[index].documentID,
                           result[index]['construction_site']['constructionId'],
-                          DateTimeUtils.dayMonthYearTimeFormat(
-                              (result[index]['added_on'] as Timestamp)
-                                  .toDate()),
+                          result[index]['added_on'] != null
+                              ? DateTimeUtils.dayMonthYearTimeFormat(
+                                  (result[index]['added_on'] as Timestamp)
+                                      .toDate())
+                              : "",
                           result[index]['construction_site']
                               ['constructionSite'],
                           "${result[index]['item']['itemName']} with ${result[index]['category']['categoryName']} blend.",

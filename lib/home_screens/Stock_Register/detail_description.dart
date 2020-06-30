@@ -28,30 +28,6 @@ class DetailDescription extends StatefulWidget {
 
 class _DetailDescription extends State<DetailDescription> {
   int index = 0;
-  int issuedQuantity = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    getIssuedQuantity();
-  }
-
-  getIssuedQuantity() {
-    Firestore.instance
-        .collection(AppConstants.prod + 'stockIssued')
-        .where('stockId', isEqualTo: widget.documentId)
-        .orderBy('added_on', descending: false)
-        .getDocuments()
-        .then((value) {
-      List<DocumentSnapshot> issuedResult = value.documents;
-
-      for (int i = 0; i < issuedResult.length; i++) {
-        setState(() {
-          issuedQuantity += int.parse(issuedResult[i]['issuedQuantity']);
-        });
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,13 +119,10 @@ class _DetailDescription extends State<DetailDescription> {
                                   subtext("Invoice No.", result['invoice_no']),
                                   subtext("Received Quantity",
                                       result['received_quantity']),
-                                  subtext(
-                                      "Issued Quantity",
-                                      issuedQuantity == 0
-                                          ? result['issued_quantity']
-                                          : issuedQuantity.toString()),
+                                  subtext("Issued Quantity",
+                                      result['issued_quantity'].toString()),
                                   subtext("Balance Quantity",
-                                      result['balance_quantity']),
+                                      result['balance_quantity'].toString()),
                                   subtext("Rate", "₹${result['rate']}"),
                                   subtext(
                                       "Sub Total", "₹${result['sub_total']}"),
@@ -216,7 +189,7 @@ class _DetailDescription extends State<DetailDescription> {
                                                 AsyncSnapshot<QuerySnapshot>
                                                     snapshot) {
                                               index = 0;
-                                              issuedQuantity = 0;
+
                                               if (!snapshot.hasData) {
                                                 return Center(
                                                     child:
@@ -231,6 +204,7 @@ class _DetailDescription extends State<DetailDescription> {
                                                 if (result.length == 0) {
                                                   return NoDataWidget();
                                                 }
+
                                                 return DataTable(
                                                   onSelectAll: (b) {},
                                                   sortAscending: true,
@@ -263,8 +237,7 @@ class _DetailDescription extends State<DetailDescription> {
                                                   ],
                                                   rows: result.map((item) {
                                                     index++;
-                                                    issuedQuantity += int.parse(
-                                                        item['issuedQuantity']);
+
                                                     ItemInfo itemRow = ItemInfo(
                                                         slNo: index.toString(),
                                                         date: item['added_on'] !=

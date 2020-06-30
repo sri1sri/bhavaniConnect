@@ -623,70 +623,8 @@ class _AddInvoiceState extends State<AddInvoice> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          Text(
-                            "Issued Quantity",
-                            style: titleStyle,
-                          ),
                           SizedBox(
                             height: getDynamicHeight(20),
-                          ),
-                          TextFormField(
-                            controller: _issuedQuantityController,
-                            textInputAction: TextInputAction.done,
-                            obscureText: false,
-                            validator: (value) => value.isNotEmpty
-                                ? null
-                                : 'Issued Quantity cant\'t be empty.',
-                            focusNode: _issuedQuantityFocusNode,
-                            decoration: new InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.shopping_cart,
-                                color: backgroundColor,
-                              ),
-                              labelText: 'Enter Issued Quantity',
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(5.0),
-                                borderSide: new BorderSide(),
-                              ),
-                            ),
-                            keyboardType: TextInputType.number,
-                            style: new TextStyle(
-                              fontFamily: "Poppins",
-                            ),
-                          ),
-                          SizedBox(
-                            height: getDynamicHeight(20),
-                          ),
-                          Text(
-                            "Balance Quantity",
-                            style: titleStyle,
-                          ),
-                          SizedBox(
-                            height: getDynamicHeight(20),
-                          ),
-                          TextFormField(
-                            controller: _balanceQuantityController,
-                            textInputAction: TextInputAction.done,
-                            obscureText: false,
-                            validator: (value) => value.isNotEmpty
-                                ? null
-                                : 'Balance Quantity cant\'t be empty.',
-                            focusNode: _balanceQuantityFocusNode,
-                            decoration: new InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.shopping_basket,
-                                color: backgroundColor,
-                              ),
-                              labelText: 'Enter Balance Quantity',
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(5.0),
-                                borderSide: new BorderSide(),
-                              ),
-                            ),
-                            keyboardType: TextInputType.number,
-                            style: new TextStyle(
-                              fontFamily: "Poppins",
-                            ),
                           ),
                           SizedBox(
                             height: getDynamicHeight(20),
@@ -939,10 +877,9 @@ class _AddInvoiceState extends State<AddInvoice> {
                                               _invoiceDateController.text,
                                           "received_quantity":
                                               _receivedQuantityController.text,
-                                          "issued_quantity":
-                                              _issuedQuantityController.text,
+                                          "issued_quantity": 0,
                                           'balance_quantity':
-                                              _balanceQuantityController.text,
+                                              _receivedQuantityController.text,
                                           'rate': _rateController.text,
                                           'sub_total': _subTotalController.text,
                                           'gst_amount':
