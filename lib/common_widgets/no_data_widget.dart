@@ -5,8 +5,9 @@ class NoDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OfflinePage(
-      text: "no data to display",
-      color: Colors.white,
+      text: "No data available",
+      color: Colors.black,
+      noData: true,
     );
   }
 }
