@@ -124,9 +124,7 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                             "Yesterday's Progress",
                             style: titleStyle,
                           ),
-                          SizedBox(
-                            height: getDynamicHeight(20)
-                          ),
+                          SizedBox(height: getDynamicHeight(20)),
                           TextFormField(
                             controller: _yesterdayProgressController,
                             //initialValue: _name,
@@ -193,20 +191,16 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                               fontFamily: "Poppins",
                             ),
                           ),
-                          SizedBox(
-                            height: getDynamicHeight(20)
-                          ),
+                          SizedBox(height: getDynamicHeight(20)),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: getDynamicHeight(20)
-                    ),
+                    SizedBox(height: getDynamicHeight(20)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          height:getDynamicHeight(55),
+                          height: getDynamicHeight(55),
                           width: getDynamicWidth(180),
                           child: GestureDetector(
                             onTap: visible
@@ -216,8 +210,7 @@ class _AddProgressRemarks extends State<AddProgressRemarks> {
                                       setState(() {
                                         visible = false;
                                       });
-                                      String documentId = DateTimeUtils
-                                          .currentDayDateTimeNow
+                                      String documentId = DateTime.now()
                                           .millisecondsSinceEpoch
                                           .toString();
                                       int totalProgress = 0;

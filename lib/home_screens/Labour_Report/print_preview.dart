@@ -48,6 +48,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Firestore.instance
         .collection(AppConstants.prod + "labourReport")
         .where("construction_site.constructionId",
@@ -160,12 +161,15 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                         .where('labour_type', isEqualTo: widget.labourType)
                         .where("block.blockId", isEqualTo: widget.blockId)
                         .where("dealer.dealerId", isEqualTo: widget.dealerId)
-                        .where("selected_date", isGreaterThan: widget.startDate)
-                        .where("selected_date", isLessThan: widget.endDate)
-                        .orderBy('selected_date', descending: true)
+                        .where("added_on", isGreaterThan: widget.startDate)
+                        .where("added_on", isLessThan: widget.endDate)
+                        .orderBy('added_on', descending: true)
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
+                      print(widget.startDate);
+                      print(widget.endDate);
+                      print(widget.startDate);
                       index = 0;
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());

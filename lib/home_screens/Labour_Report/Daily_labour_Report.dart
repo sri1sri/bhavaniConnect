@@ -96,9 +96,9 @@ class _LabourEntries extends State<LabourEntries> {
             GoToPage(
                 context,
                 PrintReport(
-                    // startDate: startFilterDate,
-                    // endDate: endFilterDate,
-                    ));
+                  startDate: startFilterDate,
+                  endDate: endFilterDate,
+                ));
           },
           primaryText: 'Daily Labour Report',
           tabBarWidget: null,
@@ -298,21 +298,29 @@ Widget LabourEntry(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                     Text(
                       "Block: $block",
                       style: descriptionStyleDarkBlur1,
                     ),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                     Expanded(
                       child: Text(labourType,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: subTitleStyleDark1),
                     ),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                     Text(dealerName, style: subTitleStyle),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                   ],
                 ),
               ),

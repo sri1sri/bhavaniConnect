@@ -1,6 +1,7 @@
 import 'package:bhavaniconnect/common_variables/app_colors.dart';
 import 'package:bhavaniconnect/common_variables/app_fonts.dart';
 import 'package:bhavaniconnect/common_variables/app_functions.dart';
+import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 
@@ -14,17 +15,18 @@ import 'package:intl/intl.dart';
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 class PrintReport extends StatefulWidget {
-  // final DateTime startDate;
-  // final DateTime endDate;
+  final DateTime startDate;
+  final DateTime endDate;
 
-  // const PrintReport({Key key, this.startDate, this.endDate}) : super(key: key);
+  const PrintReport({Key key, this.startDate, this.endDate}) : super(key: key);
   @override
   _PrintReport createState() => _PrintReport();
 }
 
 class _PrintReport extends State<PrintReport> {
-  DateTime selectedDateFrom = DateTime.now();
-  DateTime selectedDateTo = DateTime.now();
+  DateTime selectedDateFrom = DateTimeUtils.currentDayDateTimeNow;
+  DateTime selectedDateTo =
+      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -407,38 +409,33 @@ class _PrintReport extends State<PrintReport> {
                           height: getDynamicHeight(55),
                           width: getDynamicWidth(180),
                           child: GestureDetector(
-                            onTap: visible
-                                ? () {
-                                    if (_formKey.currentState.validate()) {
-                                      setState(() {
-                                        visible = false;
-                                      });
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              PrintPreviewLabour(
-                                            selectedDateFrom,
-                                            selectedDateTo,
-                                            constructionId,
-                                            selectedConstructionSite,
-                                            selectedDealerId,
-                                            selectedDealer,
-                                            selectedBlockId,
-                                            selectedBlock,
-                                            labourType,
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      setState(() {
-                                        validated = true;
-                                      });
-                                    }
-                                  }
-                                : () {
-                                    print('In Process');
-                                  },
+                            onTap: () {
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  visible = false;
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PrintPreviewLabour(
+                                      selectedDateFrom,
+                                      selectedDateTo,
+                                      constructionId,
+                                      selectedConstructionSite,
+                                      selectedDealerId,
+                                      selectedDealer,
+                                      selectedBlockId,
+                                      selectedBlock,
+                                      labourType,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  validated = true;
+                                });
+                              }
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: backgroundColor,
@@ -448,17 +445,10 @@ class _PrintReport extends State<PrintReport> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Center(
-                                    child: visible
-                                        ? Text(
-                                            "Preview",
-                                            style: activeSubTitleStyle,
-                                          )
-                                        : CircularProgressIndicator(
-                                            valueColor:
-                                                new AlwaysStoppedAnimation<
-                                                    Color>(Colors.white),
-                                          ),
-                                  )
+                                      child: Text(
+                                    "Preview",
+                                    style: activeSubTitleStyle,
+                                  ))
                                 ],
                               ),
                             ),
