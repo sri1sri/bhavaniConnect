@@ -88,7 +88,7 @@ class _AddAttendance extends State<AddAttendance> {
     setState(() {
       distance = GeoUtil.calcDistance(
           lat1, long1, currentLocation.latitude, currentLocation.longitude);
-      inRadius = distance * 1000 <= 50.0;
+      inRadius = distance * 1000 >= 50.0;
     });
   }
 
