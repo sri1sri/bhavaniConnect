@@ -277,6 +277,11 @@ Widget VehicleDetails(
                     SizedBox(height: getDynamicHeight(10)),
                     Text("Vehicle: $category", style: subTitleStyle),
                     SizedBox(height: getDynamicHeight(10)),
+                    Text(
+                      "Vehicle Name: Tractor",
+                      style: descriptionStyleDarkBlur1,
+                    ),
+                    SizedBox(height: getDynamicHeight(10)),
                     Expanded(
                       child: Text("Requested By:\n$requestedBy",
                           maxLines: 2,

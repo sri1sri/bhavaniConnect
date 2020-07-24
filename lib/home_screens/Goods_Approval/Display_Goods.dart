@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 import 'Add_Goods.dart';
+import 'Search_Goods.dart';
 
 class GoodsScreen extends StatefulWidget {
   final String currentUserId;
@@ -95,41 +96,139 @@ class _GoodsScreen extends State<GoodsScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(72),
-        child: CustomAppBarDark(
-          leftActionBar: Icon(
-            Icons.arrow_back_ios,
-            size: 25,
-            color: Colors.white,
-          ),
-          leftAction: () {
-            Navigator.pop(context, true);
-          },
-          rightActionBar: (userRole == UserRoles.Manager ||
-                  userRole == UserRoles.StoreManager ||
-                  userRole == UserRoles.Securtiy ||
-                  userRole == UserRoles.Supervisor ||
-                  userRole == UserRoles.Admin)
-              ? Icon(
-                  Icons.calendar_today,
-                  size: 25,
-                  color: Colors.white,
-                )
-              : null,
-          rightAction: (userRole == UserRoles.Manager ||
-                  userRole == UserRoles.StoreManager ||
-                  userRole == UserRoles.Securtiy ||
-                  userRole == UserRoles.Supervisor ||
-                  userRole == UserRoles.Admin)
-              ? () {
-                  showPickerFrom(context);
-                  // GoToPage(context, VehicleFilter());
-                }
-              : null,
-          primaryText: 'Goods Details',
-          tabBarWidget: null,
-        ),
-      ),
+          preferredSize: Size.fromHeight(72),
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: getDynamicHeight(15),
+                ),
+                Container(
+                  height: getDynamicHeight(80),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: getDynamicHeight(45),
+                          left: getDynamicWidth(20),
+                        ),
+                        child: InkWell(
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context, true);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            0, getDynamicHeight(30), 0, 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Goods Details",
+                              textAlign: TextAlign.center,
+                              style: appBarTitleStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                            top: getDynamicHeight(35),
+                            right: getDynamicWidth(10),
+                          ),
+                          child: Row(
+                            children: [
+                              (userRole == UserRoles.Manager ||
+                                  userRole == UserRoles.StoreManager ||
+                                  userRole == UserRoles.Securtiy ||
+                                  userRole == UserRoles.Supervisor ||
+                                  userRole == UserRoles.Admin)
+                                  ? GestureDetector(
+                                    child: Icon(
+                                Icons.calendar_today,
+                                size: 25,
+                                color: Colors.white,
+                              ),
+                                onTap: ()
+                                {
+                                  showPickerFrom(context);
+                                },
+                                  ): null,
+                              SizedBox(width: 5,),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.search,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          GoodsFilter(),
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )),
+//      appBar: PreferredSize(
+//        preferredSize: Size.fromHeight(72),
+//        child: CustomAppBarDark(
+//          leftActionBar: Icon(
+//            Icons.arrow_back_ios,
+//            size: 25,
+//            color: Colors.white,
+//          ),
+//          leftAction: () {
+//            Navigator.pop(context, true);
+//          },
+//          rightActionBar: (userRole == UserRoles.Manager ||
+//                  userRole == UserRoles.StoreManager ||
+//                  userRole == UserRoles.Securtiy ||
+//                  userRole == UserRoles.Supervisor ||
+//                  userRole == UserRoles.Admin)
+//              ? Icon(
+//                  Icons.calendar_today,
+//                  size: 25,
+//                  color: Colors.white,
+//                )
+//              : null,
+//          rightAction: (userRole == UserRoles.Manager ||
+//                  userRole == UserRoles.StoreManager ||
+//                  userRole == UserRoles.Securtiy ||
+//                  userRole == UserRoles.Supervisor ||
+//                  userRole == UserRoles.Admin)
+//              ? () {
+//                  showPickerFrom(context);
+//                  // GoToPage(context, VehicleFilter());
+//                }
+//              : null,
+//          primaryText: 'Goods Details',
+//          tabBarWidget: null,
+//        ),
+//      ),
       body: ClipRRect(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
@@ -245,6 +344,11 @@ Widget goodsDetails(
                   ),
                   SizedBox(height: getDynamicHeight(10)),
                   Text(category, style: subTitleStyle),
+                  SizedBox(height: getDynamicHeight(10)),
+                  Text(
+                    "Vehicle Number: TN66V6571",
+                    style: descriptionStyleDarkBlur1,
+                  ),
                   SizedBox(height: getDynamicHeight(10)),
                   Expanded(
                     child: Text("Requested By:\n$requestedBy",

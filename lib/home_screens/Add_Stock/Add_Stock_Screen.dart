@@ -136,6 +136,7 @@ class _F_AddStockScreen extends State<F_AddStockScreen> {
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
+          height: double.infinity,
           color: Colors.white,
           child: SingleChildScrollView(
             child: Padding(

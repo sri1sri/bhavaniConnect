@@ -314,6 +314,10 @@ Widget LabourEntry(
                           overflow: TextOverflow.ellipsis,
                           style: subTitleStyleDark1),
                     ),
+                    Text(
+                      "Total Labour's: 232",
+                      style: descriptionStyleDarkBlur1,
+                    ),
                     SizedBox(
                       height: getDynamicHeight(10),
                     ),

@@ -26,8 +26,8 @@ class _AddVehicle extends State<AddVehicle> {
   String _myActivity;
   String _myActivityResult;
   FocusNode focusNode = FocusNode();
-  // final TextEditingController _sellerNameController = TextEditingController();
-  // final FocusNode _sellerNameFocusNode = FocusNode();
+  final TextEditingController _vehicleNameController = TextEditingController();
+  final FocusNode _vehicleNameFocusNode = FocusNode();
   final TextEditingController _vehicleNumberController =
       TextEditingController();
   final FocusNode _vehicleNumbeFocusNode = FocusNode();
@@ -563,7 +563,7 @@ class _AddVehicle extends State<AddVehicle> {
                           obscureText: false,
                           validator: (value) => value.isNotEmpty
                               ? null
-                              : 'company name cant\'t be empty.',
+                              : 'vehicle Number cant\'t be empty.',
                           focusNode: _vehicleNumbeFocusNode,
                           //onSaved: (value) => _name = value,
                           decoration: new InputDecoration(
@@ -718,6 +718,42 @@ class _AddVehicle extends State<AddVehicle> {
                           validate: (value) => value == null
                               ? 'Vehicle Type cannot be empty'
                               : null,
+                        ),
+                        SizedBox(
+                          height: getDynamicHeight(20),
+                        ),
+                        Text(
+                          "Vehicle Name ",
+                          style: titleStyle,
+                        ),
+                        SizedBox(
+                          height: getDynamicHeight(10),
+                        ),
+                        DropdownSearch(
+                          showSelectedItem: true,
+                          maxHeight: 400,
+                          mode: Mode.MENU,
+                          items: [
+                            "Tractor",
+                            "JcB",
+                            "Cement Mixer",
+                            "Goods Truck"
+                          ],
+                          label: "Vehicle Name",
+                          onChanged: print,
+                          selectedItem: "Choose Vehicle Name",
+                          showSearchBox: true,
+//                          onChanged: (value) {
+//                            setState(() {
+//                              _selectedVehicleType = value;
+//                            });
+//                          },
+//                          selectedItem: _selectedVehicleType != ""
+//                              ? _selectedVehicleType
+//                              : "Choose Vehicle Name",
+//                          validate: (value) => value == null
+//                              ? 'Vehicle Name cannot be empty'
+//                              : null,
                         ),
                         SizedBox(
                           height: getDynamicHeight(20),

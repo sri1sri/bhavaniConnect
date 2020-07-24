@@ -72,7 +72,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -87,7 +87,7 @@ class _AddInvoiceState extends State<AddInvoice> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {

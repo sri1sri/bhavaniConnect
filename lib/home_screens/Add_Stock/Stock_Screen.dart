@@ -24,7 +24,8 @@ class _StockScreen extends State<StockScreen> {
     "Dealer",
     "Role",
     "Construction Site",
-    "Unit"
+    "Unit",
+    "Vehicle"
   ];
   List<String> F_image = [
     "images/s1.png",
@@ -34,6 +35,7 @@ class _StockScreen extends State<StockScreen> {
     "images/s4.png",
     "images/s5.png",
     "images/s7.png",
+    "images/c6.png"
   ];
   List<String> F_collection = [
     AppConstants.prod + "items",
@@ -43,6 +45,7 @@ class _StockScreen extends State<StockScreen> {
     AppConstants.prod + "role",
     AppConstants.prod + "constructionSite",
     AppConstants.prod + "units",
+    AppConstants.prod + "vehicle",
   ];
   @override
   Widget build(BuildContext context) {

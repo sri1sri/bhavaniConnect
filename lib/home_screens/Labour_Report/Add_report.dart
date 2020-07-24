@@ -23,8 +23,8 @@ class AddLabourReport extends StatefulWidget {
 }
 
 class _AddLabourReport extends State<AddLabourReport> {
-  DateTime selectedDate = DateTime(2010);
-  DateTime selectedDateInvoice = DateTime(2010);
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateInvoice = DateTime.now();
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
@@ -68,7 +68,7 @@ class _AddLabourReport extends State<AddLabourReport> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedFrom != null) {
       setState(() {
@@ -83,7 +83,7 @@ class _AddLabourReport extends State<AddLabourReport> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1930),
-      lastDate: DateTime(2010),
+      lastDate: DateTime.now(),
     );
     if (pickedTo != null) {
       setState(() {
@@ -98,6 +98,12 @@ class _AddLabourReport extends State<AddLabourReport> {
 
   final TextEditingController _noofPeopleController = TextEditingController();
   final FocusNode _noofPeopleFocusNode = FocusNode();
+  final TextEditingController _noofMasonController = TextEditingController();
+  final FocusNode _noofMasonFocusNode = FocusNode();
+  final TextEditingController _noofMaleController = TextEditingController();
+  final FocusNode _noofMaleFocusNode = FocusNode();
+  final TextEditingController _noofFemaleController = TextEditingController();
+  final FocusNode _noofFemaleFocusNode = FocusNode();
   final TextEditingController _purposeController = TextEditingController();
   final FocusNode _purposeFocusNode = FocusNode();
   @override
@@ -427,6 +433,120 @@ class _AddLabourReport extends State<AddLabourReport> {
                                 color: backgroundColor,
                               ),
                               labelText: 'Enter Count for People',
+                              //fillColor: Colors.redAccent,
+                              border: new OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(5.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+
+                            keyboardType: TextInputType.number,
+                            style: new TextStyle(
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(20),
+                          ),
+                          Text(
+                            "No. of Mason",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(20),
+                          ),
+                          TextFormField(
+                            controller: _noofMasonController,
+                            //initialValue: _name,
+                            textInputAction: TextInputAction.done,
+                            obscureText: false,
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'No. of Mason cant\'t be empty.',
+                            focusNode: _noofMasonFocusNode,
+                            //onSaved: (value) => _name = value,
+                            decoration: new InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.person_outline,
+                                color: backgroundColor,
+                              ),
+                              labelText: 'Enter Count for Mason',
+                              //fillColor: Colors.redAccent,
+                              border: new OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(5.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+
+                            keyboardType: TextInputType.number,
+                            style: new TextStyle(
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(20),
+                          ),
+                          Text(
+                            "No. of Male Labour",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(20),
+                          ),
+                          TextFormField(
+                            controller: _noofMaleController,
+                            //initialValue: _name,
+                            textInputAction: TextInputAction.done,
+                            obscureText: false,
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'No. of Male cant\'t be empty.',
+                            focusNode: _noofMaleFocusNode,
+                            //onSaved: (value) => _name = value,
+                            decoration: new InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.people,
+                                color: backgroundColor,
+                              ),
+                              labelText: 'Enter Count for Male Labour',
+                              //fillColor: Colors.redAccent,
+                              border: new OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(5.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+
+                            keyboardType: TextInputType.number,
+                            style: new TextStyle(
+                              fontFamily: "Poppins",
+                            ),
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(20),
+                          ),
+                          Text(
+                            "No. of Female Labour",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(20),
+                          ),
+                          TextFormField(
+                            controller: _noofFemaleController,
+                            //initialValue: _name,
+                            textInputAction: TextInputAction.done,
+                            obscureText: false,
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'No. of Female cant\'t be empty.',
+                            focusNode: _noofFemaleFocusNode,
+                            //onSaved: (value) => _name = value,
+                            decoration: new InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.people_outline,
+                                color: backgroundColor,
+                              ),
+                              labelText: 'Enter Count for Female Labour',
                               //fillColor: Colors.redAccent,
                               border: new OutlineInputBorder(
                                 borderRadius: new BorderRadius.circular(5.0),

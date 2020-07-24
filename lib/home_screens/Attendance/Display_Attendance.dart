@@ -5,6 +5,7 @@ import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_variables/enums.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Attendance/Employee_Attendance_Search.dart';
+import 'package:bhavaniconnect/home_screens/Attendance/Print_Attendance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -312,7 +313,7 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                "Daily Attendance",
+                                "Attendance",
                                 textAlign: TextAlign.center,
                                 style: appBarTitleStyle,
                               ),
@@ -360,6 +361,22 @@ class _DisplayAttendance extends State<DisplayAttendance> {
                                   ),
                                   onPressed: () {
                                     SearchDialog(context);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.print,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AttendanceFilter(),
+                                    ),
+                                  );
                                   },
                                 )
                               ],

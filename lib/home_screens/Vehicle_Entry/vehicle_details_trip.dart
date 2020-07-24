@@ -302,6 +302,20 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                                     "${result['vehicleNumber']} (${result['unitsPerTrip'] ?? ''} ${result['units']['unitName'] ?? ''})",
                                     style: descriptionStyleDark,
                                   ),
+                                  SizedBox(
+                                    height: getDynamicHeight(15),
+                                  ),
+                                  Text(
+                                    "Vehicle Name",
+                                    style: subTitleStyle,
+                                  ),
+                                  SizedBox(
+                                    height: getDynamicHeight(5),
+                                  ),
+                                  Text(
+                                    "Tractor",
+                                    style: descriptionStyleDark,
+                                  ),
                                 ],
                               ),
                             ),

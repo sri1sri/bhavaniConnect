@@ -98,6 +98,7 @@ class _PrintPreviewConcrete extends State<PrintPreviewConcrete> {
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
+          height: double.infinity,
           color: Colors.white,
           child: SingleChildScrollView(
             child: StreamBuilder(

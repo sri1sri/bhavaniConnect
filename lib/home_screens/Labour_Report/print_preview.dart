@@ -227,6 +227,21 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                               style: subTitleStyle1,
                             )),
                             DataColumn(
+                                label: Text(
+                                  "No. of Mason",
+                                  style: subTitleStyle1,
+                                )),
+                            DataColumn(
+                                label: Text(
+                                  "No. of Male Labour's",
+                                  style: subTitleStyle1,
+                                )),
+                            DataColumn(
+                                label: Text(
+                                  "No. of Female Labour's",
+                                  style: subTitleStyle1,
+                                )),
+                            DataColumn(
                               label: Text(
                                 "Propose",
                                 style: subTitleStyle1,
@@ -312,6 +327,30 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                                 DataCell(
                                   Text(
                                     itemRow.noofPeople,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    "22",
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    "30",
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    "18",
                                     style: descriptionStyleDark,
                                   ),
                                   showEditIcon: false,

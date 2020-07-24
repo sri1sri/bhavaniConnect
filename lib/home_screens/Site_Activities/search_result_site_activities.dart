@@ -186,6 +186,7 @@ class _SearchResultActivitiesState extends State<SearchResultActivities> {
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: userRole != null && userRole != UserRoles.Securtiy
             ? Container(
+                height: double.infinity,
                 color: Colors.white,
                 child: StreamBuilder(
                     stream: Firestore.instance

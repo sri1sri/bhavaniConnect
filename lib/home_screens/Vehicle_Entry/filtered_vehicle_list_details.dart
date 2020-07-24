@@ -87,6 +87,7 @@ class _VehicleDataList extends State<VehicleDataList> {
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(50.0), topLeft: Radius.circular(50.0)),
         child: Container(
+          height: double.infinity,
           color: Colors.white,
           child: SingleChildScrollView(
               child: Column(
@@ -175,6 +176,12 @@ class _VehicleDataList extends State<VehicleDataList> {
                           DataColumn(
                             label: Text(
                               "Vehicle Type",
+                              style: subTitleStyle1,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              "Vehicle Name",
                               style: subTitleStyle1,
                             ),
                           ),
@@ -310,6 +317,14 @@ class _VehicleDataList extends State<VehicleDataList> {
                               DataCell(
                                 Text(
                                   itemRow.vehicleType,
+                                  style: descriptionStyleDark,
+                                ),
+                                showEditIcon: false,
+                                placeholder: false,
+                              ),
+                              DataCell(
+                                Text(
+                                  "Tractor",
                                   style: descriptionStyleDark,
                                 ),
                                 showEditIcon: false,
@@ -603,9 +618,7 @@ class _VehicleDataList extends State<VehicleDataList> {
               //         .toList(),
               //   ),
               // ),
-              SizedBox(
-                height: 500,
-              )
+
             ],
           )),
         ),

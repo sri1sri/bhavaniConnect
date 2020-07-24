@@ -40,7 +40,9 @@ class _AddGoods extends State<AddGoods> {
   List<String> permissionDocId = [];
   List<String> permissionDocUserName = [];
   List<String> permissionDocUserRole = [];
-
+  final TextEditingController _vehicleNumberController =
+  TextEditingController();
+  final FocusNode _vehicleNumbeFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -379,6 +381,41 @@ class _AddGoods extends State<AddGoods> {
                           ),
                           SizedBox(
                             height: getDynamicHeight(20),
+                          ),
+                          Text(
+                            "Vehicle Number ",
+                            style: titleStyle,
+                          ),
+                          SizedBox(
+                            height: getDynamicHeight(10),
+                          ),
+                          TextFormField(
+                            controller: _vehicleNumberController,
+                            //initialValue: _name,
+                            textInputAction: TextInputAction.done,
+                            obscureText: false,
+                            validator: (value) => value.isNotEmpty
+                                ? null
+                                : 'Vehicle Number cant\'t be empty.',
+                            focusNode: _vehicleNumbeFocusNode,
+                            //onSaved: (value) => _name = value,
+                            decoration: new InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.keyboard,
+                                color: backgroundColor,
+                              ),
+                              labelText: 'Enter Vehicle Number',
+                              //fillColor: Colors.redAccent,
+                              border: new OutlineInputBorder(
+                                borderRadius: new BorderRadius.circular(5.0),
+                                borderSide: new BorderSide(),
+                              ),
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            style: new TextStyle(
+                              fontFamily: "Poppins",
+                            ),
                           ),
                         ],
                       ),
