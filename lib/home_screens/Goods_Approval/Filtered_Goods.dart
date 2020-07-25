@@ -158,7 +158,7 @@ class _PrintPreviewGoods extends State<PrintPreviewGoods> {
                           )),
                       DataColumn(
                           label: Text(
-                            "Vehicle Name",
+                            "Vehicle Number",
                             style: subTitleStyle1,
                           )),
                       DataColumn(
@@ -330,7 +330,7 @@ var items = <ItemInfo>[
       site: 'Bhavani Vivan',
       category: 'cevel work',
       dealerName: 'vasanth agencies',
-      vehicleName: 'Tractor',
+      vehicleName: 'AP 26 TF 5643',
       approvedBy: 'vasanth(manager)',
       requestedBy: 'sri(security)'
           )

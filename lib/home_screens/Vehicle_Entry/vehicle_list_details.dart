@@ -278,7 +278,7 @@ Widget VehicleDetails(
                     Text("Vehicle: $category", style: subTitleStyle),
                     SizedBox(height: getDynamicHeight(10)),
                     Text(
-                      "Vehicle Number: AP 26 r 4322",
+                      "Vehicle Name: Tractor",
                       style: descriptionStyleDarkBlur1,
                     ),
                     SizedBox(height: getDynamicHeight(10)),
