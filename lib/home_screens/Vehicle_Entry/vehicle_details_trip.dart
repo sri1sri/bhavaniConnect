@@ -313,7 +313,7 @@ class _AddVehicleCountDetails extends State<AddVehicleCountDetails> {
                                     height: getDynamicHeight(5),
                                   ),
                                   Text(
-                                    "Tractor",
+                                    result['vehicle']['vehicleName'],
                                     style: descriptionStyleDark,
                                   ),
                                 ],

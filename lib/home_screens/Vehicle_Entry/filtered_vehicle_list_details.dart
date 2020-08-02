@@ -235,6 +235,7 @@ class _VehicleDataList extends State<VehicleDataList> {
                             vehicleNo: item['vehicleNumber'],
                             site: item['construction_site']['constructionSite'],
                             delName: item['dealer']['dealerName'],
+                            vehicleName: item['vehicle']['vehicleName'],
                             vehicleType: item['vehicleType'],
                             startTime: item['startTime'] != null
                                 ? DateTimeUtils.hourMinuteFormat(
@@ -324,7 +325,7 @@ class _VehicleDataList extends State<VehicleDataList> {
                               ),
                               DataCell(
                                 Text(
-                                  "Tractor",
+                                  itemRow.vehicleName,
                                   style: descriptionStyleDark,
                                 ),
                                 showEditIcon: false,
@@ -618,7 +619,6 @@ class _VehicleDataList extends State<VehicleDataList> {
               //         .toList(),
               //   ),
               // ),
-
             ],
           )),
         ),
@@ -722,7 +722,7 @@ class ItemInfo {
   String vehicleNo;
   String site;
   String delName;
-  // String nameCat;
+  String vehicleName;
   String vehicleType;
   String startTime;
   String startRead;
@@ -742,7 +742,7 @@ class ItemInfo {
     this.vehicleNo,
     this.site,
     this.delName,
-    // this.nameCat,
+    this.vehicleName,
     this.vehicleType,
     this.startTime,
     this.startRead,

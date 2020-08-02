@@ -228,19 +228,19 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                             )),
                             DataColumn(
                                 label: Text(
-                                  "No. of Mason",
-                                  style: subTitleStyle1,
-                                )),
+                              "No. of Mason",
+                              style: subTitleStyle1,
+                            )),
                             DataColumn(
                                 label: Text(
-                                  "No. of Male Labour's",
-                                  style: subTitleStyle1,
-                                )),
+                              "No. of Male Labour's",
+                              style: subTitleStyle1,
+                            )),
                             DataColumn(
                                 label: Text(
-                                  "No. of Female Labour's",
-                                  style: subTitleStyle1,
-                                )),
+                              "No. of Female Labour's",
+                              style: subTitleStyle1,
+                            )),
                             DataColumn(
                               label: Text(
                                 "Propose",
@@ -250,7 +250,11 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                           ],
                           rows: result.map((item) {
                             index++;
-
+                            int totalLabourValue =
+                                (int.parse(item['no_of_mason']) +
+                                    int.parse(item['no_of_male_labour']) +
+                                    int.parse(item['no_of_female_labour']));
+                            String totalLabour = "$totalLabourValue";
                             ItemInfo itemRow = ItemInfo(
                                 slNo: index.toString(),
                                 date: DateTimeUtils.slashDateFormat(
@@ -260,7 +264,10 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                                 block: item['block']["blockName"],
                                 labourType: item['labour_type'],
                                 dealerName: item['dealer']['dealerName'],
-                                noofPeople: item['no_of_people'],
+                                noofPeople: totalLabour,
+                                noofMason: item['no_of_mason'],
+                                noofMaleLabour: item['no_of_male_labour'],
+                                noofFemaleLabour: item['no_of_female_labour'],
                                 createdBy:
                                     "${item['created_by']['name']}  (${item['created_by']['role']})",
                                 purpose: item['purpose']);
@@ -326,7 +333,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                                 ),
                                 DataCell(
                                   Text(
-                                    itemRow.noofPeople,
+                                    '${itemRow.noofPeople}',
                                     style: descriptionStyleDark,
                                   ),
                                   showEditIcon: false,
@@ -334,7 +341,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                                 ),
                                 DataCell(
                                   Text(
-                                    "22",
+                                    '${itemRow.noofMason}',
                                     style: descriptionStyleDark,
                                   ),
                                   showEditIcon: false,
@@ -342,7 +349,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                                 ),
                                 DataCell(
                                   Text(
-                                    "30",
+                                    '${itemRow.noofMaleLabour}',
                                     style: descriptionStyleDark,
                                   ),
                                   showEditIcon: false,
@@ -350,7 +357,7 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
                                 ),
                                 DataCell(
                                   Text(
-                                    "18",
+                                    '${itemRow.noofFemaleLabour}',
                                     style: descriptionStyleDark,
                                   ),
                                   showEditIcon: false,
@@ -407,11 +414,19 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
         "Block",
         "Dealer Name",
         "No. of People",
+        "No. of Mason",
+        "No. of Male Labours",
+        "No. of Female Labours",
         "Purpose"
       ],
       // data
       ...data.documents.map((result) {
         i++;
+        int totalPeopleIntValue = (int.parse(result['no_of_mason']) +
+            int.parse(result['no_of_male_labour']) +
+            int.parse(result['no_of_female_labour']));
+        String noOfPeople = '$totalPeopleIntValue';
+
         return [
           i.toString(),
           DateTimeUtils.slashDateFormat(
@@ -421,7 +436,10 @@ class _PrintPreviewLabour extends State<PrintPreviewLabour> {
           result['construction_site']['constructionSite'],
           result['block']['blockName'],
           result['dealer']['dealerName'],
-          result['no_of_people'],
+          noOfPeople,
+          result['no_of_mason'],
+          result['no_of_male_labour'],
+          result['no_of_female_labour'],
           result['purpose'],
         ];
       }),
@@ -456,6 +474,9 @@ class ItemInfo {
   String labourType;
   String dealerName;
   String noofPeople;
+  String noofMason;
+  String noofMaleLabour;
+  String noofFemaleLabour;
   String purpose;
   String createdBy;
 
@@ -468,59 +489,62 @@ class ItemInfo {
     this.labourType,
     this.dealerName,
     this.noofPeople,
+    this.noofMason,
+    this.noofMaleLabour,
+    this.noofFemaleLabour,
     this.purpose,
   });
 }
 
-var items = <ItemInfo>[
-  ItemInfo(
-      slNo: '1',
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      labourType: "Self employees",
-      dealerName: "Vasanth Agencies",
-      noofPeople: "20",
-      createdBy: "Vasanth (Manager)",
-      purpose: "Plumbing"),
-  ItemInfo(
-      slNo: '2',
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      labourType: "Out Sourcing employees",
-      dealerName: "Vasanth Agencies",
-      noofPeople: "20",
-      createdBy: "Vasanth (Manager)",
-      purpose: "Plumbing"),
-  ItemInfo(
-      slNo: '3',
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      labourType: "Self employees",
-      dealerName: "Vasanth Agencies",
-      noofPeople: "20",
-      createdBy: "Vasanth (Manager)",
-      purpose: "Plumbing"),
-  ItemInfo(
-      slNo: '3',
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      createdBy: "Vasanth (Manager)",
-      block: "8th",
-      labourType: "Out Sourcing employees",
-      dealerName: "Vasanth Agencies",
-      noofPeople: "20",
-      purpose: "Plumbing"),
-  ItemInfo(
-      slNo: '4',
-      createdBy: "Vasanth (Manager)",
-      date: '29/Oct/2020',
-      site: 'Bhavani Vivan',
-      block: "8th",
-      labourType: "Self employees",
-      dealerName: "Vasanth Agencies",
-      noofPeople: "20",
-      purpose: "Plumbing"),
-];
+// var items = <ItemInfo>[
+//   ItemInfo(
+//       slNo: '1',
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       labourType: "Self employees",
+//       dealerName: "Vasanth Agencies",
+//       noofPeople: "20",
+//       createdBy: "Vasanth (Manager)",
+//       purpose: "Plumbing"),
+//   ItemInfo(
+//       slNo: '2',
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       labourType: "Out Sourcing employees",
+//       dealerName: "Vasanth Agencies",
+//       noofPeople: "20",
+//       createdBy: "Vasanth (Manager)",
+//       purpose: "Plumbing"),
+//   ItemInfo(
+//       slNo: '3',
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       labourType: "Self employees",
+//       dealerName: "Vasanth Agencies",
+//       noofPeople: "20",
+//       createdBy: "Vasanth (Manager)",
+//       purpose: "Plumbing"),
+//   ItemInfo(
+//       slNo: '3',
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       createdBy: "Vasanth (Manager)",
+//       block: "8th",
+//       labourType: "Out Sourcing employees",
+//       dealerName: "Vasanth Agencies",
+//       noofPeople: "20",
+//       purpose: "Plumbing"),
+//   ItemInfo(
+//       slNo: '4',
+//       createdBy: "Vasanth (Manager)",
+//       date: '29/Oct/2020',
+//       site: 'Bhavani Vivan',
+//       block: "8th",
+//       labourType: "Self employees",
+//       dealerName: "Vasanth Agencies",
+//       noofPeople: "20",
+//       purpose: "Plumbing"),
+// ];

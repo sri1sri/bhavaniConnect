@@ -384,7 +384,7 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                               height: getDynamicHeight(5),
                             ),
                             Text(
-                              "Tractor",
+                              vehicleData['vehicle']['vehicleName'],
                               style: descriptionStyleDark,
                             ),
                           ],
@@ -492,9 +492,9 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
-                    ), 
+                    ),
                     height: getDynamicHeight(250),
-                   width: getDynamicWidth(400),
+                    width: getDynamicWidth(400),
                     child: Stack(
                       children: <Widget>[
                         Container(
@@ -634,7 +634,9 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                                           //fontFamily: mainFontFamily,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          fontSize: getDynamicTextSize(22),
+                                                          fontSize:
+                                                              getDynamicTextSize(
+                                                                  22),
                                                           decoration:
                                                               TextDecoration
                                                                   .none),
@@ -854,7 +856,9 @@ class _AddVehicleDetails extends State<AddVehicleDetails> {
                                                           //fontFamily: mainFontFamily,
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          fontSize: getDynamicWidth(22),
+                                                          fontSize:
+                                                              getDynamicWidth(
+                                                                  22),
                                                           decoration:
                                                               TextDecoration
                                                                   .none),

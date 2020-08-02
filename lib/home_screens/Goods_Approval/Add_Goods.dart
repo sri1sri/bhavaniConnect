@@ -41,7 +41,7 @@ class _AddGoods extends State<AddGoods> {
   List<String> permissionDocUserName = [];
   List<String> permissionDocUserRole = [];
   final TextEditingController _vehicleNumberController =
-  TextEditingController();
+      TextEditingController();
   final FocusNode _vehicleNumbeFocusNode = FocusNode();
   @override
   void initState() {
@@ -492,6 +492,8 @@ class _AddGoods extends State<AddGoods> {
                                               userRole == UserRoles.Securtiy
                                                   ? "Pending"
                                                   : "Approved",
+                                          "vehicleNumber":
+                                              _vehicleNumberController.text,
                                         });
 
                                         if (userRole == UserRoles.Securtiy) {

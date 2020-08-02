@@ -81,6 +81,9 @@ class _AddVehicle extends State<AddVehicle> {
   String selectedDealer;
   String selectedDealerId;
 
+  String selectedVehicle;
+  String selectedVehicleId;
+
   String _selectedUnitId;
   String _selectedUnit;
   String _selectedVehicleType = '';
@@ -729,31 +732,61 @@ class _AddVehicle extends State<AddVehicle> {
                         SizedBox(
                           height: getDynamicHeight(10),
                         ),
-                        DropdownSearch(
-                          showSelectedItem: true,
-                          maxHeight: 400,
-                          mode: Mode.MENU,
-                          items: [
-                            "Tractor",
-                            "JcB",
-                            "Cement Mixer",
-                            "Goods Truck"
-                          ],
-                          label: "Vehicle Name",
-                          onChanged: print,
-                          selectedItem: "Choose Vehicle Name",
-                          showSearchBox: true,
-//                          onChanged: (value) {
-//                            setState(() {
-//                              _selectedVehicleType = value;
-//                            });
-//                          },
-//                          selectedItem: _selectedVehicleType != ""
-//                              ? _selectedVehicleType
-//                              : "Choose Vehicle Name",
-//                          validate: (value) => value == null
-//                              ? 'Vehicle Name cannot be empty'
-//                              : null,
+                        StreamBuilder(
+                          stream: Firestore.instance
+                              .collection(AppConstants.prod + "vehicle")
+                              .snapshots(),
+                          builder:
+                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              List<String> items = snapshot.data.documents
+                                  .map((e) => (e.documentID.toString()))
+                                  .toList();
+                              return DropdownSearch(
+                                showSelectedItem: true,
+                                maxHeight: 400,
+                                mode: Mode.MENU,
+                                items: items,
+                                dropdownItemBuilder: (context, value, isTrue) {
+                                  return ListTile(
+                                    title: Text(snapshot.data.documents
+                                        .firstWhere((element) =>
+                                            element.documentID == value)['name']
+                                        .toString()),
+                                    selected: isTrue,
+                                    onTap: () {
+                                      setState(() {
+                                        selectedVehicle = snapshot
+                                            .data.documents
+                                            .firstWhere((element) =>
+                                                element.documentID ==
+                                                value)['name']
+                                            .toString();
+                                        selectedVehicleId = value;
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                                label: "Vehicle Name",
+                                onChanged: (value) {},
+                                selectedItem:
+                                    selectedVehicle ?? "Choose Vehicle Name",
+                                showSearchBox: true,
+                                validate: (value) {
+                                  if (validated &&
+                                      (selectedVehicle == null ||
+                                          selectedVehicle.isEmpty)) {
+                                    return "Vehicle Name cannot be empty";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              );
+                            }
+                          },
                         ),
                         SizedBox(
                           height: getDynamicHeight(20),
@@ -822,6 +855,10 @@ class _AddVehicle extends State<AddVehicle> {
                                         'dealer': {
                                           "dealerId": selectedDealerId,
                                           "dealerName": selectedDealer,
+                                        },
+                                        'vehicle': {
+                                          "vehicleId": selectedVehicleId,
+                                          "vehicleName": selectedVehicle,
                                         },
                                         "vehicleNumber":
                                             _vehicleNumberController.text,

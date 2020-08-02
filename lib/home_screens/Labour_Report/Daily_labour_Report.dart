@@ -141,6 +141,11 @@ class _LabourEntries extends State<LabourEntries> {
                               result[index]['block']['blockName'],
                               result[index]['purpose'],
                               result[index]['dealer']['dealerName'],
+                              (int.parse(result[index]['no_of_mason']) +
+                                  int.parse(
+                                      result[index]['no_of_male_labour']) +
+                                  int.parse(
+                                      result[index]['no_of_female_labour'])),
                               topPadding: index == 0 ? 40 : 20,
                             );
                           },
@@ -261,6 +266,7 @@ Widget LabourEntry(
     String block,
     String purpose,
     String dealerName,
+    int totalLabours,
     {double topPadding = 20.0}) {
   return GestureDetector(
     onTap: () {
@@ -315,7 +321,7 @@ Widget LabourEntry(
                           style: subTitleStyleDark1),
                     ),
                     Text(
-                      "Total Labour's: 232",
+                      "Total Labour's: $totalLabours",
                       style: descriptionStyleDarkBlur1,
                     ),
                     SizedBox(

@@ -5,7 +5,6 @@ import 'package:bhavaniconnect/common_variables/date_time_utils.dart';
 import 'package:bhavaniconnect/common_widgets/custom_appbar_widget/custom_app_bar_2.dart';
 import 'package:bhavaniconnect/common_widgets/offline_widgets/offline_widget.dart';
 import 'package:bhavaniconnect/home_screens/Attendance/Daily_Attendance.dart';
-import 'package:bhavaniconnect/home_screens/Stock_Register/Stock_Data_List.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdownSearch.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,66 +15,69 @@ import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 import 'Monthly_Attendance.dart';
 
-
 class AttendanceFilter extends StatefulWidget {
-
   @override
   _AttendanceFilter createState() => _AttendanceFilter();
 }
 
 class _AttendanceFilter extends State<AttendanceFilter> {
-  DateTime selectedDateFrom;
-  DateTime selectedDateTo;
+  DateTime selectedDateFrom = DateTime(
+    DateTime.now().year,
+    1,
+    1,
+  );
+  DateTime selectedDateTo =
+      DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1));
+
+  // DateTime selectedDateFrom = DateTime.now();
+  // DateTime selectedDateTo = DateTime.now();
+  var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
+  var customFormat2 = DateFormat("dd MMM yyyy");
 
   String constructionId;
   String selectedConstructionSite;
 
-  String selectedDealerId;
-  String selectedDealer;
-
-  String selectedCategory;
-  String selectedCategoryId;
+  String selectedUserId;
+  String selectedUserName;
 
   bool validated = false;
 
   @override
   void initState() {
     super.initState();
-    selectedDateFrom = DateTime.now();
-    selectedDateTo = DateTime.now();
+    // selectedDateFrom = widget.startDate;
+    // selectedDateTo = widget.endDate;
   }
 
-//  var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
-//  var customFormat2 = DateFormat("dd MMM yyyy");
-//  Future<Null> showPickerFrom(BuildContext context) async {
-//    final DateTime pickedFrom = await showDatePicker(
-//      context: context,
-//      initialDate: selectedDateFrom,
-//      firstDate: DateTime(1930),
-//      lastDate: selectedDateTo,
-//    );
-//    if (pickedFrom != null) {
-//      setState(() {
-//        print(customFormat.format(pickedFrom));
-//        selectedDateFrom = pickedFrom;
-//      });
-//    }
-//  }
-//
-//  Future<Null> showPickerTo(BuildContext context) async {
-//    final DateTime pickedTo = await showDatePicker(
-//      context: context,
-//      initialDate: selectedDateTo,
-//      firstDate: selectedDateFrom,
-//      lastDate: DateTimeUtils.currentDayDateTimeNow.add(Duration(days: 1)),
-//    );
-//    if (pickedTo != null) {
-//      setState(() {
-//        print(customFormat.format(pickedTo));
-//        selectedDateTo = pickedTo;
-//      });
-//    }
-//  }
+  Future<Null> showPickerFrom(BuildContext context) async {
+    final DateTime pickedFrom = await showDatePicker(
+      context: context,
+      initialDate: selectedDateFrom,
+      firstDate: DateTime(1930),
+      lastDate: DateTime.now(),
+    );
+    if (pickedFrom != null) {
+      setState(() {
+        print(customFormat.format(pickedFrom));
+        selectedDateFrom = pickedFrom;
+      });
+    }
+  }
+
+  Future<Null> showPickerTo(BuildContext context) async {
+    final DateTime pickedTo = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTo,
+      firstDate: DateTime(1930),
+      lastDate: DateTime.now(),
+    );
+    if (pickedTo != null) {
+      setState(() {
+        print(customFormat.format(pickedTo));
+        selectedDateTo = pickedTo;
+      });
+    }
+  }
 
   final _formKey = GlobalKey<FormState>();
   bool visible = true;
@@ -151,21 +153,66 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               SizedBox(
                                 height: getDynamicHeight(15),
                               ),
-                              DropdownSearch(
-                                showSelectedItem: true,
-                                maxHeight: 400,
-                                mode: Mode.MENU,
-                                items: [
-                                  "Bhavani vivan",
-                                  "Bhavani Aravindham",
-                                ],
-                                label: "All Construction sites Selected",
-                                onChanged: print,
-                                selectedItem: "Choose Construction site",
-                                showSearchBox: true,
-                                validate: (value) => value == null
-                                    ? 'Construction site cannot be empty'
-                                    : null,
+                              StreamBuilder(
+                                stream: Firestore.instance
+                                    .collection(
+                                        AppConstants.prod + "constructionSite")
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    List<String> items = snapshot.data.documents
+                                        .map((e) => (e.documentID.toString()))
+                                        .toList();
+                                    return DropdownSearch(
+                                      showSelectedItem: true,
+                                      maxHeight: 400,
+                                      mode: Mode.MENU,
+                                      items: items,
+                                      dropdownItemBuilder:
+                                          (context, value, isTrue) {
+                                        return ListTile(
+                                          title: Text(snapshot.data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString()),
+                                          selected: isTrue,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedConstructionSite =
+                                                  snapshot.data.documents
+                                                      .firstWhere((element) =>
+                                                          element.documentID ==
+                                                          value)['name']
+                                                      .toString();
+                                              constructionId = value;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      label: "Construction Site",
+                                      onChanged: (value) {},
+                                      selectedItem: selectedConstructionSite ??
+                                          "Choose Construction Site",
+                                      showSearchBox: true,
+                                      validate: (value) {
+                                        if (validated &&
+                                            (selectedConstructionSite == null ||
+                                                selectedConstructionSite
+                                                    .isEmpty)) {
+                                          return "Construction Site cannot be empty";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
                               ),
                               SizedBox(
                                 height: getDynamicHeight(20),
@@ -177,36 +224,71 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               SizedBox(
                                 height: getDynamicHeight(15),
                               ),
-                              DropdownSearch(
-                                showSelectedItem: true,
-                                maxHeight: 400,
-                                mode: Mode.MENU,
-                                items: [
-                                  "vasanth",
-                                  "sri",
-                                ],
-                                label: "All Employee Selected",
-                                onChanged: print,
-                                selectedItem: "Choose Employee",
-                                showSearchBox: true,
-                                validate: (value) => value == null
-                                    ? 'Employee cannot be empty'
-                                    : null,
+                              StreamBuilder(
+                                stream: Firestore.instance
+                                    .collection(AppConstants.prod + "userData")
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    List<String> items = snapshot.data.documents
+                                        .map((e) => (e.documentID.toString()))
+                                        .toList();
+
+                                    return DropdownSearch(
+                                      showSelectedItem: true,
+                                      maxHeight: 400,
+                                      mode: Mode.MENU,
+                                      items: items,
+                                      dropdownItemBuilder:
+                                          (context, value, isTrue) {
+                                        return ListTile(
+                                          title: Text(snapshot.data.documents
+                                              .firstWhere((element) =>
+                                                  element.documentID ==
+                                                  value)['name']
+                                              .toString()),
+                                          selected: isTrue,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedUserName = snapshot
+                                                  .data.documents
+                                                  .firstWhere((element) =>
+                                                      element.documentID ==
+                                                      value)['name']
+                                                  .toString();
+                                              selectedUserId = value;
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      label: "Employee Name",
+                                      onChanged: (value) {},
+                                      selectedItem: selectedUserName ??
+                                          "Choose Employee Name",
+                                      showSearchBox: true,
+                                    );
+                                  }
+                                },
                               ),
                               SizedBox(
                                 height: getDynamicHeight(20),
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Container(
                                     width:
-                                    MediaQuery.of(context).size.width / 2 -
-                                        25,
+                                        MediaQuery.of(context).size.width / 2 -
+                                            25,
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           "From",
@@ -216,7 +298,7 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                           height: getDynamicHeight(15),
                                         ),
                                         GestureDetector(
-                                          //onTap: () => showPickerFrom(context),
+                                          onTap: () => showPickerFrom(context),
                                           child: Container(
                                             child: Row(
                                               children: <Widget>[
@@ -229,8 +311,7 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                                   width: getDynamicWidth(10),
                                                 ),
                                                 Text(
-                                                    '22/03/2010',
-//                                                    '${customFormat2.format(selectedDateFrom)}',
+                                                    '${customFormat2.format(selectedDateFrom)}',
                                                     style: subTitleStyle),
                                               ],
                                             ),
@@ -241,11 +322,11 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                   ),
                                   Container(
                                     width:
-                                    MediaQuery.of(context).size.width / 2 -
-                                        25,
+                                        MediaQuery.of(context).size.width / 2 -
+                                            25,
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
                                           "To",
@@ -255,7 +336,7 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                           height: getDynamicHeight(15),
                                         ),
                                         GestureDetector(
-                                          //onTap: () => showPickerTo(context),
+                                          onTap: () => showPickerTo(context),
                                           child: Container(
                                             child: Row(
                                               children: <Widget>[
@@ -268,8 +349,7 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                                   width: getDynamicWidth(10),
                                                 ),
                                                 Text(
-                                                    '22/03/2010',
-//                                                    '${customFormat2.format(selectedDateTo)}',
+                                                    '${customFormat2.format(selectedDateTo)}',
                                                     style: subTitleStyle),
                                               ],
                                             ),
@@ -293,13 +373,19 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               height: getDynamicHeight(50),
                               width: getDynamicWidth(300),
                               child: GestureDetector(
-                                onTap: ()
-                                {
+                                onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          PrintDailyAttendance(),
+                                          PrintDailyAttendance(
+                                        selectedDateFrom,
+                                        selectedDateTo,
+                                        constructionId,
+                                        selectedConstructionSite,
+                                        selectedUserId,
+                                        selectedUserName,
+                                      ),
                                     ),
                                   );
                                 },
@@ -312,11 +398,10 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
-                                          child:Text(
-                                            "Daily Attendance",
-                                            style: activeSubTitleStyle,
-                                          )
-                                      )
+                                          child: Text(
+                                        "Daily Attendance",
+                                        style: activeSubTitleStyle,
+                                      ))
                                     ],
                                   ),
                                 ),
@@ -334,13 +419,19 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               height: getDynamicHeight(50),
                               width: getDynamicWidth(300),
                               child: GestureDetector(
-                                onTap: ()
-                                {
+                                onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          PrintMonthlyAttendance(),
+                                          PrintMonthlyAttendance(
+                                        selectedDateFrom,
+                                        selectedDateTo,
+                                        constructionId,
+                                        selectedConstructionSite,
+                                        selectedUserId,
+                                        selectedUserName,
+                                      ),
                                     ),
                                   );
                                 },
@@ -353,11 +444,10 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
-                                          child:Text(
-                                            "Monthly Attendance",
-                                            style: activeSubTitleStyle,
-                                          )
-                                      )
+                                          child: Text(
+                                        "Monthly Attendance",
+                                        style: activeSubTitleStyle,
+                                      ))
                                     ],
                                   ),
                                 ),

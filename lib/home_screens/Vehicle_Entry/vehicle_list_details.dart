@@ -135,6 +135,7 @@ class _DaySelection extends State<DaySelection> {
                         // "12.30 am",
                         result[index]['construction_site']['constructionSite'],
                         result[index]['dealer']['dealerName'],
+                        result[index]['vehicle']['vehicleName'],
                         "${result[index]['vehicleNumber']} (${result[index]['unitsPerTrip'] ?? ''} ${result[index]['units']['unitName'] ?? ''})",
                         "${result[index]['created_by']['name']} (${result[index]['created_by']['role']})",
                         result[index]['approved_by'] != null &&
@@ -221,6 +222,7 @@ Widget VehicleDetails(
     // String time,
     String site,
     String dealer,
+    String vehicle,
     String category,
     String requestedBy,
     String approvedBy,
@@ -269,7 +271,9 @@ Widget VehicleDetails(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(site, style: subTitleStyle1),
-                    SizedBox(height: getDynamicHeight(10),),
+                    SizedBox(
+                      height: getDynamicHeight(10),
+                    ),
                     Text(
                       "Dealer: $dealer",
                       style: descriptionStyleDarkBlur1,
@@ -278,7 +282,7 @@ Widget VehicleDetails(
                     Text("Vehicle: $category", style: subTitleStyle),
                     SizedBox(height: getDynamicHeight(10)),
                     Text(
-                      "Vehicle Name: Tractor",
+                      "Vehicle Name: $vehicle",
                       style: descriptionStyleDarkBlur1,
                     ),
                     SizedBox(height: getDynamicHeight(10)),

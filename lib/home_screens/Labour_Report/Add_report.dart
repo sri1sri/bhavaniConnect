@@ -410,44 +410,44 @@ class _AddLabourReport extends State<AddLabourReport> {
                           SizedBox(
                             height: getDynamicHeight(20),
                           ),
-                          Text(
-                            "No. of People",
-                            style: titleStyle,
-                          ),
-                          SizedBox(
-                            height: getDynamicHeight(20),
-                          ),
-                          TextFormField(
-                            controller: _noofPeopleController,
-                            //initialValue: _name,
-                            textInputAction: TextInputAction.done,
-                            obscureText: false,
-                            validator: (value) => value.isNotEmpty
-                                ? null
-                                : 'No. of People cant\'t be empty.',
-                            focusNode: _noofPeopleFocusNode,
-                            //onSaved: (value) => _name = value,
-                            decoration: new InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.list,
-                                color: backgroundColor,
-                              ),
-                              labelText: 'Enter Count for People',
-                              //fillColor: Colors.redAccent,
-                              border: new OutlineInputBorder(
-                                borderRadius: new BorderRadius.circular(5.0),
-                                borderSide: new BorderSide(),
-                              ),
-                            ),
+                          // Text(
+                          //   "No. of People",
+                          //   style: titleStyle,
+                          // ),
+                          // SizedBox(
+                          //   height: getDynamicHeight(20),
+                          // ),
+                          // TextFormField(
+                          //   controller: _noofPeopleController,
+                          //   //initialValue: _name,
+                          //   textInputAction: TextInputAction.done,
+                          //   obscureText: false,
+                          //   validator: (value) => value.isNotEmpty
+                          //       ? null
+                          //       : 'No. of People cant\'t be empty.',
+                          //   focusNode: _noofPeopleFocusNode,
+                          //   //onSaved: (value) => _name = value,
+                          //   decoration: new InputDecoration(
+                          //     prefixIcon: Icon(
+                          //       Icons.list,
+                          //       color: backgroundColor,
+                          //     ),
+                          //     labelText: 'Enter Count for People',
+                          //     //fillColor: Colors.redAccent,
+                          //     border: new OutlineInputBorder(
+                          //       borderRadius: new BorderRadius.circular(5.0),
+                          //       borderSide: new BorderSide(),
+                          //     ),
+                          //   ),
 
-                            keyboardType: TextInputType.number,
-                            style: new TextStyle(
-                              fontFamily: "Poppins",
-                            ),
-                          ),
-                          SizedBox(
-                            height: getDynamicHeight(20),
-                          ),
+                          //   keyboardType: TextInputType.number,
+                          //   style: new TextStyle(
+                          //     fontFamily: "Poppins",
+                          //   ),
+                          // ),
+                          // SizedBox(
+                          //   height: getDynamicHeight(20),
+                          // ),
                           Text(
                             "No. of Mason",
                             style: titleStyle,
@@ -654,13 +654,21 @@ class _AddLabourReport extends State<AddLabourReport> {
                                             "dealerName": selectedDealer,
                                           },
                                           'labour_type': labourType,
-                                          'no_of_people':
-                                              _noofPeopleController.text,
+                                          'no_of_mason':
+                                              _noofMasonController.text,
+                                          'no_of_male_labour':
+                                              _noofMaleController.text,
+                                          'no_of_female_labour':
+                                              _noofFemaleController.text,
                                           'purpose': _purposeController.text,
                                           "added_on":
                                               FieldValue.serverTimestamp(),
                                           "selected_date": selectedDate,
                                         });
+
+                                        //no_of_mason
+                                        //no_of_male_labour
+                                        //no_of_female_labour
                                         Navigator.pop(context);
                                       } catch (err) {
                                         setState(() {

@@ -132,8 +132,8 @@ class _GoodsScreen extends State<GoodsScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            0, getDynamicHeight(30), 0, 0),
+                        padding:
+                            EdgeInsets.fromLTRB(0, getDynamicHeight(30), 0, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -153,22 +153,24 @@ class _GoodsScreen extends State<GoodsScreen> {
                           child: Row(
                             children: [
                               (userRole == UserRoles.Manager ||
-                                  userRole == UserRoles.StoreManager ||
-                                  userRole == UserRoles.Securtiy ||
-                                  userRole == UserRoles.Supervisor ||
-                                  userRole == UserRoles.Admin)
+                                      userRole == UserRoles.StoreManager ||
+                                      userRole == UserRoles.Securtiy ||
+                                      userRole == UserRoles.Supervisor ||
+                                      userRole == UserRoles.Admin)
                                   ? GestureDetector(
-                                    child: Icon(
-                                Icons.calendar_today,
-                                size: 25,
-                                color: Colors.white,
+                                      child: Icon(
+                                        Icons.calendar_today,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      onTap: () {
+                                        showPickerFrom(context);
+                                      },
+                                    )
+                                  : null,
+                              SizedBox(
+                                width: 5,
                               ),
-                                onTap: ()
-                                {
-                                  showPickerFrom(context);
-                                },
-                                  ): null,
-                              SizedBox(width: 5,),
                               IconButton(
                                 icon: Icon(
                                   Icons.search,
@@ -179,8 +181,10 @@ class _GoodsScreen extends State<GoodsScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          GoodsFilter(),
+                                      builder: (context) => GoodsFilter(
+                                        startDate: startFilterDate,
+                                        endDate: endFilterDate,
+                                      ),
                                     ),
                                   );
                                 },
@@ -260,6 +264,7 @@ class _GoodsScreen extends State<GoodsScreen> {
                             (result[index]['added_on'] as Timestamp).toDate()),
                         result[index]['construction_site']['constructionSite'],
                         result[index]['dealer']['dealerName'],
+                        result[index]['vehicleNumber'],
                         result[index]['concrete_type']['concreteTypeName'],
                         result[index]['created_by']['name'] ?? "-",
                         result[index]['approved_by']['name'] ?? "-",
@@ -297,9 +302,9 @@ Widget goodsDetails(
     Size size,
     BuildContext context,
     String date,
-    // String time,
     String site,
     String dealer,
+    String vehicleNumber,
     String category,
     String requestedBy,
     String approvedBy,
@@ -337,7 +342,9 @@ Widget goodsDetails(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(site, style: subTitleStyle1),
-                  SizedBox(height: getDynamicHeight(10),),
+                  SizedBox(
+                    height: getDynamicHeight(10),
+                  ),
                   Text(
                     "Dealer: $dealer",
                     style: descriptionStyleDarkBlur1,
@@ -346,7 +353,7 @@ Widget goodsDetails(
                   Text(category, style: subTitleStyle),
                   SizedBox(height: getDynamicHeight(10)),
                   Text(
-                    "Vehicle Number: TN66V6571",
+                    "Vehicle Number: $vehicleNumber",
                     style: descriptionStyleDarkBlur1,
                   ),
                   SizedBox(height: getDynamicHeight(10)),

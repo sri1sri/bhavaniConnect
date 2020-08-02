@@ -15,6 +15,20 @@ import 'package:share_extend/share_extend.dart';
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
 
 class PrintDailyAttendance extends StatefulWidget {
+  final DateTime startDate;
+  final DateTime endDate;
+  final String selectedConstructionId;
+  final String selectedConstructionSite;
+  final String selectedUserId;
+  final String selectedUser;
+  const PrintDailyAttendance(
+    this.startDate,
+    this.endDate,
+    this.selectedConstructionId,
+    this.selectedConstructionSite,
+    this.selectedUserId,
+    this.selectedUser,
+  );
 
   @override
   _PrintDailyAttendance createState() => _PrintDailyAttendance();
@@ -45,6 +59,7 @@ class _PrintDailyAttendance extends State<PrintDailyAttendance> {
   }
 
   Widget _buildContent(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
@@ -60,7 +75,7 @@ class _PrintDailyAttendance extends State<PrintDailyAttendance> {
           },
           rightActionBar: Icon(Icons.print, size: 25, color: Colors.white),
           rightAction: () {
-            // _generateCSVAndView(context);
+            _generateCSVAndView(context);
           },
           primaryText: 'Daily Attendance',
           tabBarWidget: null,
@@ -82,28 +97,16 @@ class _PrintDailyAttendance extends State<PrintDailyAttendance> {
                 Column(
                   children: [
                     Text(
-                      "22/03/2020 to 23/03/2010",
+                      "${DateTimeUtils.dayMonthFormat(widget.startDate)} to ${DateTimeUtils.dayMonthFormat(widget.endDate)}",
                       style: subTitleStyleDark1,
                     ),
                     SizedBox(
                       height: 5,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Construction Site",
-                          style: descriptionStyleDarkBlur2,
-                        ),
-                        Text(
-                          " | ",
-                          style: descriptionStyleDarkBlur2,
-                        ),
-                        Text(
-                          "Employee Name",
-                          style: descriptionStyleDarkBlur2,
-                        ),
-                      ],
+                    Text(
+                      "${widget.selectedConstructionSite ?? 'All'} | ${widget.selectedUser ?? 'All'}",
+                      // "ConstructionSite | Dealer | Category",
+                      style: descriptionStyleDarkBlur1,
                     ),
                   ],
                 ),
@@ -112,93 +115,131 @@ class _PrintDailyAttendance extends State<PrintDailyAttendance> {
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    onSelectAll: (b) {},
-                    sortAscending: true,
-                    showCheckboxColumn: false,
-                    dataRowHeight: getDynamicHeight(70),
-                    columns: <DataColumn>[
-                      DataColumn(
-                          label: Text(
-                            "S.No.",
-                            style: subTitleStyle1,
-                          )),
-                      DataColumn(
-                          label: Text(
-                            "Date",
-                            style: subTitleStyle1,
-                          )),
-//                      DataColumn(
-//                          label: Text(
-//                            "Employee name",
-//                            style: subTitleStyle1,
-//                          )),
-//                      DataColumn(
-//                          label: Text(
-//                            "Construction Site",
-//                            style: subTitleStyle1,
-//                          )),
-                      DataColumn(
-                          label: Text(
-                            "In Time",
-                            style: subTitleStyle1,
-                          )),
-                      DataColumn(
-                          label: Text(
-                            "Out Time",
-                            style: subTitleStyle1,
-                          )),
-                      DataColumn(
-                          label: Text(
-                            "Total Time",
-                            style: subTitleStyle1,
-                          )),
-                    ],
-                    rows: items
-                        .map(
-                          (itemRow) => DataRow(
-                        cells: [
-                          DataCell(
-                            Text(itemRow.slNo,style: descriptionStyleDark,),
-                            showEditIcon: false,
-                            placeholder: false,
-                          ),
-                          DataCell(
-                            Text(itemRow.date,style: descriptionStyleDark,),
-                            showEditIcon: false,
-                            placeholder: false,
-                          ),
-//                          DataCell(
-//                            Text(itemRow.name,style: descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-//                          DataCell(
-//                            Text(itemRow.site,style: descriptionStyleDark,),
-//                            showEditIcon: false,
-//                            placeholder: false,
-//                          ),
-                          DataCell(
-                            Text(itemRow.inTime,style: descriptionStyleDark,),
-                            showEditIcon: false,
-                            placeholder: false,
-                          ),
-                          DataCell(
-                            Text(itemRow.outTime,style: descriptionStyleDark,),
-                            showEditIcon: false,
-                            placeholder: false,
-                          ),
-                          DataCell(
-                            Text(itemRow.totalTime,style: descriptionStyleDark,),
-                            showEditIcon: false,
-                            placeholder: false,
-                          ),
-                        ],
-                      ),
-                    )
-                        .toList(),
+                  child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection(AppConstants.prod + "attendance")
+                        .where("construction_site.constructionId",
+                            isEqualTo: widget.selectedConstructionId)
+                        .where('created_by.id',
+                            isEqualTo: widget.selectedUserId)
+                        .where("punch_in", isGreaterThan: widget.startDate)
+                        .where("punch_in", isLessThan: widget.endDate)
+                        .orderBy('punch_in', descending: true)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      index = 0;
+                      if (!snapshot.hasData) {
+                        return Container(
+                            child: Center(child: CircularProgressIndicator()),
+                            width: size.width);
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error),
+                        );
+                      } else {
+                        List<DocumentSnapshot> result = snapshot.data.documents;
+
+                        return DataTable(
+                          onSelectAll: (b) {},
+                          sortAscending: true,
+                          showCheckboxColumn: false,
+                          dataRowHeight: getDynamicHeight(70),
+                          columns: <DataColumn>[
+                            DataColumn(
+                                label: Text(
+                              "S.No.",
+                              style: subTitleStyle1,
+                            )),
+                            DataColumn(
+                                label: Text(
+                              "Date",
+                              style: subTitleStyle1,
+                            )),
+                            DataColumn(
+                                label: Text(
+                              "In Time",
+                              style: subTitleStyle1,
+                            )),
+                            DataColumn(
+                                label: Text(
+                              "Out Time",
+                              style: subTitleStyle1,
+                            )),
+                            DataColumn(
+                                label: Text(
+                              "Total Time",
+                              style: subTitleStyle1,
+                            )),
+                          ],
+                          rows: result.map((item) {
+                            index++;
+
+                            ItemInfo itemRow = ItemInfo(
+                              slNo: index.toString(),
+                              date: DateTimeUtils.slashDateFormat(
+                                  (item['punch_in'] as Timestamp).toDate()),
+                              site:
+                                  "${item['construction_site']['constructionSite']}",
+                              inTime: DateTimeUtils.hourMinuteFormat(
+                                  (item['punch_in'] as Timestamp).toDate()),
+                              outTime: DateTimeUtils.hourMinuteFormat(
+                                  (item['punch_out'] as Timestamp).toDate()),
+                              totalTime: DateTimeUtils.getDifferenceTime(
+                                  (item['punch_in'] as Timestamp).toDate(),
+                                  (item['punch_out'] as Timestamp).toDate()),
+                            );
+                            return DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(
+                                    itemRow.slNo,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    itemRow.date,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    itemRow.inTime,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    itemRow.outTime,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    itemRow.totalTime,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
                   ),
                 ),
+                // --------------- /////////////////////
                 SizedBox(
                   height: getDynamicHeight(500),
                 )
@@ -210,60 +251,59 @@ class _PrintDailyAttendance extends State<PrintDailyAttendance> {
     );
   }
 
-//  Future<void> _generateCSVAndView(context) async {
-//    QuerySnapshot data = await Firestore.instance
-//        .collection(AppConstants.prod + "concreteEntries")
-//        .where("construction_site.constructionId",
-//        isEqualTo: widget.constructionId)
-//        .where('concrete_type.concreteTypeId', isEqualTo: widget.concreteTypeId)
-//        .where("block.blockId", isEqualTo: widget.blockId)
-//        .where("added_on", isGreaterThan: widget.startDate)
-//        .where("added_on", isLessThan: widget.endDate)
-//        .orderBy('added_on', descending: true)
-//        .getDocuments();
-//    int i = 0;
-//    List<List<String>> csvData = [
-//      // headers
-//      <String>[
-//        'S.No.',
-//        'Created On',
-//        'Created By',
-//        "Site",
-//        "Block",
-//        "Total Progress",
-//        "Remarks"
-//      ],
-//      // data
-//      ...data.documents.map((result) {
-//        i++;
-//        return [
-//          i.toString(),
-//          DateTimeUtils.slashDateFormat(
-//              (result['added_on'] as Timestamp).toDate()),
-//          "${result['created_by']['name']}  (${result['created_by']['role']})",
-//          result['construction_site']['constructionSite'],
-//          result['block']['blockName'],
-//          result['total_progress'],
-//          result['remark'],
-//        ];
-//      }),
-//    ];
-//
-//    String csv = const ListToCsvConverter().convert(csvData);
-//
-//    final String dir = (await getApplicationDocumentsDirectory()).path;
-//    final String path = '$dir/siteActivitiesDocs.csv';
-//
-//    // create file
-//    final File file = File(path);
-//    // Save csv string using default configuration
-//    // , as field separator
-//    // " as text delimiter and
-//    // \r\n as eol.
-//    await file.writeAsString(csv);
-//
-//    shareFile(path);
-//  }
+  Future<void> _generateCSVAndView(context) async {
+    QuerySnapshot data = await Firestore.instance
+        .collection(AppConstants.prod + "attendance")
+        .where("construction_site.constructionId",
+            isEqualTo: widget.selectedConstructionId)
+        .where('created_by.id', isEqualTo: widget.selectedUserId)
+        .where("punch_in", isGreaterThan: widget.startDate)
+        .where("punch_in", isLessThan: widget.endDate)
+        .orderBy('punch_in', descending: true)
+        .getDocuments();
+    int i = 0;
+    List<List<String>> csvData = [
+      // headers
+      <String>[
+        'S.No.',
+        'Date',
+        'In Time',
+        "Out Time",
+        "Total Time",
+      ],
+      // data
+      ...data.documents.map((result) {
+        i++;
+        return [
+          i.toString(),
+          DateTimeUtils.slashDateFormat(
+              (result['punch_in'] as Timestamp).toDate()),
+          DateTimeUtils.hourMinuteFormat(
+              (result['punch_in'] as Timestamp).toDate()),
+          DateTimeUtils.hourMinuteFormat(
+              (result['punch_out'] as Timestamp).toDate()),
+          DateTimeUtils.getDifferenceTime(
+              (result['punch_in'] as Timestamp).toDate(),
+              (result['punch_out'] as Timestamp).toDate()),
+        ];
+      }),
+    ];
+
+    String csv = const ListToCsvConverter().convert(csvData);
+
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/filteredVehicles.csv';
+
+    // create file
+    final File file = File(path);
+    // Save csv string using default configuration
+    // , as field separator
+    // " as text delimiter and
+    // \r\n as eol.
+    await file.writeAsString(csv);
+
+    shareFile(path);
+  }
 
   shareFile(String path) async {
     ShareExtend.share(path, "file");
@@ -298,7 +338,5 @@ var items = <ItemInfo>[
       site: 'Bhavani Vivan',
       inTime: "10:30am",
       outTime: "6:45pm",
-      totalTime: "7hrs"
-  )
-
+      totalTime: "7hrs")
 ];
