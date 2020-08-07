@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:bhavaniconnect/common_variables/app_constants.dart';
-
+import 'package:toast/toast.dart';
 import 'Monthly_Attendance.dart';
 
 class AttendanceFilter extends StatefulWidget {
@@ -34,11 +34,29 @@ class _AttendanceFilter extends State<AttendanceFilter> {
   var customFormat = DateFormat("dd MMMM yyyy 'at' HH:mm:ss 'UTC+5:30'");
   var customFormat2 = DateFormat("dd MMM yyyy");
 
-  String constructionId;
-  String selectedConstructionSite;
+  String constructionId = '';
+  String selectedConstructionSite = '';
 
-  String selectedUserId;
-  String selectedUserName;
+  String selectedUserId = '';
+  String selectedUserName = '';
+
+  String selectedMonthName = "January";
+  int selectedMonth = 1;
+
+  Map<String, int> monthsName = {
+    'January': 1,
+    'February': 2,
+    'March': 3,
+    'April': 4,
+    'May': 5,
+    'June': 6,
+    'July': 7,
+    'August': 8,
+    'September': 9,
+    'October': 10,
+    'November': 11,
+    'December': 12,
+  };
 
   bool validated = false;
 
@@ -69,7 +87,7 @@ class _AttendanceFilter extends State<AttendanceFilter> {
       context: context,
       initialDate: selectedDateTo,
       firstDate: DateTime(1930),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 1)),
     );
     if (pickedTo != null) {
       setState(() {
@@ -278,6 +296,56 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               SizedBox(
                                 height: getDynamicHeight(20),
                               ),
+                              // selectedUserName != ""
+                              //     ? Container()
+                              //     : Text(
+                              //         "Choose Month",
+                              //         style: titleStyle,
+                              //       ),
+                              // selectedUserName != ""
+                              //     ? Container()
+                              //     : SizedBox(
+                              //         height: getDynamicHeight(15),
+                              //       ),
+                              // selectedUserName != ""
+                              //     ? Container()
+                              //     : Container(
+                              //         width: double.infinity,
+                              //         padding: EdgeInsets.symmetric(
+                              //             vertical: 13, horizontal: 10),
+                              //         decoration: BoxDecoration(
+                              //           border: Border.all(
+                              //             color: Color(0xffBFBFBF),
+                              //             width: 1,
+                              //           ),
+                              //           borderRadius: BorderRadius.circular(5),
+                              //         ),
+                              //         child: DropdownButtonHideUnderline(
+                              //           child: DropdownButton<String>(
+                              //             hint: Text("Choose Month"),
+                              //             value: selectedMonthName,
+                              //             isDense: true,
+                              //             onChanged: (newValue) {
+                              //               setState(() {
+                              //                 selectedMonthName = newValue;
+                              //                 selectedMonth =
+                              //                     monthsName[newValue];
+                              //               });
+                              //               print(selectedMonthName);
+                              //             },
+                              //             items: monthsName.keys
+                              //                 .map((String value) {
+                              //               return DropdownMenuItem<String>(
+                              //                 value: value,
+                              //                 child: Text(value),
+                              //               );
+                              //             }).toList(),
+                              //           ),
+                              //         ),
+                              //       ),
+                              SizedBox(
+                                height: getDynamicHeight(20),
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -374,20 +442,31 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               width: getDynamicWidth(300),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PrintDailyAttendance(
-                                        selectedDateFrom,
-                                        selectedDateTo,
-                                        constructionId,
-                                        selectedConstructionSite,
-                                        selectedUserId,
-                                        selectedUserName,
+                                  if (_formKey.currentState.validate() &&
+                                      selectedConstructionSite != '' &&
+                                      selectedUserName != '') {
+                                    _formKey.currentState.save();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PrintDailyAttendance(
+                                          selectedDateFrom,
+                                          selectedDateTo,
+                                          constructionId,
+                                          selectedConstructionSite,
+                                          selectedUserId,
+                                          selectedUserName,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else {
+                                    print('empty fields');
+                                    Toast.show(
+                                        "Please select Construction site and Employee name",
+                                        context,
+                                        duration: 3);
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -420,20 +499,54 @@ class _AttendanceFilter extends State<AttendanceFilter> {
                               width: getDynamicWidth(300),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PrintMonthlyAttendance(
-                                        selectedDateFrom,
-                                        selectedDateTo,
-                                        constructionId,
-                                        selectedConstructionSite,
-                                        selectedUserId,
-                                        selectedUserName,
-                                      ),
-                                    ),
-                                  );
+                                  if (_formKey.currentState.validate() &&
+                                      selectedConstructionSite != '') {
+                                    if (selectedUserName != '') {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PrintMonthlyAttendance(
+                                            selectedDateFrom,
+                                            selectedDateTo,
+                                            constructionId,
+                                            selectedConstructionSite,
+                                            selectedUserId,
+                                            selectedUserName,
+                                            selectedMonth: selectedMonth,
+                                          ),
+                                        ),
+                                      );
+                                    } else if (selectedMonthName != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PrintMonthlyAttendance(
+                                            selectedDateFrom,
+                                            selectedDateTo,
+                                            constructionId,
+                                            selectedConstructionSite,
+                                            selectedUserId,
+                                            selectedUserName,
+                                            selectedMonth: selectedMonth,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      print('Employee empty fields');
+                                      Toast.show(
+                                          "Please select Employee Name OR Month",
+                                          context,
+                                          duration: 3);
+                                    }
+                                  } else {
+                                    print('empty fields');
+                                    Toast.show(
+                                        "Please select Construction Site",
+                                        context,
+                                        duration: 3);
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

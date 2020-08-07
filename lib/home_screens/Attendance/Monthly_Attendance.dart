@@ -22,14 +22,16 @@ class PrintMonthlyAttendance extends StatefulWidget {
   final String selectedConstructionSite;
   final String selectedUserId;
   final String selectedUser;
+  final int selectedMonth;
   const PrintMonthlyAttendance(
     this.startDate,
     this.endDate,
     this.selectedConstructionId,
     this.selectedConstructionSite,
     this.selectedUserId,
-    this.selectedUser,
-  );
+    this.selectedUser, {
+    this.selectedMonth,
+  });
 
   @override
   _PrintMonthlyAttendance createState() => _PrintMonthlyAttendance();
@@ -38,15 +40,28 @@ class PrintMonthlyAttendance extends StatefulWidget {
 class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
   int index = 0;
 
-  Map<DateTime, int> newMonthAttendance = {};
-  Map<DateTime, int> holidayMonthAttendance = {};
+  Map<String, Map<int, String>> newMonthAttendance = {};
+  Map<String, Map<int, String>> holidayMonthAttendance = {};
 
-  Map<DateTime, int> printMonthAttendance = {};
-  Map<DateTime, int> printHolidayAttendance = {};
+  Map<String, Map<int, String>> printMonthAttendance = {};
+  Map<String, Map<int, String>> printHolidayAttendance = {};
 
   @override
   void initState() {
     super.initState();
+
+    print(widget.selectedUserId);
+    Firestore.instance
+        .collection(AppConstants.prod + "attendance")
+        .where("construction_site.constructionId",
+            isEqualTo: widget.selectedConstructionId)
+        .where('created_by.id',
+            isEqualTo:
+                widget.selectedUserId != "" ? widget.selectedUserId : null)
+        .where("punch_in", isGreaterThan: widget.startDate)
+        .where("punch_in", isLessThan: widget.endDate)
+        .orderBy('punch_in', descending: true)
+        .getDocuments();
   }
 
   @override
@@ -111,8 +126,7 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                       height: 5,
                     ),
                     Text(
-                      "${widget.selectedConstructionSite ?? 'All'} | ${widget.selectedUser ?? 'All'}",
-                      // "ConstructionSite | Dealer | Category",
+                      "${widget.selectedConstructionSite ?? 'All'} | ${widget.selectedUser != null && widget.selectedUser != "" ? widget.selectedUser : 'All'}",
                       style: descriptionStyleDarkBlur1,
                     ),
                   ],
@@ -128,7 +142,9 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                         .where("construction_site.constructionId",
                             isEqualTo: widget.selectedConstructionId)
                         .where('created_by.id',
-                            isEqualTo: widget.selectedUserId)
+                            isEqualTo: widget.selectedUserId != ""
+                                ? widget.selectedUserId
+                                : null)
                         .where("punch_in", isGreaterThan: widget.startDate)
                         .where("punch_in", isLessThan: widget.endDate)
                         .orderBy('punch_in', descending: true)
@@ -136,6 +152,8 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       index = 0;
+                      newMonthAttendance = {};
+                      holidayMonthAttendance = {};
                       if (!snapshot.hasData) {
                         return Container(
                             child: Center(child: CircularProgressIndicator()),
@@ -146,8 +164,7 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                         );
                       } else {
                         List<DocumentSnapshot> result = snapshot.data.documents;
-                        print(result.length);
-                        print(result.length);
+                        // String employeName = result[1]['created_by']['name'];
                         for (int i = 0; i < result.length; i++) {
                           int month = (result[i].data['punch_in'] as Timestamp)
                               .toDate()
@@ -156,19 +173,39 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                           int year = (result[i].data['punch_in'] as Timestamp)
                               .toDate()
                               .year;
+                          print('allo');
 
-                          print("year");
-                          print(year);
-                          print(year);
-                          print(year);
-                          print(month);
-                          if (newMonthAttendance[DateTime(year, month, 1)] !=
+                          if (newMonthAttendance[
+                                  DateTimeUtils.formatMonthDayYear(
+                                          DateTime(year, month, 1)) +
+                                      "-" +
+                                      result[i].data['created_by']['id']] !=
                               null) {
-                            newMonthAttendance[DateTime(year, month, 1)] =
-                                newMonthAttendance[DateTime(year, month, 1)] +
-                                    1;
+                            print('allo2');
+
+                            newMonthAttendance[DateTimeUtils.formatMonthDayYear(
+                                    DateTime(year, month, 1)) +
+                                "-" +
+                                result[i].data['created_by']['id']] = {
+                              newMonthAttendance[
+                                          DateTimeUtils.formatMonthDayYear(
+                                                  DateTime(year, month, 1)) +
+                                              "-" +
+                                              result[i].data['created_by']
+                                                  ['id']]
+                                      .keys
+                                      .toList()[0] +
+                                  1: result[i].data['created_by']['name']
+                            };
                           } else {
-                            newMonthAttendance[DateTime(year, month, 1)] = 1;
+                            print('allo3');
+
+                            newMonthAttendance[DateTimeUtils.formatMonthDayYear(
+                                    DateTime(year, month, 1)) +
+                                "-" +
+                                result[i].data['created_by']['id']] = {
+                              1: result[i].data['created_by']['name']
+                            };
 
                             for (int j = 1;
                                 j <= DateTimeUtils.daysInMonth(month, year);
@@ -177,16 +214,42 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
 
                               if (DateFormat('EEEE').format(date) == "Sunday") {
                                 if (holidayMonthAttendance[
-                                        DateTime(year, month, 1)] !=
+                                        DateTimeUtils.formatMonthDayYear(
+                                                DateTime(year, month, 1)) +
+                                            "-" +
+                                            result[i].data['created_by']
+                                                ['id']] !=
                                     null) {
+                                  print('allo4');
+
                                   holidayMonthAttendance[
-                                          DateTime(year, month, 1)] =
-                                      holidayMonthAttendance[
-                                              DateTime(year, month, 1)] +
-                                          1;
+                                      DateTimeUtils.formatMonthDayYear(
+                                              DateTime(year, month, 1)) +
+                                          "-" +
+                                          result[i].data['created_by']
+                                              ['id']] = {
+                                    holidayMonthAttendance[DateTimeUtils
+                                                    .formatMonthDayYear(
+                                                        DateTime(
+                                                            year, month, 1)) +
+                                                "-" +
+                                                result[i].data['created_by']
+                                                    ['id']]
+                                            .keys
+                                            .toList()[0] +
+                                        1: result[i].data['created_by']['name']
+                                  };
                                 } else {
+                                  print('allo5');
+
                                   holidayMonthAttendance[
-                                      DateTime(year, month, 1)] = 1;
+                                      DateTimeUtils.formatMonthDayYear(
+                                              DateTime(year, month, 1)) +
+                                          "-" +
+                                          result[i].data['created_by']
+                                              ['id']] = {
+                                    1: result[i].data['created_by']['name']
+                                  };
                                 }
                               }
                             }
@@ -202,6 +265,11 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                             DataColumn(
                                 label: Text(
                               "S.No.",
+                              style: subTitleStyle1,
+                            )),
+                            DataColumn(
+                                label: Text(
+                              "Employer Name",
                               style: subTitleStyle1,
                             )),
                             DataColumn(
@@ -228,24 +296,49 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
                           rows: newMonthAttendance.keys.map((item) {
                             index++;
 
+                            List<String> splitString = item.split('-');
+
+                            DateTime date = DateTimeUtils.monthDayYearFormat
+                                .parse(splitString[0]);
+
                             ItemInfo itemRow = ItemInfo(
                                 slNo: index.toString(),
-                                date: DateTimeUtils.formatMonthYear((item)),
-                                site: "",
-                                name: "",
-                                present: newMonthAttendance[item].toString(),
-                                absent: (DateTimeUtils.daysInMonth(
-                                            item.month, item.year) -
-                                        holidayMonthAttendance[item] -
-                                        newMonthAttendance[item])
+                                date: DateTimeUtils.formatMonthYear((date)),
+                                // site: "",
+                                name: newMonthAttendance[item]
+                                    .values
+                                    .toList()[0]
                                     .toString(),
-                                holidays:
-                                    holidayMonthAttendance[item].toString());
+                                present: newMonthAttendance[item]
+                                    .keys
+                                    .toList()[0]
+                                    .toString(),
+                                absent: (DateTimeUtils.daysInMonth(
+                                            date.month, date.year) -
+                                        holidayMonthAttendance[item]
+                                            .keys
+                                            .toList()[0] -
+                                        newMonthAttendance[item]
+                                            .keys
+                                            .toList()[0])
+                                    .toString(),
+                                holidays: holidayMonthAttendance[item]
+                                    .keys
+                                    .toList()[0]
+                                    .toString());
                             return DataRow(
                               cells: [
                                 DataCell(
                                   Text(
                                     itemRow.slNo,
+                                    style: descriptionStyleDark,
+                                  ),
+                                  showEditIcon: false,
+                                  placeholder: false,
+                                ),
+                                DataCell(
+                                  Text(
+                                    itemRow.name,
                                     style: descriptionStyleDark,
                                   ),
                                   showEditIcon: false,
@@ -308,12 +401,16 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
         .collection(AppConstants.prod + "attendance")
         .where("construction_site.constructionId",
             isEqualTo: widget.selectedConstructionId)
-        .where('created_by.id', isEqualTo: widget.selectedUserId)
+        .where('created_by.id',
+            isEqualTo:
+                widget.selectedUserId != "" ? widget.selectedUserId : null)
         .where("punch_in", isGreaterThan: widget.startDate)
         .where("punch_in", isLessThan: widget.endDate)
         .orderBy('punch_in', descending: true)
         .getDocuments();
     int i = 0;
+    printMonthAttendance = {};
+    printHolidayAttendance = {};
 
     for (int i = 0; i < data.documents.length; i++) {
       int month =
@@ -322,21 +419,58 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
       int year =
           (data.documents[i].data['punch_in'] as Timestamp).toDate().year;
 
-      if (printMonthAttendance[DateTime(year, month, 1)] != null) {
-        printMonthAttendance[DateTime(year, month, 1)] =
-            printMonthAttendance[DateTime(year, month, 1)] + 1;
+      if (printMonthAttendance[
+              DateTimeUtils.formatMonthDayYear(DateTime(year, month, 1)) +
+                  "-" +
+                  data.documents[i].data['created_by']['id']] !=
+          null) {
+        printMonthAttendance[
+            DateTimeUtils.formatMonthDayYear(DateTime(year, month, 1)) +
+                "-" +
+                data.documents[i].data['created_by']['id']] = {
+          printMonthAttendance[DateTimeUtils.formatMonthDayYear(
+                          DateTime(year, month, 1)) +
+                      "-" +
+                      data.documents[i].data['created_by']['id']]
+                  .keys
+                  .toList()[0] +
+              1: data.documents[i].data['created_by']['name']
+        };
       } else {
-        printMonthAttendance[DateTime(year, month, 1)] = 1;
+        printMonthAttendance[
+            DateTimeUtils.formatMonthDayYear(DateTime(year, month, 1)) +
+                "-" +
+                data.documents[i].data['created_by']
+                    ['id']] = {1: data.documents[i].data['created_by']['name']};
 
         for (int j = 1; j <= DateTimeUtils.daysInMonth(month, year); j++) {
           DateTime date = DateTime(year, month, j);
 
           if (DateFormat('EEEE').format(date) == "Sunday") {
-            if (printHolidayAttendance[DateTime(year, month, 1)] != null) {
-              printHolidayAttendance[DateTime(year, month, 1)] =
-                  printHolidayAttendance[DateTime(year, month, 1)] + 1;
+            if (printHolidayAttendance[
+                    DateTimeUtils.formatMonthDayYear(DateTime(year, month, 1)) +
+                        "-" +
+                        data.documents[i].data['created_by']['id']] !=
+                null) {
+              printMonthAttendance[
+                  DateTimeUtils.formatMonthDayYear(DateTime(year, month, 1)) +
+                      "-" +
+                      data.documents[i].data['created_by']['id']] = {
+                printMonthAttendance[DateTimeUtils.formatMonthDayYear(
+                                DateTime(year, month, 1)) +
+                            "-" +
+                            data.documents[i].data['created_by']['id']]
+                        .keys
+                        .toList()[0] +
+                    1: data.documents[i].data['created_by']['name']
+              };
             } else {
-              printHolidayAttendance[DateTime(year, month, 1)] = 1;
+              printMonthAttendance[
+                  DateTimeUtils.formatMonthDayYear(DateTime(year, month, 1)) +
+                      "-" +
+                      data.documents[i].data['created_by']['id']] = {
+                1: data.documents[i].data['created_by']['name']
+              };
             }
           }
         }
@@ -347,6 +481,7 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
       // headers
       <String>[
         'S.No.',
+        "Employer Name",
         "Month & Year",
         "No. of Days Worked",
         "No. of Days leave",
@@ -355,13 +490,18 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
       // data
       ...printMonthAttendance.keys.map((result) {
         i++;
+
+        List<String> splitString = result.split('-');
+
+        DateTime date = DateTimeUtils.monthDayYearFormat.parse(splitString[0]);
         return [
           i.toString(),
-          DateTimeUtils.formatMonthYear((result)),
+          printHolidayAttendance[result].values.toList()[0],
+          DateTimeUtils.formatMonthYear((date)),
           printMonthAttendance[result].toString(),
-          (DateTimeUtils.daysInMonth(result.month, result.year) -
-                  printHolidayAttendance[result] -
-                  printMonthAttendance[result])
+          (DateTimeUtils.daysInMonth(date.month, date.year) -
+                  printHolidayAttendance[result].keys.toList()[0] -
+                  printMonthAttendance[result].keys.toList()[0])
               .toString(),
           holidayMonthAttendance[result].toString(),
         ];
@@ -392,7 +532,7 @@ class _PrintMonthlyAttendance extends State<PrintMonthlyAttendance> {
 class ItemInfo {
   String slNo;
   String date;
-  String site;
+  // String site;
   String name;
   String present;
   String absent;
@@ -401,20 +541,20 @@ class ItemInfo {
   ItemInfo({
     this.slNo,
     this.date,
+    // this.site,
     this.name,
-    this.site,
     this.present,
     this.absent,
     this.holidays,
   });
 }
 
-var items = <ItemInfo>[
-  ItemInfo(
-      slNo: '1',
-      name: "Vasanth",
-      date: 'Oct-2020',
-      site: 'Bhavani Vivan',
-      present: "22 days",
-      absent: "3 days")
-];
+// var items = <ItemInfo>[
+//   ItemInfo(
+//       slNo: '1',
+//       name: "Vasanth",
+//       date: 'Oct-2020',
+//       site: 'Bhavani Vivan',
+//       present: "22 days",
+//       absent: "3 days")
+// ];

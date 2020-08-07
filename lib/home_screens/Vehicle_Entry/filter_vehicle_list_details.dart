@@ -55,7 +55,7 @@ class _VehicleFilter extends State<VehicleFilter> {
       context: context,
       initialDate: selectedDateTo,
       firstDate: DateTime(1930),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 1)),
     );
     if (pickedTo != null) {
       setState(() {

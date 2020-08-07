@@ -21,7 +21,6 @@ class PrintPreviewGoods extends StatefulWidget {
   final String selectedConstructionSite;
   final String selectedDealerId;
   final String selectedDealer;
-  final String vechileNumber;
   final String selectedConcreteTypeId;
   final String selectedConcreteType;
 
@@ -32,7 +31,6 @@ class PrintPreviewGoods extends StatefulWidget {
     this.selectedConstructionSite,
     this.selectedDealerId,
     this.selectedDealer,
-    this.vechileNumber,
     this.selectedConcreteTypeId,
     this.selectedConcreteType,
   );
@@ -130,7 +128,6 @@ class _PrintPreviewGoods extends State<PrintPreviewGoods> {
                             isEqualTo: widget.selectedDealerId)
                         .where('concrete_type.concreteTypeId',
                             isEqualTo: widget.selectedConcreteTypeId)
-                        .where('vehicleNumber', isEqualTo: widget.vechileNumber)
                         .where('status', isEqualTo: "Approved")
                         .where("added_on", isGreaterThan: widget.startDate)
                         .where("added_on", isLessThan: widget.endDate)
@@ -323,7 +320,6 @@ class _PrintPreviewGoods extends State<PrintPreviewGoods> {
         .where('dealer.dealerId', isEqualTo: widget.selectedDealerId)
         .where('concrete_type.concreteTypeId',
             isEqualTo: widget.selectedConcreteTypeId)
-        .where('vehicleNumber', isEqualTo: widget.vechileNumber)
         .where('status', isEqualTo: "Approved")
         .where("added_on", isGreaterThan: widget.startDate)
         .where("added_on", isLessThan: widget.endDate)

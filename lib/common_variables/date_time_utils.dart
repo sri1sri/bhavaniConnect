@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class DateTimeUtils {
   static final DateFormat _monthYearFormat = new DateFormat("MMMM yyyy");
   static final DateFormat _dayFormat = new DateFormat("dd");
-  static final DateFormat _monthDayYearFormat = new DateFormat("MMM dd, yyyy");
+  static final DateFormat monthDayYearFormat = new DateFormat("MMM dd, yyyy");
   static final DateFormat _firstDayFormat = new DateFormat("MMM dd");
   static final DateFormat _dayMonthYearFormat = new DateFormat("dd MMM yyyy");
   static final DateFormat _weekDayFormat = new DateFormat("EEEE");
@@ -26,7 +26,7 @@ class DateTimeUtils {
   static String formatMonthYear(DateTime d) => _monthYearFormat.format(d);
   static String formatDayMonthYear(DateTime d) => _dayMonthYearFormat.format(d);
   static String formatDay(DateTime d) => _dayFormat.format(d);
-  static String formatMonthDayYear(DateTime d) => _monthDayYearFormat.format(d);
+  static String formatMonthDayYear(DateTime d) => monthDayYearFormat.format(d);
   static String formatFirstDay(DateTime d) => _firstDayFormat.format(d);
   static String formatMonth(DateTime d) => _monthFormat.format(d);
   static String formatAbbrMonth(DateTime d) => _monthAbbrFormat.format(d);

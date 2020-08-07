@@ -71,7 +71,7 @@ class _GoodsFilter extends State<GoodsFilter> {
       context: context,
       initialDate: selectedDateTo,
       firstDate: DateTime(1930),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 1)),
     );
     if (pickedTo != null) {
       setState(() {
@@ -354,45 +354,45 @@ class _GoodsFilter extends State<GoodsFilter> {
                                   }
                                 },
                               ),
-                              SizedBox(
-                                height: getDynamicHeight(20),
-                              ),
-                              Text(
-                                "Vehicle Number ",
-                                style: titleStyle,
-                              ),
-                              SizedBox(
-                                height: getDynamicHeight(10),
-                              ),
-                              TextFormField(
-                                controller: _vehicleNumberController,
-                                //initialValue: _name,
-                                textInputAction: TextInputAction.done,
-                                obscureText: false,
-                                validator: (value) => value.isNotEmpty
-                                    ? null
-                                    : 'Vehicle Number cant\'t be empty.',
-                                focusNode: _vehicleNumbeFocusNode,
-                                //onSaved: (value) => _name = value,
-                                decoration: new InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.keyboard,
-                                    color: backgroundColor,
-                                  ),
-                                  labelText: 'Enter Vehicle Number',
-                                  //fillColor: Colors.redAccent,
-                                  border: new OutlineInputBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(5.0),
-                                    borderSide: new BorderSide(),
-                                  ),
-                                ),
+                              // SizedBox(
+                              //   height: getDynamicHeight(20),
+                              // ),
+                              // Text(
+                              //   "Vehicle Number ",
+                              //   style: titleStyle,
+                              // ),
+                              // SizedBox(
+                              //   height: getDynamicHeight(10),
+                              // ),
+                              // TextFormField(
+                              //   controller: _vehicleNumberController,
+                              //   //initialValue: _name,
+                              //   textInputAction: TextInputAction.done,
+                              //   obscureText: false,
+                              //   validator: (value) => value.isNotEmpty
+                              //       ? null
+                              //       : 'Vehicle Number cant\'t be empty.',
+                              //   focusNode: _vehicleNumbeFocusNode,
+                              //   //onSaved: (value) => _name = value,
+                              //   decoration: new InputDecoration(
+                              //     prefixIcon: Icon(
+                              //       Icons.keyboard,
+                              //       color: backgroundColor,
+                              //     ),
+                              //     labelText: 'Enter Vehicle Number',
+                              //     //fillColor: Colors.redAccent,
+                              //     border: new OutlineInputBorder(
+                              //       borderRadius:
+                              //           new BorderRadius.circular(5.0),
+                              //       borderSide: new BorderSide(),
+                              //     ),
+                              //   ),
 
-                                keyboardType: TextInputType.text,
-                                style: new TextStyle(
-                                  fontFamily: "Poppins",
-                                ),
-                              ),
+                              //   keyboardType: TextInputType.text,
+                              //   style: new TextStyle(
+                              //     fontFamily: "Poppins",
+                              //   ),
+                              // ),
                               SizedBox(
                                 height: getDynamicHeight(20),
                               ),
@@ -502,7 +502,7 @@ class _GoodsFilter extends State<GoodsFilter> {
                                         selectedConstructionSite,
                                         selectedDealerId,
                                         selectedDealer,
-                                        _vehicleNumberController.text,
+                                        // _vehicleNumberController.text,
                                         selectedConcreteTypeId,
                                         selectedConcreteType,
                                       ),
