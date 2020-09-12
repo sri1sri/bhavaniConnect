@@ -388,110 +388,103 @@ class _AddAttendance extends State<AddAttendance> {
                                   margin: EdgeInsets.only(
                                     top: 50,
                                   ),
-                                  child: inRadius == null
-                                      ? CircularProgressIndicator()
-                                      : inRadius
-                                          ? ConfirmationSlider(
-                                              foregroundShape:
-                                                  BorderRadius.circular(15),
-                                              backgroundShape:
-                                                  BorderRadius.circular(15),
-                                              text: snapshot.data == null ||
-                                                      snapshot.data.data ==
-                                                          null ||
-                                                      snapshot.data.data[
-                                                              'punch_in'] ==
-                                                          null
-                                                  ? "      Slide to Punch In"
-                                                  : "      Slide to Punch Out",
-                                              textStyle: activeSubTitleStyle,
-                                              iconColor: Colors.black,
-                                              backgroundColor:
-                                                  snapshot.data == null ||
-                                                          snapshot.data.data ==
-                                                              null ||
-                                                          snapshot.data.data[
-                                                                  'punch_in'] ==
-                                                              null
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                              foregroundColor: Colors.white,
-                                              onConfirmation: () async {
-                                                if (snapshot.data == null ||
-                                                    snapshot.data.data ==
-                                                        null ||
-                                                    snapshot.data
-                                                            .data['punch_in'] ==
-                                                        null) {
-                                                  try {
-                                                    await Firestore.instance
-                                                        .collection(
-                                                            AppConstants.prod +
-                                                                'attendance')
-                                                        .document(documentId)
-                                                        .setData({
-                                                      'created_by': {
-                                                        "id": widget
-                                                            .currentUserId,
-                                                        "name": userName,
-                                                        "role": userRoleValue,
-                                                      },
-                                                      'documentId': documentId,
-                                                      'construction_site': {
-                                                        "constructionId":
-                                                            constructionSiteId,
-                                                        "constructionSite":
-                                                            constructionSiteName,
-                                                      },
-                                                      'punch_in': FieldValue
-                                                          .serverTimestamp(),
-                                                    });
-                                                    Navigator.pop(context);
-                                                  } catch (err) {
-                                                    setState(() {
-                                                      // isProcessing = false;
-                                                      // error = err;
-                                                    });
-                                                  } finally {
-                                                    if (mounted) {
-                                                      setState(() {
-                                                        // isProcessing = false;
-                                                      });
-                                                    }
-                                                  }
-                                                } else if (snapshot.data
-                                                        .data['punch_out'] ==
-                                                    null) {
-                                                  try {
-                                                    await Firestore.instance
-                                                        .collection(
-                                                            AppConstants.prod +
-                                                                'attendance')
-                                                        .document(documentId)
-                                                        .updateData({
-                                                      'punch_out': FieldValue
-                                                          .serverTimestamp(),
-                                                    });
-                                                    Navigator.pop(context);
-                                                  } catch (err) {
-                                                    setState(() {
-                                                      // isProcessing = false;
-                                                      // error = err;
-                                                    });
-                                                  } finally {
-                                                    if (mounted) {
-                                                      setState(() {
-                                                        // isProcessing = false;
-                                                      });
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                            )
-                                          : Text(
-                                              "You are not in construction Site",
-                                              style: subTitleStyleDark1,
-                                            ),
+                                  child: ConfirmationSlider(
+                                    foregroundShape:
+                                    BorderRadius.circular(15),
+                                    backgroundShape:
+                                    BorderRadius.circular(15),
+                                    text: snapshot.data == null ||
+                                        snapshot.data.data ==
+                                            null ||
+                                        snapshot.data.data[
+                                        'punch_in'] ==
+                                            null
+                                        ? "      Slide to Punch In"
+                                        : "      Slide to Punch Out",
+                                    textStyle: activeSubTitleStyle,
+                                    iconColor: Colors.black,
+                                    backgroundColor:
+                                    snapshot.data == null ||
+                                        snapshot.data.data ==
+                                            null ||
+                                        snapshot.data.data[
+                                        'punch_in'] ==
+                                            null
+                                        ? Colors.green
+                                        : Colors.red,
+                                    foregroundColor: Colors.white,
+                                    onConfirmation: () async {
+                                      if (snapshot.data == null ||
+                                          snapshot.data.data ==
+                                              null ||
+                                          snapshot.data
+                                              .data['punch_in'] ==
+                                              null) {
+                                        try {
+                                          await Firestore.instance
+                                              .collection(
+                                              AppConstants.prod +
+                                                  'attendance')
+                                              .document(documentId)
+                                              .setData({
+                                            'created_by': {
+                                              "id": widget
+                                                  .currentUserId,
+                                              "name": userName,
+                                              "role": userRoleValue,
+                                            },
+                                            'documentId': documentId,
+                                            'construction_site': {
+                                              "constructionId":
+                                              constructionSiteId,
+                                              "constructionSite":
+                                              constructionSiteName,
+                                            },
+                                            'punch_in': FieldValue
+                                                .serverTimestamp(),
+                                          });
+                                          Navigator.pop(context);
+                                        } catch (err) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                            // error = err;
+                                          });
+                                        } finally {
+                                          if (mounted) {
+                                            setState(() {
+                                              // isProcessing = false;
+                                            });
+                                          }
+                                        }
+                                      } else if (snapshot.data
+                                          .data['punch_out'] ==
+                                          null) {
+                                        try {
+                                          await Firestore.instance
+                                              .collection(
+                                              AppConstants.prod +
+                                                  'attendance')
+                                              .document(documentId)
+                                              .updateData({
+                                            'punch_out': FieldValue
+                                                .serverTimestamp(),
+                                          });
+                                          Navigator.pop(context);
+                                        } catch (err) {
+                                          setState(() {
+                                            // isProcessing = false;
+                                            // error = err;
+                                          });
+                                        } finally {
+                                          if (mounted) {
+                                            setState(() {
+                                              // isProcessing = false;
+                                            });
+                                          }
+                                        }
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                             )
@@ -635,3 +628,115 @@ class _AddAttendance extends State<AddAttendance> {
     );
   }
 }
+
+
+
+
+
+/*
+commented code
+                                  child: inRadius == null
+                                      ? CircularProgressIndicator()
+                                      : inRadius
+                                          ? ConfirmationSlider(
+                                              foregroundShape:
+                                                  BorderRadius.circular(15),
+                                              backgroundShape:
+                                                  BorderRadius.circular(15),
+                                              text: snapshot.data == null ||
+                                                      snapshot.data.data ==
+                                                          null ||
+                                                      snapshot.data.data[
+                                                              'punch_in'] ==
+                                                          null
+                                                  ? "      Slide to Punch In"
+                                                  : "      Slide to Punch Out",
+                                              textStyle: activeSubTitleStyle,
+                                              iconColor: Colors.black,
+                                              backgroundColor:
+                                                  snapshot.data == null ||
+                                                          snapshot.data.data ==
+                                                              null ||
+                                                          snapshot.data.data[
+                                                                  'punch_in'] ==
+                                                              null
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                              foregroundColor: Colors.white,
+                                              onConfirmation: () async {
+                                                if (snapshot.data == null ||
+                                                    snapshot.data.data ==
+                                                        null ||
+                                                    snapshot.data
+                                                            .data['punch_in'] ==
+                                                        null) {
+                                                  try {
+                                                    await Firestore.instance
+                                                        .collection(
+                                                            AppConstants.prod +
+                                                                'attendance')
+                                                        .document(documentId)
+                                                        .setData({
+                                                      'created_by': {
+                                                        "id": widget
+                                                            .currentUserId,
+                                                        "name": userName,
+                                                        "role": userRoleValue,
+                                                      },
+                                                      'documentId': documentId,
+                                                      'construction_site': {
+                                                        "constructionId":
+                                                            constructionSiteId,
+                                                        "constructionSite":
+                                                            constructionSiteName,
+                                                      },
+                                                      'punch_in': FieldValue
+                                                          .serverTimestamp(),
+                                                    });
+                                                    Navigator.pop(context);
+                                                  } catch (err) {
+                                                    setState(() {
+                                                      // isProcessing = false;
+                                                      // error = err;
+                                                    });
+                                                  } finally {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        // isProcessing = false;
+                                                      });
+                                                    }
+                                                  }
+                                                } else if (snapshot.data
+                                                        .data['punch_out'] ==
+                                                    null) {
+                                                  try {
+                                                    await Firestore.instance
+                                                        .collection(
+                                                            AppConstants.prod +
+                                                                'attendance')
+                                                        .document(documentId)
+                                                        .updateData({
+                                                      'punch_out': FieldValue
+                                                          .serverTimestamp(),
+                                                    });
+                                                    Navigator.pop(context);
+                                                  } catch (err) {
+                                                    setState(() {
+                                                      // isProcessing = false;
+                                                      // error = err;
+                                                    });
+                                                  } finally {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        // isProcessing = false;
+                                                      });
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                            )
+                                          : Text(
+                                              "You are not in construction Site",
+                                              style: subTitleStyleDark1,
+                                            )
+ */
