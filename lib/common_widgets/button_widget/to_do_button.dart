@@ -5,7 +5,7 @@ import 'custom_raised_button.dart';
 
 class ToDoButton extends CustomRaisedButton {
   ToDoButton({
-    @required String assetName,
+//    @required String assetName,
     @required String text,
     double textSize,
     Color backgroundColor,
@@ -13,13 +13,14 @@ class ToDoButton extends CustomRaisedButton {
     VoidCallback onPressed,
     bool isEnabled = true,
     bool isLoading = false,
-  })  : assert(assetName != null),
+  })  :
+//        assert(assetName != null),
         assert(text != null),
         super(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Image.asset(assetName),
+//              Image.asset(assetName),
               !isLoading
                   ? Text(
                       text,
@@ -32,10 +33,10 @@ class ToDoButton extends CustomRaisedButton {
                       valueColor:
                           new AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
-              Opacity(
-                opacity: 0.0,
-                child: Image.asset(assetName),
-              )
+//              Opacity(
+//                opacity: 0.0,
+//                child: Image.asset(assetName),
+//              )
             ],
           ),
           color: isEnabled ? backgroundColor : backgroundColor.withOpacity(.65),

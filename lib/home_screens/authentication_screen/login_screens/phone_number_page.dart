@@ -145,7 +145,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
             SizedBox(height: getDynamicHeight(20.0)),
             ToDoButton(
               isEnabled: phoneNo != null && phoneNo.length == 10,
-              assetName: '',
+//              assetName: '',
               text: 'Get OTP',
               textColor: Colors.white,
               backgroundColor: activeButtonBackgroundColor,
@@ -159,7 +159,7 @@ class _F_PhoneNumberPageState extends State<F_PhoneNumberPage> {
             ),
             SizedBox(height: getDynamicHeight(10.0)),
             ToDoButton(
-              assetName: '',
+//              assetName: '',
               text: 'back',
               isLoading: isLoading,
               textColor: Colors.black,

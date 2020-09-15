@@ -10,6 +10,6 @@ class AppConstants {
   static const List<String> concreteType = [
     "M10",
     "M25",
-    "M30",
+    "M35",
   ];
 }

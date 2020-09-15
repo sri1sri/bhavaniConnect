@@ -75,7 +75,7 @@ class LoginPage extends StatelessWidget {
             children: <Widget>[
               SizedBox(height: 10.0),
               ToDoButton(
-                assetName: 'images/google-lodgo.png',
+//                assetName: 'images/google-lodgo.png',
                 text: 'Login with phone number',
                 textColor: activeButtonTextColor,
                 backgroundColor: activeButtonBackgroundColor,
@@ -83,7 +83,7 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: 10.0),
               ToDoButton(
-                assetName: 'images/google-lodgo.png',
+//                assetName: 'images/google-lodgo.png',
                 text: 'Don\'t have an Account? Sign Up',
                 textColor: inActiveButtonTextColor,
                 backgroundColor: inActiveButtonBackgroundColor,

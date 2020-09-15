@@ -435,7 +435,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     SizedBox(height: getDynamicHeight(25)),
                     ToDoButton(
-                      assetName: '',
+//                      assetName: '',
                       text: 'Register',
                       textColor: Colors.white,
                       backgroundColor: activeButtonBackgroundColor,

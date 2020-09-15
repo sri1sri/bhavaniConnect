@@ -168,7 +168,7 @@ class _OTPPageState extends State<OTPPage> {
             ),
             SizedBox(height: getDynamicHeight(20.0)),
             ToDoButton(
-              assetName: 'images/google-lodgo.png',
+//              assetName: 'images/google-lodgo.png',
               text: 'Verify',
               isEnabled: smsOTP != null && smsOTP.length == 6,
               textColor: Colors.white,
@@ -182,7 +182,7 @@ class _OTPPageState extends State<OTPPage> {
             ),
             SizedBox(height: getDynamicHeight(10.0)),
             ToDoButton(
-              assetName: 'images/google-lodgo.png',
+//              assetName: 'images/google-lodgo.png',
               text: 'Edit phone number',
               textColor: Colors.black,
               backgroundColor: Colors.white,
